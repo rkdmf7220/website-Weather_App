@@ -11,7 +11,8 @@ const URL = {
   villageForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=600&pageNo=1&dataType=JSON',
   windChillTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2?&requestCode=A41&dataType=JSON',
   ultraviolet: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
-  airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0'
+  airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0',
+  weatherWarn: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON'
 }
 
 export default new Vuex.Store({
@@ -41,6 +42,9 @@ export default new Vuex.Store({
     },
     airQuality(state, data) {
       state.airQuality = data
+    },
+    weatherWarn(state, data) {
+      state.weatherWarn = data
     }
   },
   actions: {
@@ -67,7 +71,7 @@ export default new Vuex.Store({
     },
     updateVillageForecast({commit}, {base_date, base_time, nx, ny}) {
       axios.get(`${URL.villageForecast}&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}&serviceKey=${API_KEY}`)
-      // axios.get(`https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D&numOfRows=10&pageNo=1&base_date=20220513&base_time=0500&nx=55&ny=127&dataType=JSON`)
+          // axios.get(`https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D&numOfRows=10&pageNo=1&base_date=20220513&base_time=0500&nx=55&ny=127&dataType=JSON`)
           .then(result => {
             if (result.statusText === "OK") {
               // console.log("단기예보 / updateVillageForecast = ", result)
@@ -106,6 +110,17 @@ export default new Vuex.Store({
               // console.log(commit)
               let item = result?.data?.response?.items?.[0];
               commit('airQuality', item || helper.getAirQuality())
+            }
+          })
+    },
+    updateWeatherWarn({commit}) {
+      axios.get(`${URL.weatherWarn}&serviceKey=${API_KEY}`)
+          .then(result => {
+            if (result.statusText === "OK") {
+              console.log("기상특보 / weatherWarn = ", result)
+              console.log(commit)
+              let item = result?.data?.response?.body?.items?.item?.[0];
+              commit('weatherWarn', item || helper.getWeatherWarn())
             }
           })
     }
@@ -151,85 +166,85 @@ const helper = {
   getMediumTemperature: () => {
     return {
       regId: null,
-        taMin3: null,
-        taMin3Low: null,
-        taMin3High: null,
-        taMax3: null,
-        taMax3Low: null,
-        taMax3High: null,
-        taMin4: null,
-        taMin4Low: null,
-        taMin4High: null,
-        taMax4: null,
-        taMax4Low: null,
-        taMax4High: null,
-        taMin5: null,
-        taMin5Low: null,
-        taMin5High: null,
-        taMax5: null,
-        taMax5Low: null,
-        taMax5High: null,
-        taMin6: null,
-        taMin6Low: null,
-        taMin6High: null,
-        taMax6: null,
-        taMax6Low: null,
-        taMax6High: null,
-        taMin7: null,
-        taMin7Low: null,
-        taMin7High: null,
-        taMax7: null,
-        taMax7Low: null,
-        taMax7High: null,
-        taMin8: null,
-        taMin8Low: null,
-        taMin8High: null,
-        taMax8: null,
-        taMax8Low: null,
-        taMax8High: null,
-        taMin9: null,
-        taMin9Low: null,
-        taMin9High: null,
-        taMax9: null,
-        taMax9Low: null,
-        taMax9High: null,
-        taMin10: null,
-        taMin10Low: null,
-        taMin10High: null,
-        taMax10: null,
-        taMax10Low: null,
-        taMax10High: null
+      taMin3: null,
+      taMin3Low: null,
+      taMin3High: null,
+      taMax3: null,
+      taMax3Low: null,
+      taMax3High: null,
+      taMin4: null,
+      taMin4Low: null,
+      taMin4High: null,
+      taMax4: null,
+      taMax4Low: null,
+      taMax4High: null,
+      taMin5: null,
+      taMin5Low: null,
+      taMin5High: null,
+      taMax5: null,
+      taMax5Low: null,
+      taMax5High: null,
+      taMin6: null,
+      taMin6Low: null,
+      taMin6High: null,
+      taMax6: null,
+      taMax6Low: null,
+      taMax6High: null,
+      taMin7: null,
+      taMin7Low: null,
+      taMin7High: null,
+      taMax7: null,
+      taMax7Low: null,
+      taMax7High: null,
+      taMin8: null,
+      taMin8Low: null,
+      taMin8High: null,
+      taMax8: null,
+      taMax8Low: null,
+      taMax8High: null,
+      taMin9: null,
+      taMin9Low: null,
+      taMin9High: null,
+      taMax9: null,
+      taMax9Low: null,
+      taMax9High: null,
+      taMin10: null,
+      taMin10Low: null,
+      taMin10High: null,
+      taMax10: null,
+      taMax10Low: null,
+      taMax10High: null
     }
   },
   getWindChillTemperature: () => {
     return {
-    areaNo: "A41",
-    code: "",
-    date: "",
-    h1: "",
-    h2: "",
-    h3: "",
-    h4: "",
-    h5: "",
-    h6: "",
-    h7: "",
-    h8: "",
-    h9: "",
-    h10: "",
-    h11: "",
-    h12: "",
-    h13: "",
-    h14: "",
-    h15: "",
-    h16: "",
-    h17: "",
-    h18: "",
-    h19: "",
-    h20: "",
-    h21: "",
-    h22: "",
-    h23: "",
-    h24: ""
+      areaNo: "A41",
+      code: "",
+      date: "",
+      h1: "",
+      h2: "",
+      h3: "",
+      h4: "",
+      h5: "",
+      h6: "",
+      h7: "",
+      h8: "",
+      h9: "",
+      h10: "",
+      h11: "",
+      h12: "",
+      h13: "",
+      h14: "",
+      h15: "",
+      h16: "",
+      h17: "",
+      h18: "",
+      h19: "",
+      h20: "",
+      h21: "",
+      h22: "",
+      h23: "",
+      h24: ""
     }
   },
   getUltraviolet: () => {
@@ -266,6 +281,16 @@ const helper = {
       so2Flag: null,
       so2Grade: "",
       so2Value: ""
+    }
+  },
+  getWeatherWarn: () => {
+    return {
+      other: "",
+      t6: "",
+      t7: "",
+      tmEf: "",
+      tmFc: null,
+      tmSeq: null
     }
   }
 }
