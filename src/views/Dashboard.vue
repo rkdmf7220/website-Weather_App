@@ -1,12 +1,32 @@
 <template>
-  <div>
-    {{this.$store.mediumLandForecast}}
+  <div class="dashboard-container">
+<!--    {{this.$store.mediumLandForecast}}-->
+    <header>
+      <dashboard-title/>
+      <search-bar/>
+    </header>
+
+    <div class="list-container">
+      <current-weather/>
+      <hourly-weather/>
+      <sunrise-sunset/>
+      <weather-warn/>
+      <weekly-weather/>
+    </div>
   </div>
 </template>
 
 <script>
+import DashboardTitle from "../components/Dashboard/DashboardTitle";
+import SearchBar from "../components/Dashboard/SearchBar";
+import CurrentWeather from "../components/Dashboard/CurrentWeather";
+import HourlyWeather from "../components/Dashboard/HourlyWeather";
+import SunriseSunset from "../components/Dashboard/SunriseSunset";
+import WeatherWarn from "../components/Dashboard/WeatherWarn";
+import WeeklyWeather from "../components/Dashboard/WeeklyWeather";
 export default {
   name: "Dashboard",
+  components: {WeeklyWeather, WeatherWarn, SunriseSunset, HourlyWeather, CurrentWeather, SearchBar, DashboardTitle},
   data() {
     return{
       today: '202205131800',
@@ -26,10 +46,11 @@ export default {
     this.$store.dispatch('updateWindChillTemperature', {areaNo: this.areaNo, time: this.time})
     this.$store.dispatch('updateUltraviolet', {areaNo: this.areaNo, time: this.time})
     this.$store.dispatch('updateAirQuality', {stationName: this.stationName})
+    this.$store.dispatch('updateWeatherWarn')
   }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  @import "../assets/scss/dashboard";
 </style>
