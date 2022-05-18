@@ -8,9 +8,11 @@
 
     <div class="list-container">
       <current-weather/>
-      <hourly-weather/>
-      <sunrise-sunset/>
-      <weather-warn/>
+      <div class="list-column">
+        <hourly-weather/>
+        <sunrise-sunset/>
+        <weather-warn/>
+      </div>
       <weekly-weather/>
     </div>
   </div>

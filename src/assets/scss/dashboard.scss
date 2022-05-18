@@ -4,6 +4,13 @@
     flex-wrap: wrap;
     width: 1200px;
 
+    .list-column{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      width: 600px;
+    }
+
     .card-item{
       background-color: white;
       border-radius: 8px;

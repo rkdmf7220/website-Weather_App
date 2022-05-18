@@ -11,5 +11,8 @@ export default {
 </script>
 
 <style scoped>
-
+  .card-item{
+    width: 180px;
+    height: 236px;
+  }
 </style>

@@ -11,6 +11,10 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 @import "assets/scss/reset.scss";
+#app {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 #nav {
   padding: 30px;
 }

@@ -20,6 +20,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  .dashboard-title-container{
+    padding-left: 10px;
+  }
 </style>
