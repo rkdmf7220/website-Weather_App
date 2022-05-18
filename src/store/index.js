@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-const API_KEY = ""
+const API_KEY = "MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D"
 
 Vue.use(Vuex)
 
@@ -12,7 +12,8 @@ const URL = {
   windChillTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2?&requestCode=A41&dataType=JSON',
   ultraviolet: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
   airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0',
-  weatherWarn: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON'
+  weatherWarn: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
+  sunriseSunset: 'https://api.sunrise-sunset.org/json?'
 }
 
 export default new Vuex.Store({
@@ -45,6 +46,9 @@ export default new Vuex.Store({
     },
     weatherWarn(state, data) {
       state.weatherWarn = data
+    },
+    sunriseSunset(state, data) {
+      state.sunriseSunset = data
     }
   },
   actions: {
@@ -117,13 +121,23 @@ export default new Vuex.Store({
       axios.get(`${URL.weatherWarn}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
-              console.log("기상특보 / weatherWarn = ", result)
-              console.log(commit)
+              // console.log("기상특보 / weatherWarn = ", result)
+              // console.log(commit)
               let item = result?.data?.response?.body?.items?.item?.[0];
               commit('weatherWarn', item || helper.getWeatherWarn())
             }
           })
-    }
+    },
+    updateSunriseSunset({commit}, {lat, lng, date}) {
+      console.log("작동확인")
+      axios.get(`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
+          .then(result => {
+            if (result.data.status === "OK") {
+              console.log("일출일몰 / sunriseSunset", result)
+              console.log(commit, `${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
+            }
+          })
+}
   },
   modules: {
   }
