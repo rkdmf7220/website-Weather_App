@@ -1,13 +1,19 @@
 <template>
-  <div></div>
+  <ul>
+    <li>
+      <air-info-item/>
+    </li>
+  </ul>
 </template>
 
 <script>
+import AirInfoItem from "@/components/Dashboard/currentWeather/AirInfoItem";
 export default {
-  name: "AirInfo"
+  name: "AirInfo",
+  components: {AirInfoItem},
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

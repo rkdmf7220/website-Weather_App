@@ -2,7 +2,9 @@
   <div class="card-item">
     <place-and-time/>
     <div class="top-item-wrap">
-      <weather-icon/>
+      <div class="icon-wrap">
+        <weather-icon/>
+      </div>
       <temperature-info/>
     </div>
     <air-info/>
@@ -26,5 +28,18 @@ export default {
   width: 580px;
   height: 412px;
   flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+
+  .top-item-wrap{
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+
+    .icon-wrap{
+      width: 160px;
+      height: 160px;
+    }
+  }
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
-  <div class="dashboard-title-container">
-    <h1>Today Weather</h1>
-    <h2>
+  <h1 class="dashboard-title-container">
+    <span>Today Weather</span>
+    <span class="title-day">
       <b>{{moment().format('M월 DD일')}}</b>
       날씨입니다
-    </h2>
-  </div>
+    </span>
+  </h1>
 </template>
 
 <script>
@@ -23,5 +23,8 @@ export default {
 <style scoped lang="scss">
   .dashboard-title-container{
     padding-left: 10px;
+  }
+  .title-day{
+    display: block;
   }
 </style>
