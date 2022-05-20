@@ -14,7 +14,7 @@
       <li><span class="vertical-line"></span></li>
       <li>
         <span class="gray3">풍속</span>
-        <span class="gray4">2.8m/x</span>
+        <span class="gray4">2.8m/s</span>
       </li>
       <li><span class="vertical-line"></span></li>
       <li>
