@@ -1,5 +1,9 @@
 <template>
-  <weekly-weather-item/>
+  <ul class="weekly-list">
+    <li class="weekly-item" v-for="item in 6" :key="item">
+      <weekly-weather-item/>
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -10,6 +14,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  .weekly-list{
+    display: flex;
+    flex-direction: row;
+  }
 </style>

@@ -1,18 +1,66 @@
 <template>
-  <div class="card-item">
-
+  <div class="card-item weekly-weather-item">
+    <div class="text-day-info">
+      <span>오늘</span>
+      <span class="small-text txt-date gray2">5/20</span>
+    </div>
+    <div class="icon-wrap">
+      <weather-icon/>
+    </div>
+    <div class="value-info">
+      <div class="temperature-value">
+        <h3 class="gray2 small-text"><span class="blue-bell">12°</span> / <span class="coral">23°</span></h3>
+      </div>
+      <div class="rainfall-probability-value small-text">
+        <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 11.692c0 2.103-1.79 3.808-4 3.808s-4-1.705-4-3.808C6 9.59 9.333 4.5 10 4.5c.667 0 4 5.09 4 7.192Z" fill="#85B6FD"/></svg>
+        <b class="blue-bell">30%</b>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import WeatherIcon from "@/components/Dashboard/currentWeather/WeatherIcon";
 export default {
-  name: "WeeklyWeatherItem"
+  name: "WeeklyWeatherItem",
+  components: {WeatherIcon}
 }
 </script>
 
-<style scoped>
-  .card-item{
+<style scoped lang="scss">
+  .weekly-weather-item{
     width: 180px;
     height: 236px;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .txt-date{
+      margin-left: 4px;
+    }
+
+    .icon-wrap{
+      width: 100px;
+      height: 100px;
+      margin: 0 auto;
+    }
+
+    .value-info{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .temperature-value{
+        margin-left: 0;
+        margin-right: auto;
+      }
+      .rainfall-probability-value{
+        margin-left: auto;
+        margin-right: 0;
+
+        b{
+          vertical-align: text-top;
+        }
+      }
+    }
   }
 </style>
