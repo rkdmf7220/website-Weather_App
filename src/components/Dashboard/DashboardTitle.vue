@@ -1,5 +1,5 @@
 <template>
-  <h1 class="dashboard-title-container">
+  <h1 class="dashboard-title">
     <span>Today Weather</span>
     <span class="title-day">
       <b>{{moment().format('M월 DD일')}}</b>
@@ -21,10 +21,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .dashboard-title-container{
+  .dashboard-title{
     padding-left: 10px;
-  }
-  .title-day{
-    display: block;
+
+    span{
+      font-weight: 400;
+    }
+    .title-day{
+      display: block;
+    }
   }
 </style>
