@@ -35,7 +35,7 @@ export default {
       moment,
       today: moment().format('YYYYMMDD1800'),
       base_date: moment().format('YYYYMMDD'),
-      base_time: '0500',
+      base_time: moment().format('0200'),
       nx: '55',
       ny: '127',
       areaNo: '1100000000',
@@ -47,9 +47,9 @@ export default {
   }
   },
   mounted() {
+    this.$store.dispatch('updateVillageForecast', {base_date: this.base_date, base_time: this.base_time, nx: this.nx, ny: this.ny})
     this.$store.dispatch('updateMediumLandForecast', {regId: '11B00000', tmFc: this.today})
     this.$store.dispatch('updateMediumTemperature', {regId: '11B10101', tmFc: this.today})
-    this.$store.dispatch('updateVillageForecast', {today: this.today, base_date: this.base_date, base_time: this.base_time, nx: this.nx, ny: this.ny})
     this.$store.dispatch('updateWindChillTemperature', {areaNo: this.areaNo, time: this.time})
     this.$store.dispatch('updateUltraviolet', {areaNo: this.areaNo, time: this.time})
     this.$store.dispatch('updateAirQuality', {stationName: this.stationName})
