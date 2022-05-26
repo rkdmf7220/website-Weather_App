@@ -1,6 +1,6 @@
 <template>
   <div class="info-container">
-    <h2>12°</h2>
+    <h2>{{currentTemperature}}</h2>
     <span>어제보다 <b class="coral">1°</b> 높아요</span>
     <div class="temperature-list">
       <h3 class="gray2"><span class="blue-bell">12°</span> / <span class="coral">23°</span></h3>
@@ -26,8 +26,34 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
-  name: "TempInfo"
+  name: "TempInfo",
+  computed: {
+     currentTemperature() {
+       // console.log('currentTemperature()::::', this.$store.state)
+       let found = this.$store.state.villageForecast.find(item => (
+           item.category === "TMP" &&
+           item.fcstDate === this.today &&
+           item.fcstTime === this.now
+       ));
+       return found ? found.fcstValue + '°' : '';
+     }
+  },
+
+  data() {
+    return {
+      today: moment().format('YYYYMMDD'),
+      now: moment().format('HH') + '00'
+    }
+  },
+
+  methods: {
+    getYesterdayTemperature() {
+      //
+    }
+  }
 }
 </script>
 
