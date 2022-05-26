@@ -78,9 +78,14 @@ export default new Vuex.Store({
           // axios.get(`https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D&numOfRows=10&pageNo=1&base_date=20220513&base_time=0500&nx=55&ny=127&dataType=JSON`)
           .then(result => {
             if (result.statusText === "OK") {
-              // console.log("단기예보 / updateVillageForecast = ", result)
               // console.log(commit, base_date, base_time, nx, ny)
-              commit('villageForecast')
+              let list = result?.data?.response?.body?.items?.item;
+              if (list && Array.isArray(list)) {
+                console.log("단기예보 / updateVillageForecast items = ", list)
+                commit('villageForecast', list)
+              } else {
+                console.log('단기예보 / error')
+              }
             }
           })
     },
@@ -133,7 +138,7 @@ export default new Vuex.Store({
       axios.get(`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
           .then(result => {
             if (result.data.status === "OK") {
-              console.log("일출일몰 / sunriseSunset", result)
+              // console.log("일출일몰 / sunriseSunset", result)
               console.log(commit, `${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
             }
           })
