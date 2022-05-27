@@ -118,7 +118,8 @@ export default new Vuex.Store({
             if (result.statusText === "OK") {
               // console.log("대기환경 / airQuality", result)
               // console.log(commit)
-              let item = result?.data?.response?.items?.[0];
+              let item = result?.data?.response?.body?.items?.[0];
+              // console.log("AirQuality item", result?.data?.response?.body?.items?.[0])
               commit('airQuality', item || helper.getAirQuality())
             }
           })
