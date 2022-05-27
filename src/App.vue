@@ -49,7 +49,7 @@
   color: #FFAD33;
 }
 .green{
-  color: #3DEC72;
+  color: #23E05C;
 }
 .blue-bell{
   color: #85B6FD;

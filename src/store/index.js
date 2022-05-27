@@ -23,7 +23,8 @@ export default new Vuex.Store({
     villageForecast: [],
     windChillTemperature: {},
     ultraviolet: {},
-    airQuality: {}
+    airQuality: {},
+    sunriseSunset: {}
   },
   mutations: {
     mediumLandForecast(state, obj) {
@@ -140,8 +141,9 @@ export default new Vuex.Store({
       axios.get(`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
           .then(result => {
             if (result.data.status === "OK") {
-              // console.log("일출일몰 / sunriseSunset", result)
-              console.log(commit, `${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
+              let item = result?.data?.results
+              console.log("일출일몰 / sunriseSunset", item)
+              commit('sunriseSunset', item || helper.getSunriseSunset())
             }
           })
 }
@@ -312,6 +314,20 @@ const helper = {
       tmEf: "",
       tmFc: null,
       tmSeq: null
+    }
+  },
+  getSunriseSunset: () => {
+    return {
+      sunrise: "",
+      sunset: "",
+      solar_noon: "",
+      day_length: "",
+      civil_twilight_begin: "",
+      civil_twilight_end: "",
+      nautical_twilight_begin: "",
+      nautical_twilight_end: "",
+      astronomical_twilight_begin: "",
+      astronomical_twilight_end: ""
     }
   }
 }
