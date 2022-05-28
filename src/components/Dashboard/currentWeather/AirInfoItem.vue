@@ -1,8 +1,8 @@
 <template>
   <div class="air-item-container">
     <span class="small-text">{{itemData.title}}</span>
-    <b class="air-item-grade small-text white grade-good">좋음</b>
-    <span class="air-item-value blue-bell">{{dataValue}}</span>
+    <b class="air-item-grade small-text white" :class="gradeObject.className">{{ gradeObject.text }}</b>
+    <span class="air-item-value blue-bell">{{itemData.value}}<span v-show="itemData.value.length" class="small-text">{{itemData.unit}}</span></span>
   </div>
 </template>
 
@@ -17,6 +17,57 @@ export default {
     //   return this.itemData.valueKey
     //   // return this.itemData.data.pm25Grade
     // }
+    gradeObject() {
+      let grade = this.itemData.data[this.itemData.gradeKey];
+      let text;
+      let className;
+      if (this.itemData.id === 'ultraviolet') {
+
+        let found = Number(grade);
+        if (0 <= found && found < 3) {
+          text = '낮음'
+          className = 'grade-good';
+        } else if (3 <= found && found < 6) {
+          text = '보통'
+          className = 'grade-good';
+        } else if (6 <= found && found < 8) {
+          text = '높음'
+          className = 'grade-good';
+        } else if (8 <= found && found < 11) {
+          text = '매우높음'
+          className = 'grade-good';
+        } else if (11 <= found) {
+          text = '위험'
+          className = 'grade-good';
+        }
+
+      } else {
+        switch (grade) {
+          case "1":
+            text = '좋음'
+            className = 'grade-good';
+            break;
+          case "2":
+            text = '보통'
+            className = 'grade-good';
+            break;
+          case "3":
+            text = '나쁨'
+            className = 'grade-good';
+            break;
+          case "4":
+            text = '매우나쁨'
+            className = 'grade-good';
+            break;
+          default:
+        }
+      }
+
+      return {
+        text,
+        className
+      };
+    }
   },
   watch: {
     dataValue: {
