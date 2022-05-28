@@ -2,7 +2,7 @@
   <div class="air-item-container">
     <span class="small-text">{{itemData.title}}</span>
     <b class="air-item-grade small-text white grade-good">좋음</b>
-    <span class="air-item-value blue-bell">{{itemData.value}}<span v-show="itemData.value.length" class="small-text">{{itemData.unit}}</span></span>
+    <span class="air-item-value blue-bell">{{dataValue}}</span>
   </div>
 </template>
 
@@ -11,6 +11,24 @@ export default {
   name: "AirInfoItem",
   props: {
     itemData: Object
+  },
+  computed: {
+    // dataValue() {
+    //   return this.itemData.valueKey
+    //   // return this.itemData.data.pm25Grade
+    // }
+  },
+  watch: {
+    dataValue: {
+      deep: true,
+      handler() {
+          // return this.itemData.valueKey
+          return this.itemData.id
+      }
+    }
+  },
+  mounted() {
+    console.log(this.itemData.title, this.itemData)
   }
 }
 </script>

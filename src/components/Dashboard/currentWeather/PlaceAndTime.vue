@@ -11,8 +11,14 @@
 </template>
 
 <script>
+import moment from "moment"
 export default {
-  name: "PlaceAndTime"
+  name: "PlaceAndTime",
+  data() {
+    return {
+      moment
+    }
+  }
 }
 </script>
 

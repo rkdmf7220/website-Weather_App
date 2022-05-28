@@ -120,7 +120,7 @@ export default new Vuex.Store({
               // console.log("대기환경 / airQuality", result)
               // console.log(commit)
               let item = result?.data?.response?.body?.items?.[0];
-              // console.log("AirQuality item", result?.data?.response?.body?.items?.[0])
+              console.log("AirQuality item", item)
               commit('airQuality', item || helper.getAirQuality())
             }
           })

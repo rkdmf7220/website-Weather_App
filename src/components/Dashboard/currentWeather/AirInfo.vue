@@ -1,6 +1,9 @@
 <template>
   <ul class="air-info-container">
-    <li class="air-info-list" v-for="item in airDataList" :key="item.title">
+<!--    <li class="air-info-list" v-for="item in airDataList" :key="item.title">
+      <air-info-item :item-data="item"/>
+    </li>-->
+    <li class="air-info-list" v-for="item in keyList" :key="item.id">
       <air-info-item :item-data="item"/>
     </li>
   </ul>
@@ -8,10 +11,16 @@
 
 <script>
 import AirInfoItem from "@/components/Dashboard/currentWeather/AirInfoItem";
+import {mapState} from "vuex";
 export default {
   name: "AirInfo",
   components: {AirInfoItem},
   computed: {
+    ...mapState([
+      'airQuality',
+      'ultraviolet'
+    ]),
+
     currentPm10Value() {
       return this.$store.state.airQuality.pm10Value;
       // let found = this.$store.state.airQuality.pm10Value;
@@ -62,6 +71,7 @@ export default {
     this.$nextTick(function () {
       this.loadAirData;
       console.log('airData 확인', this.airDataList)
+      console.log('store airQuality 확인', this.airQuality)
     })
   },
   watch: {
@@ -116,6 +126,40 @@ export default {
   },
   data() {
     return {
+      keyList: [
+        {
+          id: 'pm10',
+          title: '미세먼지',
+          data: this.airQuality,
+          gradeKey: 'pm10Grade',
+          valueKey: 'pm10Value',
+          unit: '㎍/㎥'
+        },
+        {
+          id: 'pm25',
+          title: '초미세먼지',
+          data: this.airQuality,
+          gradeKey: 'pm25Grade',
+          valueKey: 'pm25Value',
+          unit: '㎍/㎥'
+        },
+        {
+          id: 'o3',
+          title: '오존',
+          data: this.airQuality,
+          gradeKey: 'o3Grade',
+          valueKey: 'o3Value',
+          unit: 'ppm'
+        },
+        {
+          id: 'ultraviolet',
+          title: '자외선',
+          data: this.$store.state.ultraviolet,
+          gradeKey: 'today',
+          valueKey: 'today',
+          unit: 'uv'
+        }
+      ],
       airDataList: {
         pm10: {
           title: '미세먼지',
