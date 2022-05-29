@@ -24,6 +24,36 @@ export default new Vuex.Store({
     windChillTemperature: {},
     ultraviolet: {},
     airQuality: {},
+    airInfoList: [
+      {
+        id: 'pm10',
+        title: '미세먼지',
+        grade: undefined,
+        value: undefined,
+        unit: '㎍/㎥'
+      },
+      {
+        id: 'pm25',
+        title: '초미세먼지',
+        grade: undefined,
+        value: undefined,
+        unit: '㎍/㎥'
+      },
+      {
+        id: 'o3',
+        title: '오존',
+        grade: undefined,
+        value: undefined,
+        unit: 'ppm'
+      },
+      {
+        id: 'ultraviolet',
+        title: '자외선',
+        grade: undefined,
+        value: undefined,
+        unit: 'uv'
+      }
+    ],
     sunriseSunset: {}
   },
   mutations: {
@@ -47,6 +77,9 @@ export default new Vuex.Store({
     },
     weatherWarn(state, data) {
       state.weatherWarn = data
+    },
+    airInfoList(state, data) {
+      state.airInfoList = data
     },
     sunriseSunset(state, data) {
       state.sunriseSunset = data
@@ -102,26 +135,31 @@ export default new Vuex.Store({
             }
           })
     },
-    updateUltraviolet({commit}, {areaNo, time}) {
+    updateUltraviolet({commit, state}, {areaNo, time}) {
       axios.get(`${URL.ultraviolet}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
               // console.log("자외선지수 / ultraviolet = ", result)
               // console.log(commit)
               let item = result?.data?.response?.body?.items?.item?.[0];
-              commit('ultraviolet', item || helper.getWindChillTemperature())
+              let list = helper.pushUltravioletData(state.airInfoList, item);
+              commit('airInfoList', list)
+              // commit('ultraviolet', item || helper.getUltraviolet())
+              // console.log(commit, state)
             }
           })
     },
-    updateAirQuality({commit}, {stationName}) {
+    updateAirQuality({commit, state}, {stationName}) {
       axios.get(`${URL.airQuality}&stationName=${stationName}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
               // console.log("대기환경 / airQuality", result)
               // console.log(commit)
               let item = result?.data?.response?.body?.items?.[0];
-              console.log("AirQuality item", item)
-              commit('airQuality', item || helper.getAirQuality())
+              // console.log("AirQuality item", item, state.airInfoList)
+              let list = helper.pushAirQualityData(state.airInfoList, item);
+              commit('airInfoList', list)
+              // commit('airQuality', item || helper.getAirQuality())
             }
           })
     },
@@ -329,5 +367,29 @@ const helper = {
       astronomical_twilight_begin: "",
       astronomical_twilight_end: ""
     }
+  },
+  pushAirQualityData: (airInfoList, data) => {
+    airInfoList.forEach((item, index) => {
+      if (index === 0) {
+        item.value = data.pm10Value
+        item.grade = data.pm10Grade
+      } else if (index === 1) {
+        item.value = data.pm25Value
+        item.grade = data.pm25Grade
+      } else if (index === 2) {
+        item.value = data.o3Value
+        item.grade = data.o3Grade
+      }
+    })
+    return [...airInfoList];
+  },
+  pushUltravioletData: (airInfoList, data) => {
+    airInfoList.forEach((item, index) => {
+      if (index === 3) {
+        item.value = data.today
+        item.grade = data.today
+      }
+    })
+    return [...airInfoList]
   }
 }
