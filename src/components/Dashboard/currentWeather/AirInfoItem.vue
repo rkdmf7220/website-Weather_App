@@ -7,66 +7,16 @@
 </template>
 
 <script>
+import {getGradeObject} from "../../../common/helper";
 export default {
   name: "AirInfoItem",
   props: {
     itemData: Object
   },
   computed: {
-    // dataValue() {
-    //   return this.itemData.valueKey
-    //   // return this.itemData.data.pm25Grade
-    // }
+
     gradeObject() {
-      let grade = this.itemData.data[this.itemData.gradeKey];
-      let text;
-      let className;
-      if (this.itemData.id === 'ultraviolet') {
-
-        let found = Number(grade);
-        if (0 <= found && found < 3) {
-          text = '낮음'
-          className = 'grade-good';
-        } else if (3 <= found && found < 6) {
-          text = '보통'
-          className = 'grade-good';
-        } else if (6 <= found && found < 8) {
-          text = '높음'
-          className = 'grade-good';
-        } else if (8 <= found && found < 11) {
-          text = '매우높음'
-          className = 'grade-good';
-        } else if (11 <= found) {
-          text = '위험'
-          className = 'grade-good';
-        }
-
-      } else {
-        switch (grade) {
-          case "1":
-            text = '좋음'
-            className = 'grade-good';
-            break;
-          case "2":
-            text = '보통'
-            className = 'grade-good';
-            break;
-          case "3":
-            text = '나쁨'
-            className = 'grade-good';
-            break;
-          case "4":
-            text = '매우나쁨'
-            className = 'grade-good';
-            break;
-          default:
-        }
-      }
-
-      return {
-        text,
-        className
-      };
+      return getGradeObject(this.itemData.id, this.itemData.grade);
     }
   },
   watch: {
@@ -80,6 +30,9 @@ export default {
   },
   mounted() {
     console.log(this.itemData.title, this.itemData)
+  },
+  methods: {
+
   }
 }
 </script>
