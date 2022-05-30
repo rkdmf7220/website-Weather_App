@@ -1,13 +1,16 @@
 <template>
   <div class="air-item-container">
     <span class="small-text">{{itemData.title}}</span>
-    <b class="air-item-grade small-text white" :class="gradeObject.className">{{ gradeObject.text }}</b>
-    <span class="air-item-value blue-bell">{{itemData.value}}<span v-show="itemData.value.length" class="small-text">{{itemData.unit}}</span></span>
+    <b class="air-item-grade small-text white" :class="gradeObject.gradeClassName">{{ gradeObject.text }}</b>
+    <span class="air-item-value" :class="gradeObject.valueClassName">
+      {{itemData.value}}
+      <span v-show="itemData.value" class="small-text">{{itemData.unit}}</span>
+    </span>
   </div>
 </template>
 
 <script>
-import {getGradeObject} from "../../../common/helper";
+import {getGradeObject} from "@/common/helper";
 export default {
   name: "AirInfoItem",
   props: {
