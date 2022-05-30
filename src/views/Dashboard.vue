@@ -27,6 +27,7 @@ import SunriseSunset from "../components/Dashboard/SunriseSunset";
 import WeatherWarn from "../components/Dashboard/WeatherWarn";
 import WeeklyWeather from "../components/Dashboard/WeeklyWeather";
 import moment from "moment";
+import {getAreaInfo} from "@/common/areaInfo";
 export default {
   name: "Dashboard",
   components: {WeeklyWeather, WeatherWarn, SunriseSunset, HourlyWeather, CurrentWeather, SearchBar, DashboardTitle},
@@ -47,14 +48,24 @@ export default {
   }
   },
   mounted() {
-    this.$store.dispatch('updateVillageForecast', {base_date: this.base_date, base_time: this.base_time, nx: this.nx, ny: this.ny})
-    this.$store.dispatch('updateMediumLandForecast', {regId: '11B00000', tmFc: this.today})
-    this.$store.dispatch('updateMediumTemperature', {regId: '11B10101', tmFc: this.today})
-    this.$store.dispatch('updateWindChillTemperature', {areaNo: this.areaNo, time: this.time})
-    this.$store.dispatch('updateUltraviolet', {areaNo: this.areaNo, time: this.time})
-    this.$store.dispatch('updateAirQuality', {stationName: this.stationName})
+    /*this.$store.dispatch('updateVillageForecast', {base_date: this.base_date, base_time: this.base_time, nx: getAreaInfo("seoul", "gangnam")[2].nx, ny: getAreaInfo("seoul", "gangnam")[2].ny})
+    this.$store.dispatch('updateMediumLandForecast', {regId: getAreaInfo("seoul", "gangnam")[0], tmFc: this.today})
+    this.$store.dispatch('updateMediumTemperature', {regId: getAreaInfo("seoul", "gangnam")[0], tmFc: this.today})
+    this.$store.dispatch('updateWindChillTemperature', {areaNo: getAreaInfo("seoul", "gangnam")[2].areaNo, time: this.time})
+    this.$store.dispatch('updateUltraviolet', {areaNo: getAreaInfo("seoul", "gangnam")[2].areaNo, time: this.time})
+    this.$store.dispatch('updateAirQuality', {stationName: getAreaInfo("seoul", "gangnam")[2].stationName})
     this.$store.dispatch('updateWeatherWarn')
-    this.$store.dispatch('updateSunriseSunset', {lat: this.lat, lng: this.lng, date: this.date,})
+    this.$store.dispatch('updateSunriseSunset', {lat: getAreaInfo("seoul", "gangnam")[2].lat, lng: getAreaInfo("seoul", "gangnam")[2].lng, date: this.date,})
+    */
+
+    this.$store.dispatch('updateVillageForecast', {base_date: this.base_date, base_time: this.base_time, nx: getAreaInfo.seoul.gangnam.nx, ny: getAreaInfo.seoul.gangnam.ny})
+    this.$store.dispatch('updateMediumLandForecast', {regId: getAreaInfo.seoul.regId, tmFc: this.today})
+    this.$store.dispatch('updateMediumTemperature', {regId: getAreaInfo.seoul.regId, tmFc: this.today})
+    this.$store.dispatch('updateWindChillTemperature', {areaNo: getAreaInfo.seoul.gangnam.areaNo, time: this.time})
+    this.$store.dispatch('updateUltraviolet', {areaNo: getAreaInfo.seoul.gangnam.areaNo, time: this.time})
+    this.$store.dispatch('updateAirQuality', {stationName: getAreaInfo.seoul.gangnam.stationName})
+    this.$store.dispatch('updateWeatherWarn')
+    this.$store.dispatch('updateSunriseSunset', {lat: getAreaInfo.seoul.gangnam.lat, lng: getAreaInfo.seoul.gangnam.lng, date: this.date,})
   }
 }
 </script>
