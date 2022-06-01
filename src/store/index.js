@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import moment from "moment";
 const API_KEY = "MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D"
 
 Vue.use(Vuex)
@@ -54,7 +55,17 @@ export default new Vuex.Store({
         unit: 'uv'
       }
     ],
-    sunriseSunset: {}
+    sunriseSunset: {},
+    weeklyInfoList: [
+      {
+        id: 'tomorrow',
+        cloud: undefined,
+        rain: undefined,
+        minTemperature: undefined,
+        maxTemperature: undefined,
+        rainfallProbability: undefined
+      }
+    ]
   },
   mutations: {
     mediumLandForecast(state, obj) {
@@ -83,6 +94,9 @@ export default new Vuex.Store({
     },
     sunriseSunset(state, data) {
       state.sunriseSunset = data
+    },
+    weeklyInfoList(state, data) {
+      state.weeklyInfoList = data
     }
   },
   actions: {
@@ -107,7 +121,7 @@ export default new Vuex.Store({
             }
           })
     },
-    updateVillageForecast({commit}, {base_date, base_time, nx, ny}) {
+    updateVillageForecast({commit, state}, {base_date, base_time, nx, ny}) {
       axios.get(`${URL.villageForecast}&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}&serviceKey=${API_KEY}`)
           // axios.get(`https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D&numOfRows=10&pageNo=1&base_date=20220513&base_time=0500&nx=55&ny=127&dataType=JSON`)
           .then(result => {
@@ -115,6 +129,8 @@ export default new Vuex.Store({
               // console.log("단기예보 / updateVillageForecast = ", result)
               // console.log(commit, base_date, base_time, nx, ny)
               let list = result?.data?.response?.body?.items?.item;
+              let newList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
+              console.log("newList", newList)
               if (list && Array.isArray(list)) {
                 // console.log("단기예보 / updateVillageForecast items = ", list)
                 commit('villageForecast', list)
@@ -391,5 +407,48 @@ const helper = {
       }
     })
     return [...airInfoList]
+  },
+  pushWeeklyDataFromVillage: (weeklyInfoList, data) => {
+    let referenceTime = "0200"
+    let referenceDate = moment().format("YYYYMMDD")
+
+    weeklyInfoList.forEach((item, index) => {
+      let getCloudData = item.cloud = data.find(info=> (
+          info.category === "SKY" &&
+          info.fcstTime === referenceTime &&
+          info.fcstDate === moment().add(index+1, 'days').format("YYYYMMDD")
+      ))
+      if (index === 0) {
+        getCloudData
+        console.log("가져온 데이터 확인", getCloudData)
+        item.cloud = data.find(info => (
+            info.category === "SKY" &&
+            info.fcstTime === referenceTime &&
+            info.fcstDate === referenceDate
+        ))
+        console.log("4차 시간 확인", referenceDate)
+        item.rain = data.find(info => (
+            info.category === "PTY" &&
+            info.fcstTime === referenceTime &&
+            info.fcstDate === referenceDate
+        ))
+        item.minTemperature = data.find(info => (
+            info.category === "TMN" &&
+            info.fcstTime === referenceTime &&
+            info.fcstDate === referenceDate
+        ))
+        item.maxTemperature = data.find(info => (
+            info.category === "TMX" &&
+            info.fcstTime === referenceTime &&
+            info.fcstDate === referenceDate
+        ))
+        item.rainfallProbability = data.find(info => (
+            info.category === "POP" &&
+            info.fcstTime === referenceTime &&
+            info.fcstDate === referenceDate
+        ))
+      }
+    })
+    return [...weeklyInfoList]
   }
 }
