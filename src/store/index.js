@@ -9,7 +9,7 @@ Vue.use(Vuex)
 const URL = {
   mediumLandForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/MidFcstInfoService/getMidLandFcst?numOfRows=10&pageNo=1&dataType=JSON',
   mediumTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa?numOfRows=10&pageNo=1&dataType=JSON',
-  villageForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=600&pageNo=1&dataType=JSON',
+  villageForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=800&pageNo=1&dataType=JSON',
   windChillTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2?&requestCode=A41&dataType=JSON',
   ultraviolet: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
   airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0',
@@ -59,6 +59,14 @@ export default new Vuex.Store({
     weeklyInfoList: [
       {
         id: 'tomorrow',
+        cloud: undefined,
+        rain: undefined,
+        minTemperature: undefined,
+        maxTemperature: undefined,
+        rainfallProbability: undefined
+      },
+      {
+        id: 'after-tomorrow',
         cloud: undefined,
         rain: undefined,
         minTemperature: undefined,
@@ -129,6 +137,7 @@ export default new Vuex.Store({
               // console.log("단기예보 / updateVillageForecast = ", result)
               // console.log(commit, base_date, base_time, nx, ny)
               let list = result?.data?.response?.body?.items?.item;
+              console.log("단기예보 데이터 확인", list)
               let newList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
               console.log("newList", newList)
               if (list && Array.isArray(list)) {
@@ -409,44 +418,24 @@ const helper = {
     return [...airInfoList]
   },
   pushWeeklyDataFromVillage: (weeklyInfoList, data) => {
-    let referenceTime = "0200"
-    let referenceDate = moment().format("YYYYMMDD")
-
     weeklyInfoList.forEach((item, index) => {
-      let getCloudData = item.cloud = data.find(info=> (
-          info.category === "SKY" &&
-          info.fcstTime === referenceTime &&
-          info.fcstDate === moment().add(index+1, 'days').format("YYYYMMDD")
-      ))
-      if (index === 0) {
-        getCloudData
-        console.log("가져온 데이터 확인", getCloudData)
-        item.cloud = data.find(info => (
-            info.category === "SKY" &&
-            info.fcstTime === referenceTime &&
+      let referenceDate = moment().add(index+1, 'days').format("YYYYMMDD")
+      function findInfoData(category) {
+        let found = data.find(info => (
+            info.category === category &&
+            // info.fcstTime === referenceTime &&
             info.fcstDate === referenceDate
         ))
-        console.log("4차 시간 확인", referenceDate)
-        item.rain = data.find(info => (
-            info.category === "PTY" &&
-            info.fcstTime === referenceTime &&
-            info.fcstDate === referenceDate
-        ))
-        item.minTemperature = data.find(info => (
-            info.category === "TMN" &&
-            info.fcstTime === referenceTime &&
-            info.fcstDate === referenceDate
-        ))
-        item.maxTemperature = data.find(info => (
-            info.category === "TMX" &&
-            info.fcstTime === referenceTime &&
-            info.fcstDate === referenceDate
-        ))
-        item.rainfallProbability = data.find(info => (
-            info.category === "POP" &&
-            info.fcstTime === referenceTime &&
-            info.fcstDate === referenceDate
-        ))
+        // console.log("함수작동확인",index," : ", category, found)
+        // console.log("결과확인", found.fcstValue)
+        return found.fcstValue
+      }
+      if (index <= 1) {
+        item.cloud = findInfoData("SKY")
+        item.rain = findInfoData("PTY")
+        item.minTemperature = findInfoData("TMN")
+        item.maxTemperature = findInfoData("TMX")
+        item.rainfallProbability = findInfoData("POP")
       }
     })
     return [...weeklyInfoList]
