@@ -19,6 +19,7 @@ const URL = {
 
 export default new Vuex.Store({
   state: {
+    areaNo: null,
     mediumLandForecast: {},
     mediumTemperature: {},
     villageForecast: [],
@@ -76,6 +77,9 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    areaNo(state, areaNo) {
+      state.areaNo = areaNo
+    },
     mediumLandForecast(state, obj) {
       state.mediumLandForecast = obj
     },
@@ -108,6 +112,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setAreaNo({commit}, areaNo) {
+      commit('areaNo', areaNo)
+    },
     updateMediumLandForecast({commit}, {regId, tmFc}) {
       axios.get(`${URL.mediumLandForecast}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
           .then(result => {
@@ -409,12 +416,17 @@ const helper = {
     return [...airInfoList];
   },
   pushUltravioletData: (airInfoList, data) => {
-    airInfoList.forEach((item, index) => {
+    let info = airInfoList?.[3];
+    if (info) {
+      info.value = data.today
+      info.grade = data.today
+    }
+    /*airInfoList.forEach((item, index) => {
       if (index === 3) {
         item.value = data.today
         item.grade = data.today
       }
-    })
+    })*/
     return [...airInfoList]
   },
   pushWeeklyDataFromVillage: (weeklyInfoList, data) => {

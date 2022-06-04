@@ -12,15 +12,22 @@
 
 <script>
 import moment from "moment"
-import {getAreaInfo} from "@/common/areaInfo";
+import {areaInfo} from "../../../common/areaInfo";
 export default {
   name: "PlaceAndTime",
   computed: {
     cityName() {
-      return getAreaInfo.seoul.cityName
+      return areaInfo.seoul.cityName
     },
     stationName() {
-      return getAreaInfo.seoul.gangnam.stationName
+      let areaNo =  this.$store.state.areaNo;
+      if (areaNo) {
+        console.log('<<<<',areaNo, this.$store, areaInfo)
+        let found = areaNo ? areaInfo.seoul.stations.find(item => item.areaNo === areaNo) : {stationName: '지역을 설정해주세요'}
+        return found.stationName;
+      } else {
+        return ''
+      }
     }
   },
   data() {
