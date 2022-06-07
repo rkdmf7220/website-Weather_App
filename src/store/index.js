@@ -57,6 +57,23 @@ export default new Vuex.Store({
       }
     ],
     sunriseSunset: {},
+    sunriseSunsetList: [
+      {
+        id: 'today',
+        sunrise: undefined,
+        sunset: undefined
+      },
+      {
+        id: 'tomorrow',
+        sunrise: undefined,
+        sunset: undefined
+      },
+      {
+        id: 'after-tomorrow',
+        sunrise: undefined,
+        sunset: undefined
+      }
+    ],
     weeklyInfoList: [
       {
         id: 'tomorrow',
@@ -73,6 +90,38 @@ export default new Vuex.Store({
         minTemperature: undefined,
         maxTemperature: undefined,
         rainfallProbability: undefined
+      },
+      {
+        id: '3days-later',
+        cloud: undefined,
+        rain: undefined,
+        minTemperature: undefined,
+        maxTemperature: undefined,
+        rainfallProbability: undefined
+      },
+      {
+        id: '4days-later',
+        cloud: undefined,
+        rain: undefined,
+        minTemperature: undefined,
+        maxTemperature: undefined,
+        rainfallProbability: undefined
+      },
+      {
+        id: '5days-later',
+        cloud: undefined,
+        rain: undefined,
+        minTemperature: undefined,
+        maxTemperature: undefined,
+        rainfallProbability: undefined
+      },
+      {
+        id: '6days-later',
+        cloud: undefined,
+        rain: undefined,
+        minTemperature: undefined,
+        maxTemperature: undefined,
+        rainfallProbability: undefined
       }
     ]
   },
@@ -80,24 +129,15 @@ export default new Vuex.Store({
     areaNo(state, areaNo) {
       state.areaNo = areaNo
     },
-    mediumLandForecast(state, obj) {
-      state.mediumLandForecast = obj
-    },
-    mediumTemperature(state, obj) {
-      state.mediumTemperature = obj
-    },
-    villageForecast(state, list) {
-      state.villageForecast = list
-    },
     windChillTemperature(state, data) {
       state.windChillTemperature = data
-    },
+    },/*
     ultraviolet(state, data) {
       state.ultraviolet = data
     },
     airQuality(state, data) {
       state.airQuality = data
-    },
+    },*/
     weatherWarn(state, data) {
       state.weatherWarn = data
     },
@@ -109,52 +149,23 @@ export default new Vuex.Store({
     },
     weeklyInfoList(state, data) {
       state.weeklyInfoList = data
+    },
+    mediumLandForecast(state, obj) {
+      state.mediumLandForecast = obj
+    },
+    mediumTemperature(state, obj) {
+      state.mediumTemperature = obj
+    },
+    villageForecast(state, list) {
+      state.villageForecast = list
+    },
+    sunriseSunsetList(state, data) {
+      state.sunriseSunsetList = data
     }
   },
   actions: {
     setAreaNo({commit}, areaNo) {
       commit('areaNo', areaNo)
-    },
-    updateMediumLandForecast({commit}, {regId, tmFc}) {
-      axios.get(`${URL.mediumLandForecast}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
-          .then(result => {
-            // console.log("updateMediumLandForecast() response 응답 확인",result)
-            if (result.statusText === "OK") {
-              let item = result?.data?.response?.body?.items?.item?.[0];
-              // console.log("updateMediumLandForecast() item", item);
-              commit('mediumLandForecast', item || helper.getMediumLandForecastItem())
-            }
-          })
-    },
-    updateMediumTemperature({commit}, {regId, tmFc}) {
-      axios.get(`${URL.mediumTemperature}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
-          .then(result => {
-            if (result.statusText === "OK") {
-              // console.log("updateMediumTemperature / 중기기온 = ", result, {regId, tmFc})
-              let item = result?.data?.response?.body?.items?.item?.[0];
-              commit('mediumTemperature', item || helper.getMediumTemperature())
-            }
-          })
-    },
-    updateVillageForecast({commit, state}, {base_date, base_time, nx, ny}) {
-      axios.get(`${URL.villageForecast}&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}&serviceKey=${API_KEY}`)
-          // axios.get(`https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D&numOfRows=10&pageNo=1&base_date=20220513&base_time=0500&nx=55&ny=127&dataType=JSON`)
-          .then(result => {
-            if (result.statusText === "OK") {
-              // console.log("단기예보 / updateVillageForecast = ", result)
-              // console.log(commit, base_date, base_time, nx, ny)
-              let list = result?.data?.response?.body?.items?.item;
-              console.log("단기예보 데이터 확인", list)
-              let newList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
-              console.log("newList", newList)
-              if (list && Array.isArray(list)) {
-                // console.log("단기예보 / updateVillageForecast items = ", list)
-                commit('villageForecast', list)
-              } else {
-                // console.log('단기예보 / error', result)
-              }
-            }
-          })
     },
     updateWindChillTemperature({commit}, {areaNo, time}) {
       axios.get(`${URL.windChillTemperature}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
@@ -207,16 +218,64 @@ export default new Vuex.Store({
           })
     },
     updateSunriseSunset({commit}, {lat, lng, date}) {
-      console.log("작동확인")
+      // console.log("작동확인")
       axios.get(`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
           .then(result => {
             if (result.data.status === "OK") {
               let item = result?.data?.results
-              console.log("일출일몰 / sunriseSunset", item)
+              // console.log("일출일몰 / sunriseSunset", item)
               commit('sunriseSunset', item || helper.getSunriseSunset())
             }
           })
-}
+    },
+    updateMediumLandForecast({commit, state}, {regId, tmFc}) {
+      axios.get(`${URL.mediumLandForecast}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
+          .then(result => {
+            // console.log("updateMediumLandForecast() response 응답 확인",result)
+            if (result.statusText === "OK") {
+              let item = result?.data?.response?.body?.items?.item?.[0];
+              // console.log("updateMediumLandForecast() item", item);
+              let list = helper.pushWeeklyDataFromMidLand(state.weeklyInfoList, item)
+              // commit('mediumLandForecast', item || helper.getMediumLandForecastItem())
+              commit('weeklyInfoList', list)
+            }
+          })
+    },
+    updateMediumTemperature({commit, state}, {regId, tmFc}) {
+      axios.get(`${URL.mediumTemperature}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
+          .then(result => {
+            if (result.statusText === "OK") {
+              // console.log("updateMediumTemperature / 중기기온 = ", result, {regId, tmFc})
+              let item = result?.data?.response?.body?.items?.item?.[0];
+              let list = helper.pushWeeklyDataFromMidTemp(state.weeklyInfoList, item)
+              // commit('mediumTemperature', item || helper.getMediumTemperature())
+              commit('weeklyInfoList', list)
+            }
+          })
+    },
+    updateVillageForecast({commit, state}, {base_date, base_time, nx, ny}) {
+      axios.get(`${URL.villageForecast}&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}&serviceKey=${API_KEY}`)
+          // axios.get(`https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D&numOfRows=10&pageNo=1&base_date=20220513&base_time=0500&nx=55&ny=127&dataType=JSON`)
+          .then(result => {
+            if (result.statusText === "OK") {
+
+              // console.log("단기예보 / updateVillageForecast = ", result)
+              // console.log(commit, base_date, base_time, nx, ny)
+              let list = result?.data?.response?.body?.items?.item;
+              // console.log("단기예보 데이터 확인", list)
+              // console.log("villageForecast에서", state.weeklyInfoList)
+              let newList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
+              console.log("newList", newList)
+              if (list && Array.isArray(list)) {
+                // console.log("단기예보 / updateVillageForecast items = ", list)
+                commit('villageForecast', newList)
+                // console.log(commit)
+              } else {
+                // console.log('단기예보 / error', result)
+              }
+            }
+          })
+    }
   },
   modules: {
   }
@@ -340,7 +399,7 @@ const helper = {
       h24: ""
     }
   },
-  getUltraviolet: () => {
+/*  getUltraviolet: () => {
     return {
       areaNo: "",
       code: "A07_1",
@@ -375,7 +434,7 @@ const helper = {
       so2Grade: "",
       so2Value: ""
     }
-  },
+  },*/
   getWeatherWarn: () => {
     return {
       other: "",
@@ -401,6 +460,7 @@ const helper = {
     }
   },
   pushAirQualityData: (airInfoList, data) => {
+    console.log("airQuality에서", airInfoList)
     airInfoList.forEach((item, index) => {
       if (index === 0) {
         item.value = data.pm10Value
@@ -430,26 +490,51 @@ const helper = {
     return [...airInfoList]
   },
   pushWeeklyDataFromVillage: (weeklyInfoList, data) => {
+    let referenceDate
+    function findInfoData(category) {
+      let found = data.find(info => (
+          info.category === category &&
+          // info.fcstTime === referenceTime &&
+          info.fcstDate === referenceDate
+      ))
+      // console.log("함수작동확인",index," : ", category, found)
+      // console.log("결과확인", found.fcstValue)
+      console.log("found", found)
+      console.log("found fcstValue", found.fcstValue)
+      return found.fcstValue
+    }
     weeklyInfoList.forEach((item, index) => {
-      let referenceDate = moment().add(index+1, 'days').format("YYYYMMDD")
-      function findInfoData(category) {
-        let found = data.find(info => (
-            info.category === category &&
-            // info.fcstTime === referenceTime &&
-            info.fcstDate === referenceDate
-        ))
-        // console.log("함수작동확인",index," : ", category, found)
-        // console.log("결과확인", found.fcstValue)
-        return found.fcstValue
-      }
+      referenceDate = moment().add(index+1, 'days').format("YYYYMMDD")
       if (index <= 1) {
         item.cloud = findInfoData("SKY")
         item.rain = findInfoData("PTY")
         item.minTemperature = findInfoData("TMN")
         item.maxTemperature = findInfoData("TMX")
         item.rainfallProbability = findInfoData("POP")
+        console.log("빌리지 데이터를 확인합시다", item)
       }
     })
+    return [...weeklyInfoList]
+  },
+  pushWeeklyDataFromMidLand: (weeklyInfoList, data) => {
+    weeklyInfoList.forEach((item, index) => {
+      if (index > 1) {
+        item.cloud = data[`wf${index+1}Am`]
+        item.rain = data[`wf${index+1}Am`]
+        item.rainfallProbability = data[`rnSt${index+1}Am`]
+      }
+    })
+    console.log("pushWeeklyDataFromMidLand 완료 후", weeklyInfoList)
+    return [...weeklyInfoList]
+  },
+  pushWeeklyDataFromMidTemp: (weeklyInfoList, data) => {
+    weeklyInfoList.forEach((item, index) => {
+      if (index > 1) {
+        item.minTemperature = data[`taMin${index+1}`]
+        item.maxTemperature = data[`taMax${index+1}`]
+      }
+    })
+    console.log("pushWeeklyDataFromMidTemp 완료 후", weeklyInfoList)
     return [...weeklyInfoList]
   }
 }

@@ -8,9 +8,15 @@
 
 <script>
 import WeeklyWeatherItem from "./WeeklyWeatherItem";
+import {mapState} from "vuex";
 export default {
   name: "WeeklyWeather",
-  components: {WeeklyWeatherItem}
+  components: {WeeklyWeatherItem},
+  computed: {
+    ...mapState([
+        'weeklyInfoList'
+    ])
+  }
 }
 </script>
 
