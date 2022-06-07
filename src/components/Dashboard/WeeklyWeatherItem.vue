@@ -56,10 +56,6 @@ export default {
       .rainfall-probability-value{
         margin-left: auto;
         margin-right: 0;
-
-        b{
-          vertical-align: text-top;
-        }
       }
     }
   }

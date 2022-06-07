@@ -82,6 +82,10 @@ export default {
     height: 194px;
     flex-direction: column;
 
+    .card-title{
+      margin-bottom: 0;
+    }
+
     .sun-container{
       display: flex;
       flex-direction: column;

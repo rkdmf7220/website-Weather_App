@@ -32,7 +32,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.itemData.title, this.itemData)
+    // console.log(this.itemData.title, this.itemData)
   },
   methods: {
 
