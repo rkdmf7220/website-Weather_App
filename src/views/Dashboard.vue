@@ -16,8 +16,6 @@
       <weekly-weather/>
     </div>
     <div>
-      <b-button v-b-modal.stationModal>Launch demo modal</b-button>
-
       <b-modal id="stationModal" title="BootstrapVue">
         <select v-model="selectedStation" @change="setLocale">
           <option key="none" :value="null" label="선택"/>
@@ -83,14 +81,14 @@ export default {
   },
   methods : {
     dispatchStation(station) {
-      this.$store.dispatch('updateVillageForecast', {base_date: this.base_date, base_time: this.base_time, nx: station.nx, ny: station.ny})
-      this.$store.dispatch('updateMediumLandForecast', {regId: areaInfo.seoul.regId, tmFc: this.today})
-      this.$store.dispatch('updateMediumTemperature', {regId: areaInfo.seoul.regId, tmFc: this.today})
       this.$store.dispatch('updateWindChillTemperature', {areaNo: station.areaNo, time: this.time})
       this.$store.dispatch('updateUltraviolet', {areaNo: station.areaNo, time: this.time})
       this.$store.dispatch('updateAirQuality', {stationName: station.stationName})
       this.$store.dispatch('updateWeatherWarn')
       this.$store.dispatch('updateSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date,})
+      this.$store.dispatch('updateVillageForecast', {base_date: this.base_date, base_time: this.base_time, nx: station.nx, ny: station.ny})
+      this.$store.dispatch('updateMediumLandForecast', {regId: areaInfo.seoul.regId, tmFc: this.today})
+      this.$store.dispatch('updateMediumTemperature', {regId: areaInfo.seoul.regId, tmFc: this.today})
     },
     getLocale() {
       let areaNo = localStorage.getItem("areaNo")
@@ -120,4 +118,10 @@ export default {
 
 <style lang="scss">
   @import "../assets/scss/dashboard";
+  .box1{
+    width: 20px;
+    height: 20px;
+    background: #000;
+    margin: 8px;
+  }
 </style>

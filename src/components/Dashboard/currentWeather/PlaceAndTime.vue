@@ -1,7 +1,7 @@
 <template>
   <div class="txt-container">
     <div class="txt-place">
-      <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C5.79 2 4 3.705 4 5.808 4 7.91 7.333 13 8 13c.667 0 4-5.09 4-7.192C12 3.705 10.21 2 8 2Zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" fill="#BBB"/></svg>
+      <svg v-b-modal.stationModal width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C5.79 2 4 3.705 4 5.808 4 7.91 7.333 13 8 13c.667 0 4-5.09 4-7.192C12 3.705 10.21 2 8 2Zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" fill="#BBB"/></svg>
       <span class="gray4">{{`${cityName} ${stationName}`}}</span>
     </div>
     <div class="txt-time">
@@ -22,7 +22,7 @@ export default {
     stationName() {
       let areaNo =  this.$store.state.areaNo;
       if (areaNo) {
-        console.log('<<<<',areaNo, this.$store, areaInfo)
+        // console.log('<<<<',areaNo, this.$store, areaInfo)
         let found = areaNo ? areaInfo.seoul.stations.find(item => item.areaNo === areaNo) : {stationName: '지역을 설정해주세요'}
         return found.stationName;
       } else {
