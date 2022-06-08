@@ -6,7 +6,7 @@ const API_KEY = "MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZ
 
 Vue.use(Vuex)
 
-const URL = {
+/*const URL = {
   mediumLandForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/MidFcstInfoService/getMidLandFcst?numOfRows=10&pageNo=1&dataType=JSON',
   mediumTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa?numOfRows=10&pageNo=1&dataType=JSON',
   villageForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=800&pageNo=1&dataType=JSON',
@@ -14,6 +14,16 @@ const URL = {
   ultraviolet: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
   airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0',
   weatherWarn: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
+  sunriseSunset: 'https://api.sunrise-sunset.org/json?'
+}*/
+const URL = {
+  mediumLandForecast: 'http://apis.data.go.kr/1360000/MidFcstInfoService/getMidLandFcst?numOfRows=10&pageNo=1&dataType=JSON',
+  mediumTemperature: 'http://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa?numOfRows=10&pageNo=1&dataType=JSON',
+  villageForecast: 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=800&pageNo=1&dataType=JSON',
+  windChillTemperature: 'http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2?&requestCode=A41&dataType=JSON',
+  ultraviolet: 'http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
+  airQuality: 'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0',
+  weatherWarn: 'http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
   sunriseSunset: 'https://api.sunrise-sunset.org/json?'
 }
 
@@ -76,7 +86,8 @@ export default new Vuex.Store({
     ],
     weeklyInfoList: [
       {
-        id: 'tomorrow',
+        id: 'today',
+        day: "오늘",
         cloud: undefined,
         rain: undefined,
         minTemperature: undefined,
@@ -84,7 +95,17 @@ export default new Vuex.Store({
         rainfallProbability: undefined
       },
       {
-        id: 'after-tomorrow',
+        id: 'tomorrow',
+        day: "내일",
+        cloud: undefined,
+        rain: undefined,
+        minTemperature: undefined,
+        maxTemperature: undefined,
+        rainfallProbability: undefined
+      },
+      {
+        id: '2days-later',
+        day: undefined,
         cloud: undefined,
         rain: undefined,
         minTemperature: undefined,
@@ -93,6 +114,7 @@ export default new Vuex.Store({
       },
       {
         id: '3days-later',
+        day: undefined,
         cloud: undefined,
         rain: undefined,
         minTemperature: undefined,
@@ -101,6 +123,7 @@ export default new Vuex.Store({
       },
       {
         id: '4days-later',
+        day: undefined,
         cloud: undefined,
         rain: undefined,
         minTemperature: undefined,
@@ -109,14 +132,7 @@ export default new Vuex.Store({
       },
       {
         id: '5days-later',
-        cloud: undefined,
-        rain: undefined,
-        minTemperature: undefined,
-        maxTemperature: undefined,
-        rainfallProbability: undefined
-      },
-      {
-        id: '6days-later',
+        day: undefined,
         cloud: undefined,
         rain: undefined,
         minTemperature: undefined,
@@ -264,11 +280,12 @@ export default new Vuex.Store({
               let list = result?.data?.response?.body?.items?.item;
               // console.log("단기예보 데이터 확인", list)
               // console.log("villageForecast에서", state.weeklyInfoList)
-              let newList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
-              console.log("newList", newList)
+              let filteredList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
+              // console.log("filteredList", filteredList)
               if (list && Array.isArray(list)) {
                 // console.log("단기예보 / updateVillageForecast items = ", list)
-                commit('villageForecast', newList)
+                commit('villageForecast', list)
+                commit('weeklyInfoList', filteredList)
                 // console.log(commit)
               } else {
                 // console.log('단기예보 / error', result)
@@ -460,7 +477,6 @@ const helper = {
     }
   },
   pushAirQualityData: (airInfoList, data) => {
-    console.log("airQuality에서", airInfoList)
     airInfoList.forEach((item, index) => {
       if (index === 0) {
         item.value = data.pm10Value
@@ -493,14 +509,14 @@ const helper = {
     let referenceDate
     function findInfoData(category) {
       let found = data.find(info => (
-          info.category === category &&
+          info?.category === category &&
           // info.fcstTime === referenceTime &&
-          info.fcstDate === referenceDate
+          info?.fcstDate === referenceDate
       ))
       // console.log("함수작동확인",index," : ", category, found)
       // console.log("결과확인", found.fcstValue)
-      console.log("found", found)
-      console.log("found fcstValue", found.fcstValue)
+      // console.log("found", found)
+      // console.log("found fcstValue", found.fcstValue)
       return found.fcstValue
     }
     weeklyInfoList.forEach((item, index) => {
@@ -508,33 +524,96 @@ const helper = {
       if (index <= 1) {
         item.cloud = findInfoData("SKY")
         item.rain = findInfoData("PTY")
-        item.minTemperature = findInfoData("TMN")
-        item.maxTemperature = findInfoData("TMX")
+        item.minTemperature = Math.round(findInfoData("TMN"))
+        item.maxTemperature = Math.round(findInfoData("TMX"))
         item.rainfallProbability = findInfoData("POP")
-        console.log("빌리지 데이터를 확인합시다", item)
       }
     })
     return [...weeklyInfoList]
   },
   pushWeeklyDataFromMidLand: (weeklyInfoList, data) => {
+    // console.log('pushWeeklyDataFromMidLand', weeklyInfoList)
     weeklyInfoList.forEach((item, index) => {
       if (index > 1) {
-        item.cloud = data[`wf${index+1}Am`]
-        item.rain = data[`wf${index+1}Am`]
+        // item.cloud = data[`wf${index+1}Am`]
+        // item.rain = data[`wf${index+1}Am`]
         item.rainfallProbability = data[`rnSt${index+1}Am`]
+        console.log("wf${index+1}Am", data[`wf${index+1}Am`])
+        switch (data[`wf${index+1}Am`]) {
+          case "맑음":
+            item.cloud = 0
+            item.rain = 0
+            break;
+          case "소나기":
+            item.cloud = 0
+            item.rain = 1
+            break;
+          case "비":
+            item.cloud = 0
+            item.rain = 1
+            break;
+          case "눈":
+            item.cloud = 0
+            item.rain = 2
+            break;
+          case "비/눈":
+            item.cloud = 3
+            item.rain = 3
+            break;
+          case "구름많음":
+            item.cloud = 3
+            item.rain = 0
+            break;
+          case "구름많고 소나기":
+            item.cloud = 3
+            item.rain = 1
+            break;
+          case "구름많고 비":
+            item.cloud = 3
+            item.rain = 1
+            break;
+          case "구름많고 눈":
+            item.cloud = 3
+            item.rain = 2
+            break;
+          case "구름많고 비/눈":
+            item.cloud = 3
+            item.rain = 3
+            break;
+          case "흐림":
+            item.cloud = 4
+            item.rain = 0
+            break;
+          case "흐리고 소나기":
+            item.cloud = 4
+            item.rain = 1
+            break;
+          case "흐리고 비":
+            item.cloud = 4
+            item.rain = 1
+            break;
+          case "흐리고 눈":
+            item.cloud = 4
+            item.rain = 2
+            break;
+          case "흐리고 비/눈":
+            item.cloud = 4
+            item.rain = 3
+            break;
+          default:
+        }
       }
     })
-    console.log("pushWeeklyDataFromMidLand 완료 후", weeklyInfoList)
     return [...weeklyInfoList]
   },
   pushWeeklyDataFromMidTemp: (weeklyInfoList, data) => {
     weeklyInfoList.forEach((item, index) => {
       if (index > 1) {
+        item.day = moment().locale("ko").add(index, 'days').format("dddd")
         item.minTemperature = data[`taMin${index+1}`]
         item.maxTemperature = data[`taMax${index+1}`]
       }
     })
-    console.log("pushWeeklyDataFromMidTemp 완료 후", weeklyInfoList)
     return [...weeklyInfoList]
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <ul class="weekly-list">
-    <li class="weekly-item" v-for="item in 6" :key="item">
-      <weekly-weather-item/>
+    <li class="weekly-item" v-for="(item, index) in this.weeklyInfoList" :key="item.id">
+      <weekly-weather-item :item-data="item" :index="index"/>
     </li>
   </ul>
 </template>
