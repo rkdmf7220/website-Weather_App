@@ -8,6 +8,9 @@ export const getGradeObject = (id, grade) => {
     let valueClassName;
     if (id === 'ultraviolet') {
 
+        if(grade === "") {
+            grade = '정보없음'
+        }
         let found = Number(grade);
         if (0 <= found && found < 3) {
             text = '낮음'
@@ -28,6 +31,10 @@ export const getGradeObject = (id, grade) => {
         } else if (11 <= found) {
             text = '위험'
             gradeClassName = 'grade-hazardous';
+            valueClassName = 'gray3'
+        } else {
+            text = '정보없음'
+            gradeClassName = 'grade-null';
             valueClassName = 'gray3'
         }
 
@@ -51,7 +58,12 @@ export const getGradeObject = (id, grade) => {
             case "4":
                 text = '매우나쁨'
                 gradeClassName = 'grade-very-unhealthy';
-                valueClassName = 'coral'
+                valueClassName = 'gray3'
+                break;
+            case "":
+                text = '정보없음'
+                gradeClassName = 'grade-null';
+                valueClassName = 'gray3'
                 break;
             default:
         }

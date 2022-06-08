@@ -69,6 +69,10 @@ export default {
     .grade-hazardous{
       background-color: #000000;
     }
+    .grade-null{
+      background-color: transparent;
+      color: #666666
+    }
 
     .air-item-value{
       .small-text{
