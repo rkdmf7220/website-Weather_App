@@ -51,7 +51,8 @@ export const areaInfo = {
         seoul: {
             cityId: 'seoul',
             cityName: "서울특별시",
-            regId: "11B10101",
+            landRegId: "11B00000",
+            temperatureRegId: "11B10101",
             stations: [
                 {
                     stationName: "강남구",

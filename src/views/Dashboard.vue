@@ -16,9 +16,9 @@
       <weekly-weather/>
     </div>
     <div>
-      <b-modal id="stationModal" title="BootstrapVue">
+      <b-modal id="stationModal" title="지역 설정">
         <select v-model="selectedStation" @change="setLocale">
-          <option key="none" :value="null" label="선택"/>
+          <option key="none" :value="null" label="시/군/구"/>
           <option v-for="station in stations" :key="station.areaNo" :value="station.areaNo" :label="station.stationName"/>
         </select>
       </b-modal>
@@ -87,8 +87,8 @@ export default {
       this.$store.dispatch('updateWeatherWarn')
       this.$store.dispatch('updateSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date,})
       this.$store.dispatch('updateVillageForecast', {base_date: this.base_date, base_time: this.base_time, nx: station.nx, ny: station.ny})
-      this.$store.dispatch('updateMediumLandForecast', {regId: areaInfo.seoul.regId, tmFc: this.today})
-      this.$store.dispatch('updateMediumTemperature', {regId: areaInfo.seoul.regId, tmFc: this.today})
+      this.$store.dispatch('updateMediumLandForecast', {regId: areaInfo.seoul.landRegId, tmFc: this.today})
+      this.$store.dispatch('updateMediumTemperature', {regId: areaInfo.seoul.temperatureRegId, tmFc: this.today})
     },
     getLocale() {
       let areaNo = localStorage.getItem("areaNo")
