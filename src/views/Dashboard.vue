@@ -16,8 +16,8 @@
       <weekly-weather/>
     </div>
     <div>
-      <b-modal id="stationModal" title="지역 설정">
-        <select v-model="selectedStation" @change="setLocale">
+      <b-modal id="stationModal" title="지역 설정" @ok="setLocale">
+        <select v-model="selectedStation">
           <option key="none" :value="null" label="시/군/구"/>
           <option v-for="station in stations" :key="station.areaNo" :value="station.areaNo" :label="station.stationName"/>
         </select>
@@ -104,14 +104,16 @@ export default {
       }
     },
     setLocale() {
-      // console.log("selectedStation", this.selectedStation)
       localStorage.setItem("areaNo", this.selectedStation)
       let station = areaInfo.seoul.stations.find(item => item.areaNo === this.selectedStation);
       if (station) {
         this.dispatchStation(station);
       }
       this.$store.dispatch('setAreaNo', this.selectedStation)
-    }
+    },
+/*    undoLocal() {
+      //TODO : cancel을 클릭하거나 close 했을 때 , localStorage 데이터를 이용해 select 되돌리기
+    }*/
   }
 }
 </script>
