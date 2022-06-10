@@ -57,7 +57,9 @@ export default {
       stationName: '종로구',
       lat: 37.5360944,
       lng: 126.9675222,
-      date: moment().format('YYYY-MM-DD'),
+      date_today: moment().format('YYYY-MM-DD'),
+      date_tomorrow: moment().add(1, 'days').format('YYYY-MM-DD'),
+      date_after_tomorrow: moment().add(2, 'days').format('YYYY-MM-DD'),
       areaInfo,
       selectedStation: null,
   }
@@ -85,7 +87,9 @@ export default {
       this.$store.dispatch('updateUltraviolet', {areaNo: station.areaNo, time: this.time})
       this.$store.dispatch('updateAirQuality', {stationName: station.stationName})
       this.$store.dispatch('updateWeatherWarn')
-      this.$store.dispatch('updateSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date,})
+      this.$store.dispatch('updateTodaySunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_today,})
+      this.$store.dispatch('updateTomorrowSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_tomorrow,})
+      this.$store.dispatch('updateAfterTomorrowSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_after_tomorrow,})
       this.$store.dispatch('updateVillageForecast', {base_date: this.base_date, base_time: this.base_time, nx: station.nx, ny: station.ny})
       this.$store.dispatch('updateMediumLandForecast', {regId: areaInfo.seoul.landRegId, tmFc: this.today})
       this.$store.dispatch('updateMediumTemperature', {regId: areaInfo.seoul.temperatureRegId, tmFc: this.today})

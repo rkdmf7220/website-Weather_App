@@ -12,7 +12,7 @@
         </div>
       </div>
       <ul class="sun-data-list">
-        <li v-for="item in this.SunriseSunsetData" class="sun-data-item" :key="item.title">
+        <li v-for="item in this.sunriseSunsetList" class="sun-data-item" :key="item.title">
           <sun-data-item :item-data="item"/>
         </li>
       </ul>
@@ -22,16 +22,20 @@
 
 <script>
 import SunDataItem from "@/components/Dashboard/SunriseSunset/SunDataItem";
+import {mapState} from "vuex";
 export default {
   name: "SunriseSunset",
   components: {SunDataItem},
   computed: {
-    todaySunrise() {
+    ...mapState([
+        'sunriseSunsetList'
+    ])
+/*    todaySunrise() {
       return this.$store.state.sunriseSunset.sunrise
     },
     todaySunset() {
       return this.$store.state.sunriseSunset.sunset
-    }
+    }*/
   },
   watch: {
     todaySunrise: {

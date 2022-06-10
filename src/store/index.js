@@ -6,7 +6,7 @@ const API_KEY = "MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZ
 
 Vue.use(Vuex)
 
-/*const URL = {
+const URL = {
   mediumLandForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/MidFcstInfoService/getMidLandFcst?numOfRows=10&pageNo=1&dataType=JSON',
   mediumTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa?numOfRows=10&pageNo=1&dataType=JSON',
   villageForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=800&pageNo=1&dataType=JSON',
@@ -15,8 +15,8 @@ Vue.use(Vuex)
   airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0',
   weatherWarn: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
   sunriseSunset: 'https://api.sunrise-sunset.org/json?'
-}*/
-const URL = {
+}
+/*const URL = {
   mediumLandForecast: 'http://apis.data.go.kr/1360000/MidFcstInfoService/getMidLandFcst?numOfRows=10&pageNo=1&dataType=JSON',
   mediumTemperature: 'http://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa?numOfRows=10&pageNo=1&dataType=JSON',
   villageForecast: 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=800&pageNo=1&dataType=JSON',
@@ -25,7 +25,7 @@ const URL = {
   airQuality: 'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0',
   weatherWarn: 'http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
   sunriseSunset: 'https://api.sunrise-sunset.org/json?'
-}
+}*/
 
 export default new Vuex.Store({
   state: {
@@ -70,16 +70,22 @@ export default new Vuex.Store({
     sunriseSunsetList: [
       {
         id: 'today',
+        day: '오늘',
+        date: moment().format("MM/DD"),
         sunrise: undefined,
         sunset: undefined
       },
       {
         id: 'tomorrow',
+        day: '내일',
+        date: moment().add(1, 'days').format("MM/DD"),
         sunrise: undefined,
         sunset: undefined
       },
       {
         id: 'after-tomorrow',
+        day: '모레',
+        date: moment().add(2, 'days').format("MM/DD"),
         sunrise: undefined,
         sunset: undefined
       }
@@ -233,14 +239,42 @@ export default new Vuex.Store({
             }
           })
     },
-    updateSunriseSunset({commit}, {lat, lng, date}) {
+    updateTodaySunriseSunset({commit, state}, {lat, lng, date}) {
       // console.log("작동확인")
       axios.get(`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
           .then(result => {
             if (result.data.status === "OK") {
               let item = result?.data?.results
-              // console.log("일출일몰 / sunriseSunset", item)
-              commit('sunriseSunset', item || helper.getSunriseSunset())
+              console.log("일출일몰 / sunriseSunset",`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`, item)
+              let list = helper.pushTodaySunriseSunset(state.sunriseSunsetList, item)
+              // commit('sunriseSunset', item || helper.getSunriseSunset())
+              commit('sunriseSunsetList', list)
+            }
+          })
+    },
+    updateTomorrowSunriseSunset({commit, state}, {lat, lng, date}) {
+      // console.log("작동확인")
+      axios.get(`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
+          .then(result => {
+            if (result.data.status === "OK") {
+              let item = result?.data?.results
+              console.log("일출일몰 / sunriseSunset",`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`, item)
+              let list = helper.pushTomorrowSunriseSunset(state.sunriseSunsetList, item)
+              // commit('sunriseSunset', item || helper.getSunriseSunset())
+              commit('sunriseSunsetList', list)
+            }
+          })
+    },
+    updateAfterTomorrowSunriseSunset({commit, state}, {lat, lng, date}) {
+      // console.log("작동확인")
+      axios.get(`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
+          .then(result => {
+            if (result.data.status === "OK") {
+              let item = result?.data?.results
+              console.log("일출일몰 / sunriseSunset",`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`, item)
+              let list = helper.pushAfterTomorrowSunriseSunset(state.sunriseSunsetList, item)
+              // commit('sunriseSunset', item || helper.getSunriseSunset())
+              commit('sunriseSunsetList', list)
             }
           })
     },
@@ -533,6 +567,17 @@ const helper = {
   },
   pushWeeklyDataFromMidLand: (weeklyInfoList, data) => {
     // console.log('pushWeeklyDataFromMidLand', weeklyInfoList)
+    /**
+    * @key cloud = 0 === sunny(맑음)
+    * @key cloud = 3 === cloudy(구름많음)
+    * @key cloud = 3 === overcast(흐림)
+    * @key rain = 0 === clear(없음)
+    * @key rain = 1 === rain(비)
+    * @key rain = 2 === snow(눈)
+    * @key rain = 3 === Sleet(비/눈)
+    * @key rain = 4 === showers(소나기)
+    */
+
     weeklyInfoList.forEach((item, index) => {
       if (index > 1) {
         // item.cloud = data[`wf${index+1}Am`]
@@ -615,5 +660,29 @@ const helper = {
       }
     })
     return [...weeklyInfoList]
+  },
+  pushTodaySunriseSunset: (sunriseSunsetList, data) => {
+    let info = sunriseSunsetList?.[0]
+    if (info) {
+      info.sunrise = moment(data.sunrise, 'hh:mm a').add(9, 'h').format('HH:mm')
+      info.sunset = moment(data.sunset, 'hh:mm a').add(9, 'h').format('HH:mm')
+    }
+    return [...sunriseSunsetList]
+  },
+  pushTomorrowSunriseSunset: (sunriseSunsetList, data) => {
+    let info = sunriseSunsetList?.[1]
+    if (info) {
+      info.sunrise = moment(data.sunrise, 'hh:mm a').add(9, 'h').format('HH:mm')
+      info.sunset = moment(data.sunset, 'hh:mm a').add(9, 'h').format('HH:mm')
+    }
+    return [...sunriseSunsetList]
+  },
+  pushAfterTomorrowSunriseSunset: (sunriseSunsetList, data) => {
+    let info = sunriseSunsetList?.[2]
+    if (info) {
+      info.sunrise = moment(data.sunrise, 'hh:mm a').add(9, 'h').format('HH:mm')
+      info.sunset = moment(data.sunset, 'hh:mm a').add(9, 'h').format('HH:mm')
+    }
+    return [...sunriseSunsetList]
   }
 }
