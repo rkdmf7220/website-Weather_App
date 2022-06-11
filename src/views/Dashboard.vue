@@ -16,7 +16,7 @@
       <weekly-weather/>
     </div>
     <div>
-      <b-modal id="stationModal" title="지역 설정" @ok="setLocale">
+      <b-modal id="stationModal" title="지역 설정" @ok="LocaleUtil.setLocale(selectedStation, dispatchStation)">
         <select v-model="selectedStation">
           <option key="none" :value="null" label="시/군/구"/>
           <option v-for="station in stations" :key="station.areaNo" :value="station.areaNo" :label="station.stationName"/>
@@ -36,6 +36,8 @@ import WeatherWarn from "../components/Dashboard/WeatherWarn";
 import WeeklyWeather from "../components/Dashboard/WeeklyWeather";
 import moment from "moment";
 import {areaInfo} from "../common/areaInfo";
+import LocaleUtil from "../common/LocationUtil"
+
 export default {
   name: "Dashboard",
   components: {WeeklyWeather, WeatherWarn, SunriseSunset, HourlyWeather, CurrentWeather, SearchBar, DashboardTitle},
@@ -47,7 +49,7 @@ export default {
   data() {
     return{
       moment,
-      today: moment().format('YYYYMMDD1800'),
+      today: moment().format('YYYYMMDD0600'),
       base_date: moment().format('YYYYMMDD'),
       base_time: moment().format('0200'),
       nx: '55',
@@ -61,6 +63,7 @@ export default {
       date_tomorrow: moment().add(1, 'days').format('YYYY-MM-DD'),
       date_after_tomorrow: moment().add(2, 'days').format('YYYY-MM-DD'),
       areaInfo,
+      LocaleUtil,
       selectedStation: null,
   }
   },
@@ -75,13 +78,32 @@ export default {
     this.$store.dispatch('updateSunriseSunset', {lat: areaInfo("seoul", "gangnam")[2].lat, lng: areaInfo("seoul", "gangnam")[2].lng, date: this.date,})
     */
 
-    let station = this.getLocale();
-    if (station) {
-      this.dispatchStation(station)
+    let localeObject = LocaleUtil.getLocale();
+    if (!localeObject.isSaved) {
+      this.$bvModal.show("stationModal")
     }
+    this.dispatchStation(localeObject.station)
+
 
   },
   methods : {
+    getBaseDateTime() {
+      let base_date = null;
+      let base_time = null;
+      let isToday = moment().hour() > 17;
+      console.log("isToday : ",isToday)
+      if (isToday) {
+        base_date = moment().format('YYYYMMDD');
+        base_time = "0200";
+      } else {
+        base_date = moment().subtract(1, 'days').format('YYYYMMDD');
+        base_time = "2300";
+      }
+      return {
+        base_date,
+        base_time,
+      }
+    },
     dispatchStation(station) {
       this.$store.dispatch('updateWindChillTemperature', {areaNo: station.areaNo, time: this.time})
       this.$store.dispatch('updateUltraviolet', {areaNo: station.areaNo, time: this.time})
@@ -90,30 +112,11 @@ export default {
       this.$store.dispatch('updateTodaySunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_today,})
       this.$store.dispatch('updateTomorrowSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_tomorrow,})
       this.$store.dispatch('updateAfterTomorrowSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_after_tomorrow,})
-      this.$store.dispatch('updateVillageForecast', {base_date: this.base_date, base_time: this.base_time, nx: station.nx, ny: station.ny})
+      const {base_date, base_time} = this.getBaseDateTime();
+      this.$store.dispatch('updateVillageForecast', {base_date, base_time, nx: station.nx, ny: station.ny})
       this.$store.dispatch('updateMediumLandForecast', {regId: areaInfo.seoul.landRegId, tmFc: this.today})
       this.$store.dispatch('updateMediumTemperature', {regId: areaInfo.seoul.temperatureRegId, tmFc: this.today})
-    },
-    getLocale() {
-      let areaNo = localStorage.getItem("areaNo")
-      if (areaNo) {
-        // console.log('if: areaNo:::', areaNo)
-        this.$store.dispatch('setAreaNo', areaNo)
-        return areaInfo.seoul.stations.find(item => item.areaNo === areaNo)
-      } else {
-        this.$bvModal.show("stationModal")
-        // console.log('else: areaNo:::', areaNo)
-        this.$store.dispatch('setAreaNo', "1168000000")
-        return areaInfo.seoul.stations.find(item => item.areaNo === "1168000000")
-      }
-    },
-    setLocale() {
-      localStorage.setItem("areaNo", this.selectedStation)
-      let station = areaInfo.seoul.stations.find(item => item.areaNo === this.selectedStation);
-      if (station) {
-        this.dispatchStation(station);
-      }
-      this.$store.dispatch('setAreaNo', this.selectedStation)
+      this.$store.dispatch('setAreaNo', station.areaNo)
     },
 /*    undoLocal() {
       //TODO : cancel을 클릭하거나 close 했을 때 , localStorage 데이터를 이용해 select 되돌리기
