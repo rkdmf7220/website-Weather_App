@@ -245,7 +245,7 @@ export default new Vuex.Store({
           .then(result => {
             if (result.data.status === "OK") {
               let item = result?.data?.results
-              console.log("일출일몰 / sunriseSunset",`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`, item)
+              // console.log("일출일몰 / sunriseSunset",`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`, item)
               let list = helper.pushTodaySunriseSunset(state.sunriseSunsetList, item)
               // commit('sunriseSunset', item || helper.getSunriseSunset())
               commit('sunriseSunsetList', list)
@@ -258,7 +258,7 @@ export default new Vuex.Store({
           .then(result => {
             if (result.data.status === "OK") {
               let item = result?.data?.results
-              console.log("일출일몰 / sunriseSunset",`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`, item)
+              // console.log("일출일몰 / sunriseSunset",`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`, item)
               let list = helper.pushTomorrowSunriseSunset(state.sunriseSunsetList, item)
               // commit('sunriseSunset', item || helper.getSunriseSunset())
               commit('sunriseSunsetList', list)
@@ -271,7 +271,7 @@ export default new Vuex.Store({
           .then(result => {
             if (result.data.status === "OK") {
               let item = result?.data?.results
-              console.log("일출일몰 / sunriseSunset",`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`, item)
+              // console.log("일출일몰 / sunriseSunset",`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`, item)
               let list = helper.pushAfterTomorrowSunriseSunset(state.sunriseSunsetList, item)
               // commit('sunriseSunset', item || helper.getSunriseSunset())
               commit('sunriseSunsetList', list)
