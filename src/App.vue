@@ -8,10 +8,9 @@
   </div>
 </template>
 
-<style>
+<style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
-@import '../node_modules/bootstrap/dist/css/bootstrap.css';
-@import "assets/scss/reset-bootstrap.scss";
+@import "assets/scss/reset-bootstrap";
 @import "assets/scss/reset.scss";
 #app {
   max-width: 1200px;
