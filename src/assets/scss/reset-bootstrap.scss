@@ -63,6 +63,9 @@ h1, h2, h3{
 #stationModal{
   backdrop-filter: blur(4px);
 }
+.modal-backdrop{
+  background-color: rgba(222, 222, 222, 0.7);
+}
 .modal-dialog {
   margin: 10rem auto;
 }
