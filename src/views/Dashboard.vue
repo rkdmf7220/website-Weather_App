@@ -90,8 +90,8 @@ export default {
     getBaseDateTime() {
       let base_date = null;
       let base_time = null;
-      let isToday = moment().hour() > 17;
-      console.log("isToday : ",isToday)
+      let isToday = moment().hour() > 2;
+      // console.log("isToday : ",isToday)
       if (isToday) {
         base_date = moment().format('YYYYMMDD');
         base_time = "0200";
@@ -104,9 +104,22 @@ export default {
         base_time,
       }
     },
+    getMidlandAndLivingTime() {
+      let time = null;
+      let isToday = moment().hour() > 6;
+      if (isToday) {
+        time = moment().format('YYYYMMDD06');
+      } else {
+        time = moment().subtract(1, 'days').format('YYYYMMDD18');
+      }
+      return {
+        time
+      }
+    },
     dispatchStation(station) {
-      this.$store.dispatch('updateWindChillTemperature', {areaNo: station.areaNo, time: this.time})
-      this.$store.dispatch('updateUltraviolet', {areaNo: station.areaNo, time: this.time})
+      const {time} = this.getMidlandAndLivingTime();
+      this.$store.dispatch('updateWindChillTemperature', {areaNo: station.areaNo, time: time})
+      this.$store.dispatch('updateUltraviolet', {areaNo: station.areaNo, time: time})
       this.$store.dispatch('updateAirQuality', {stationName: station.stationName})
       this.$store.dispatch('updateWeatherWarn')
       this.$store.dispatch('updateTodaySunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_today,})
@@ -114,8 +127,8 @@ export default {
       this.$store.dispatch('updateAfterTomorrowSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_after_tomorrow,})
       const {base_date, base_time} = this.getBaseDateTime();
       this.$store.dispatch('updateVillageForecast', {base_date, base_time, nx: station.nx, ny: station.ny})
-      this.$store.dispatch('updateMediumLandForecast', {regId: areaInfo.seoul.landRegId, tmFc: this.today})
-      this.$store.dispatch('updateMediumTemperature', {regId: areaInfo.seoul.temperatureRegId, tmFc: this.today})
+      this.$store.dispatch('updateMediumLandForecast', {regId: areaInfo.seoul.landRegId, tmFc: time})
+      this.$store.dispatch('updateMediumTemperature', {regId: areaInfo.seoul.temperatureRegId, tmFc: time})
       this.$store.dispatch('setAreaNo', station.areaNo)
     },
 /*    undoLocal() {
