@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import moment from "moment"
 export default {
   name: "WeatherIcon",
   computed: {
@@ -17,6 +18,15 @@ export default {
           item.category === "PTY"
       ))
       return skyData ? skyData.fcstValue + rainData.fcstValue : '';
+    },
+    checkDaytime() {
+      return moment().isBetween(moment(this.$store.state.sunriseSunsetList[0].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[0].sunset, 'h:mm A'))
+    }
+  },
+  data() {
+    return {
+      moment,
+      isDaytime: this.checkDaytime
     }
   }
 }
