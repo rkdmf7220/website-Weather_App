@@ -145,7 +145,15 @@ export default new Vuex.Store({
         maxTemperature: undefined,
         rainfallProbability: undefined
       }
-    ]
+    ],
+    completeCount: 10,
+    loadingCount: 0,
+    isLoadingLocationData: false
+  },
+  getters: {
+    getCompleteCount(state) {
+      return state.completeCount;
+    }
   },
   mutations: {
     areaNo(state, areaNo) {
@@ -183,6 +191,15 @@ export default new Vuex.Store({
     },
     sunriseSunsetList(state, data) {
       state.sunriseSunsetList = data
+    },
+    increaseLoadingCount(state) {
+      state.loadingCount = state.loadingCount + 1;
+    },
+    resetLoadingCount(state) {
+      state.loadingCount = 0
+    },
+    isLoadingLocationData(state, data) {
+      state.isLoadingLocationData = data
     }
   },
   actions: {
@@ -197,6 +214,7 @@ export default new Vuex.Store({
               // console.log("체감온도 / windChillTemperature = ", commit, areaNo, time)
               let item = result?.data?.response?.body?.items?.item?.[0];
               commit('windChillTemperature', item || helper.getWindChillTemperature())
+              commit('increaseLoadingCount')
             }
           })
     },
@@ -209,6 +227,7 @@ export default new Vuex.Store({
               let item = result?.data?.response?.body?.items?.item?.[0];
               let list = helper.pushUltravioletData(state.airInfoList, item);
               commit('airInfoList', list)
+              commit('increaseLoadingCount')
               // commit('ultraviolet', item || helper.getUltraviolet())
               // console.log(commit, state)
             }
@@ -224,6 +243,7 @@ export default new Vuex.Store({
               // console.log("AirQuality item", item, state.airInfoList)
               let list = helper.pushAirQualityData(state.airInfoList, item);
               commit('airInfoList', list)
+              commit('increaseLoadingCount')
               // commit('airQuality', item || helper.getAirQuality())
             }
           })
@@ -236,6 +256,7 @@ export default new Vuex.Store({
               // console.log(commit)
               let item = result?.data?.response?.body?.items?.item?.[0];
               commit('weatherWarn', item || helper.getWeatherWarn())
+              commit('increaseLoadingCount')
             }
           })
     },
@@ -249,6 +270,7 @@ export default new Vuex.Store({
               let list = helper.pushTodaySunriseSunset(state.sunriseSunsetList, item)
               // commit('sunriseSunset', item || helper.getSunriseSunset())
               commit('sunriseSunsetList', list)
+              commit('increaseLoadingCount')
             }
           })
     },
@@ -262,6 +284,7 @@ export default new Vuex.Store({
               let list = helper.pushTomorrowSunriseSunset(state.sunriseSunsetList, item)
               // commit('sunriseSunset', item || helper.getSunriseSunset())
               commit('sunriseSunsetList', list)
+              commit('increaseLoadingCount')
             }
           })
     },
@@ -275,6 +298,7 @@ export default new Vuex.Store({
               let list = helper.pushAfterTomorrowSunriseSunset(state.sunriseSunsetList, item)
               // commit('sunriseSunset', item || helper.getSunriseSunset())
               commit('sunriseSunsetList', list)
+              commit('increaseLoadingCount')
             }
           })
     },
@@ -288,6 +312,7 @@ export default new Vuex.Store({
               let list = helper.pushWeeklyDataFromMidLand(state.weeklyInfoList, item)
               // commit('mediumLandForecast', item || helper.getMediumLandForecastItem())
               commit('weeklyInfoList', list)
+              commit('increaseLoadingCount')
             }
           })
     },
@@ -300,6 +325,7 @@ export default new Vuex.Store({
               let list = helper.pushWeeklyDataFromMidTemp(state.weeklyInfoList, item)
               // commit('mediumTemperature', item || helper.getMediumTemperature())
               commit('weeklyInfoList', list)
+              commit('increaseLoadingCount')
             }
           })
     },
@@ -320,12 +346,19 @@ export default new Vuex.Store({
                 // console.log("단기예보 / updateVillageForecast items = ", list)
                 commit('villageForecast', list)
                 commit('weeklyInfoList', filteredList)
+                commit('increaseLoadingCount')
                 // console.log(commit)
               } else {
                 // console.log('단기예보 / error', result)
               }
             }
           })
+    },
+    updateLoadingLocationData({commit}, isLoading) {
+      commit('isLoadingLocationData', isLoading)
+    },
+    resetLoadingCount({commit}) {
+      commit('resetLoadingCount')
     }
   },
   modules: {
@@ -583,7 +616,7 @@ const helper = {
         // item.cloud = data[`wf${index+1}Am`]
         // item.rain = data[`wf${index+1}Am`]
         item.rainfallProbability = data[`rnSt${index+1}Am`]
-        console.log("wf${index+1}Am", data[`wf${index+1}Am`])
+        // console.log("wf${index+1}Am", data[`wf${index+1}Am`])
         switch (data[`wf${index+1}Am`]) {
           case "맑음":
             item.cloud = 0
