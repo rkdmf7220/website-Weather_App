@@ -76,7 +76,7 @@ export default {
 
     .air-item-value{
       .small-text{
-        margin-left: -4px;
+        margin-left: -3px;
       }
     }
   }
