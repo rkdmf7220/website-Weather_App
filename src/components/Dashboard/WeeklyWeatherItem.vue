@@ -5,7 +5,7 @@
       <span class="small-text txt-date gray2">{{moment().add(index, "days").format("M/D")}}</span>
     </div>
     <div class="icon-wrap">
-      <weather-icon/>
+      <weather-icon :item-data="weatherData"/>
     </div>
     <div class="value-info">
       <div class="temperature-value">
@@ -28,6 +28,22 @@ import moment from "moment"
 export default {
   name: "WeeklyWeatherItem",
   components: {WeatherIcon},
+  computed: {
+    weatherData() {
+      let skyData = this.itemData.cloud;
+      let rainData = this.itemData.rain;
+      if (skyData && rainData) {
+        console.log("if 작동 확인")
+        return {cloud: skyData, rain: rainData}
+      } else if (!skyData && !rainData) {
+        console.log("else if 작동 확인")
+        return {cloud: '9', rain: '9'}
+      } else {
+        console.log("else 작동 확인")
+        return {cloud: skyData, rain: rainData}
+      }
+    }
+  },
   props: {
     itemData: Object,
     index: Number

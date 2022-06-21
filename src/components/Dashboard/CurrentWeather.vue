@@ -3,7 +3,7 @@
     <place-and-time/>
     <div class="top-item-wrap">
       <div class="icon-wrap">
-        <weather-icon/>
+        <weather-icon :item-data="this.weatherData"/>
       </div>
       <temperature-info/>
     </div>
@@ -18,7 +18,22 @@ import TemperatureInfo from "./currentWeather/TemperatureInfo";
 import AirInfo from "./currentWeather/AirInfo";
 export default {
   name: "CurrentWeather",
-  components: {AirInfo, WeatherIcon, TemperatureInfo, PlaceAndTime}
+  components: {AirInfo, WeatherIcon, TemperatureInfo, PlaceAndTime},
+  computed: {
+    weatherData() {
+      let skyData = this.$store.state.villageForecast.find(item => (
+          item.category === "SKY"
+      ))
+      let rainData = this.$store.state.villageForecast.find(item => (
+          item.category === "PTY"
+      ))
+      if (skyData && rainData) {
+        return {cloud: skyData.fcstValue, rain: rainData.fcstValue};
+      } else {
+        return {cloud: '9', rain: '9'}
+      }
+    },
+  }
 }
 </script>
 
