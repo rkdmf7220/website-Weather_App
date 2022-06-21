@@ -3,7 +3,7 @@
     <place-and-time/>
     <div class="top-item-wrap">
       <div class="icon-wrap">
-        <weather-icon :item-data="this.weatherData"/>
+        <weather-icon :item-data="this.weatherData" :daytime="currentDaytime"/>
       </div>
       <temperature-info/>
     </div>
@@ -16,6 +16,7 @@ import PlaceAndTime from "./currentWeather/PlaceAndTime";
 import WeatherIcon from "./currentWeather/WeatherIcon";
 import TemperatureInfo from "./currentWeather/TemperatureInfo";
 import AirInfo from "./currentWeather/AirInfo";
+import moment from "moment";
 export default {
   name: "CurrentWeather",
   components: {AirInfo, WeatherIcon, TemperatureInfo, PlaceAndTime},
@@ -33,6 +34,21 @@ export default {
         return {cloud: '9', rain: '9'}
       }
     },
+    currentDaytime() {
+      // daytime = true, night = false
+      let currentTime;
+      let found = moment().isBetween(moment(this.$store.state.sunriseSunsetList[0].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[0].sunset, 'h:mm A'))
+      switch (found) {
+        case true :
+          currentTime = "0"
+          break;
+        case false :
+          currentTime = "1"
+          break;
+        default:
+      }
+      return currentTime
+    }
   }
 }
 </script>

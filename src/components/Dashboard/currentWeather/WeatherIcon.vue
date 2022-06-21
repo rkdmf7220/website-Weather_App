@@ -13,29 +13,17 @@ import moment from "moment"
 export default {
   name: "WeatherIcon",
   props: {
-    itemData : Object
+    itemData : Object,
+    daytime : String
   },
   computed: {
     checkDaytime() {
-      // daytime = true, night = false
-      let currentTime;
-      let found = moment().isBetween(moment(this.$store.state.sunriseSunsetList[0].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[0].sunset, 'h:mm A'))
-      switch (found) {
-        case true :
-          currentTime = "0"
-              break;
-        case false :
-          currentTime = "1"
-              break;
-        default:
-      }
-      return currentTime
+      return this.daytime ? this.daytime : "0"
     }
   },
   data() {
     return {
       moment,
-      isDaytime: this.checkDaytime
     }
   },
   methods: {
