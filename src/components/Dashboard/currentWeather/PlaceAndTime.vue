@@ -1,8 +1,8 @@
 <template>
   <div class="txt-container">
-    <div class="txt-place">
-      <b-spinner v-if="isLoading" small variant="primary"/>
-      <svg v-b-modal.stationModal width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C5.79 2 4 3.705 4 5.808 4 7.91 7.333 13 8 13c.667 0 4-5.09 4-7.192C12 3.705 10.21 2 8 2Zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" fill="#BBB"/></svg>
+    <div v-b-modal.stationModal class="txt-place">
+      <b-spinner v-if="isLoading" small variant="blue-bell"/>
+      <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.05 3.5a.68.68 0 0 0-.61.39l-.646 1.336-.004.008-.002.005-.086.177a1.515 1.515 0 0 1-1.312.773h-.001l-1.634-.102a.677.677 0 0 0-.631.351l-.908 1.624a.724.724 0 0 0 .022.74l.797 1.247.1.169c.284.507.263 1.11-.003 1.581l-.09.142-.007.01-.754 1.18-.043.067a.724.724 0 0 0-.022.74l.908 1.624c.129.23.373.367.631.35l1.444-.089.14-.008a1.514 1.514 0 0 1 1.365.787l.09.172.647 1.337a.68.68 0 0 0 .61.389h1.815a.68.68 0 0 0 .61-.39l.646-1.336.089-.172c.29-.52.823-.803 1.366-.787l1.585.098a.677.677 0 0 0 .63-.351l.908-1.624a.724.724 0 0 0-.021-.74l-.908-1.42a1.619 1.619 0 0 1 .049-1.628l.017-.032.842-1.316a.724.724 0 0 0 .021-.74l-.907-1.624a.677.677 0 0 0-.632-.35l-1.632.1h-.002c-.558 0-1.046-.31-1.312-.771l-.74-1.528a.68.68 0 0 0-.61-.389H9.052Zm.908 10a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" fill="#BBB"/></svg>
       <span class="gray4">{{`${cityName} ${stationName}`}}</span>
     </div>
     <div class="txt-time">
