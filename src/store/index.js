@@ -146,6 +146,7 @@ export default new Vuex.Store({
         rainfallProbability: undefined
       }
     ],
+    chartTemperatureList: [],
     completeCount: 10,
     loadingCount: 0,
     isLoadingLocationData: false
@@ -191,6 +192,9 @@ export default new Vuex.Store({
     },
     sunriseSunsetList(state, data) {
       state.sunriseSunsetList = data
+    },
+    chartTemperatureList(state, data) {
+      state.chartTemperatureList = data
     },
     increaseLoadingCount(state) {
       state.loadingCount = state.loadingCount + 1;
@@ -341,11 +345,14 @@ export default new Vuex.Store({
               // console.log("단기예보 데이터 확인", list)
               // console.log("villageForecast에서", state.weeklyInfoList)
               let filteredList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
+              let chartTemperatureList = helper.pushChartTemperatureData(state.chartTemperatureList, list)
               // console.log("filteredList", filteredList)
               if (list && Array.isArray(list)) {
                 // console.log("단기예보 / updateVillageForecast items = ", list)
                 commit('villageForecast', list)
                 commit('weeklyInfoList', filteredList)
+                commit('chartTemperatureList', chartTemperatureList)
+                // console.log("state확인", state.chartTemperatureList, chartTemperatureList)
                 commit('increaseLoadingCount')
                 // console.log(commit)
               } else {
@@ -574,6 +581,7 @@ const helper = {
   },
   pushWeeklyDataFromVillage: (weeklyInfoList, data) => {
     let referenceDate
+    // console.log("push확인", weeklyInfoList, data)
     function findInfoData(category) {
       let found = data.find(info => (
           info?.category === category &&
@@ -717,5 +725,53 @@ const helper = {
       info.sunset = moment(data.sunset, 'hh:mm a').add(9, 'h').format('HH:mm')
     }
     return [...sunriseSunsetList]
+  },
+  pushChartTemperatureData: (chartTemperatureList, data) => {
+    // console.log("정보 확인", chartTemperatureList, data)
+    let checkDate;
+    let checkTime;
+    function findWeatherData (category, checkDate, checkTime) {
+      let found = data.find(info => (
+        info?.category === category &&
+        info?.fcstDate === checkDate &&
+        info?.fcstTime === checkTime
+      ))
+      return found.fcstValue
+    }
+    for (let i = 0; i < 48; i++) {
+      checkDate = moment().add(i, "hour").format("YYYYMMDD")
+      checkTime = moment().add(i, "hour").format("HH00")
+      let dayAgo
+      switch (moment(moment().format("YYYYMMDD")).diff(moment(checkDate), "days")) {
+        case 0:
+          dayAgo = "today"
+          break;
+        case -1:
+          dayAgo = "tomorrow"
+          break;
+        case -2:
+          dayAgo = "after-tomorrow"
+          break;
+        default:
+      }
+
+      let found = {
+        /**
+         * @key x = x좌표(index)
+         * @key y = 차트의 값(여기선 기온)
+         * @key day = 오늘, 내일, 모레 판정
+         */
+        
+        x: i+1,
+        y: findWeatherData("TMP", checkDate, checkTime),
+        hour: moment().add(i, "hour").format("HH"),
+        cloud: findWeatherData("SKY", checkDate, checkTime),
+        rain: findWeatherData("PTY", checkDate, checkTime),
+        day: dayAgo
+      }
+      chartTemperatureList.push(found)
+    }
+    // console.log("chart 기온 정보", chartTemperatureList)
+    return [...chartTemperatureList]
   }
 }
