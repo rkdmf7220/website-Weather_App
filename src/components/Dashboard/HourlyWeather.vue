@@ -1,35 +1,36 @@
 <template>
   <div class="card-item" style="overflow: hidden">
     <div class="tab-menu">
-      <button class="tab-btn active">날씨</button>
+      <button @click="onClickTab('WEATHER')" :class="[{active: selectedTab === 'WEATHER'}]" class="tab-btn">날씨</button>
       <span class="vertical-bar"></span>
-      <button class="tab-btn">바람</button>
+      <button @click="onClickTab('WIND')" :class="[{active: selectedTab === 'WIND'}]" class="tab-btn">바람</button>
       <span class="vertical-bar"></span>
-      <button class="tab-btn">강수</button>
+      <button @click="onClickTab('RAINFALL')" :class="[{active: selectedTab === 'RAINFALL'}]" class="tab-btn">강수</button>
       <span class="vertical-bar"></span>
-      <button class="tab-btn">습도</button>
+      <button @click="onClickTab('HUMIDITY')" :class="[{active: selectedTab === 'HUMIDITY'}]" class="tab-btn">습도</button>
     </div>
-    <div class="chart-slide-wrap" style="width: 1000px; height: 40px;">
-      <canvas id="chart" width="2390" height="40"></canvas>
-      <ul class="chart-data-list">
-<!--        <li class="chart-data-item" v-for="item in this.chartTemperatureList">
-          <span class="weather-icon"></span>
-          <span class="weather-value">{{item.}}</span>
-          <span class="weather-hour"></span>
-        </li>-->
-      </ul>
+    <div class="chart-slide-wrap">
+      <canvas id="chart" width="2361" height="40"></canvas>
+      <chart-data-list :chart-data="chartTemperatureData"/>
     </div>
   </div>
 </template>
 
 <script>
 // import {mapState} from "vuex";
+import ChartDataList from "@/components/Dashboard/ChartDataList";
 import { Chart, ArcElement, LineElement, BarElement, PointElement, BarController, BubbleController, DoughnutController, LineController, PieController, PolarAreaController, RadarController, ScatterController, CategoryScale, LinearScale, LogarithmicScale, RadialLinearScale, TimeScale, TimeSeriesScale, Decimation, Filler, Legend, Title, Tooltip, SubTitle } from 'chart.js';
 Chart.register( ArcElement, LineElement, BarElement, PointElement, BarController, BubbleController, DoughnutController, LineController, PieController, PolarAreaController, RadarController, ScatterController, CategoryScale, LinearScale, LogarithmicScale, RadialLinearScale, TimeScale, TimeSeriesScale, Decimation, Filler, Legend, Title, Tooltip, SubTitle )
 let chart
 
 export default {
   name: "HourlyWeather",
+  data() {
+    return {
+      selectedTab : 'WEATHER'
+    }
+  },
+  components: {ChartDataList},
   computed: {
     chartTemperatureData() {
       return this.$store.state.chartTemperatureList
@@ -45,6 +46,9 @@ export default {
     this.fillData();
   },
   methods: {
+    onClickTab(type) {
+      this.selectedTab = type
+    },
     fillData() {
       if (chart !== undefined) {
         chart.destroy()
@@ -110,6 +114,7 @@ export default {
     height: 194px;
     flex-shrink: 0;
     flex-direction: column;
+    justify-content: space-between;
 
     .tab-menu{
       line-height: 1em;
@@ -138,9 +143,12 @@ export default {
 
     .chart-slide-wrap{
       position: relative;
+      width: 2390px;
 
       #chart{
         position: absolute;
+        left: 14px;
+        top: 46px;
       }
     }
   }
