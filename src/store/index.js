@@ -147,6 +147,7 @@ export default new Vuex.Store({
       }
     ],
     chartTemperatureList: [],
+    chartHumidityList: [],
     completeCount: 10,
     loadingCount: 0,
     isLoadingLocationData: false
@@ -195,6 +196,9 @@ export default new Vuex.Store({
     },
     chartTemperatureList(state, data) {
       state.chartTemperatureList = data
+    },
+    chartHumidityList(state, data) {
+      state.chartHumidityList = data
     },
     increaseLoadingCount(state) {
       state.loadingCount = state.loadingCount + 1;
@@ -346,12 +350,15 @@ export default new Vuex.Store({
               // console.log("villageForecast에서", state.weeklyInfoList)
               let filteredList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
               let chartTemperatureList = helper.pushChartTemperatureData(state.chartTemperatureList, list)
+              let chartHumidityList = helper.pushChartHumidityList(state.chartHumidityList, list)
+              // console.log(chartHumidityList)
               // console.log("filteredList", filteredList)
               if (list && Array.isArray(list)) {
                 // console.log("단기예보 / updateVillageForecast items = ", list)
                 commit('villageForecast', list)
                 commit('weeklyInfoList', filteredList)
                 commit('chartTemperatureList', chartTemperatureList)
+                commit('chartHumidityList', chartHumidityList)
                 // console.log("state확인", state.chartTemperatureList, chartTemperatureList)
                 commit('increaseLoadingCount')
                 // console.log(commit)
@@ -726,7 +733,11 @@ const helper = {
     }
     return [...sunriseSunsetList]
   },
+
   pushChartTemperatureData: (chartTemperatureList, data) => {
+    if (chartTemperatureList !== []) {
+      chartTemperatureList = []
+    }
     // console.log("정보 확인", chartTemperatureList, data)
     let checkDate;
     let checkTime;
@@ -773,5 +784,46 @@ const helper = {
     }
     // console.log("chart 기온 정보", chartTemperatureList)
     return [...chartTemperatureList]
+  },
+  pushChartHumidityList: (chartHumidityList, data) => {
+    if (chartHumidityList !== []) {
+      chartHumidityList = []
+    }
+    let checkDate;
+    let checkTime;
+    function findHumidityData (checkDate, checkTime) {
+      let found = data.find(info => (
+        info?.category === "REH" &&
+        info?.fcstDate === checkDate &&
+        info?.fcstTime === checkTime
+      ))
+      return found.fcstValue
+    }
+    for(let i = 0; i < 48; i++) {
+      checkDate = moment().add(i, "hour").format("YYYYMMDD")
+      checkTime = moment().add(i, "hour").format("HH00")
+      let dayAgo;
+      switch (moment(moment().format("YYYYMMDD")).diff(moment(checkDate), "days")) {
+        case 0:
+          dayAgo = "today"
+              break;
+        case -1:
+          dayAgo = "tomorrow"
+              break;
+        case -2:
+          dayAgo = "after-tomorrow"
+              break;
+        default:
+      }
+
+      let found = {
+        x: i + 1,
+        y: findHumidityData(checkDate, checkTime),
+        hour: moment().add(i, "hour").format("HH"),
+        day: dayAgo
+      }
+      chartHumidityList.push(found)
+    }
+    return [...chartHumidityList]
   }
 }

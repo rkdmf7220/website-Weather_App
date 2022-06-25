@@ -18,7 +18,7 @@
 
 <script>
 // import {mapState} from "vuex";
-import ChartDataList from "@/components/Dashboard/ChartDataList";
+import ChartDataList from "./ChartDataList";
 import { Chart, ArcElement, LineElement, BarElement, PointElement, BarController, BubbleController, DoughnutController, LineController, PieController, PolarAreaController, RadarController, ScatterController, CategoryScale, LinearScale, LogarithmicScale, RadialLinearScale, TimeScale, TimeSeriesScale, Decimation, Filler, Legend, Title, Tooltip, SubTitle } from 'chart.js';
 Chart.register( ArcElement, LineElement, BarElement, PointElement, BarController, BubbleController, DoughnutController, LineController, PieController, PolarAreaController, RadarController, ScatterController, CategoryScale, LinearScale, LogarithmicScale, RadialLinearScale, TimeScale, TimeSeriesScale, Decimation, Filler, Legend, Title, Tooltip, SubTitle )
 let chart
@@ -34,11 +34,17 @@ export default {
   computed: {
     chartTemperatureData() {
       return this.$store.state.chartTemperatureList
+    },
+    chartHumidityData() {
+      return this.$store.state.chartHumidityList
     }
   },
   watch: {
     chartTemperatureData() {
       this.fillData()
+    },
+    chartHumidityData() {
+      this.fillData
     },
     deep: true
   },
@@ -104,6 +110,62 @@ export default {
       // chart.data.datasets[0].data = this.chartTemperatureData
       chart.update()
     }
+    /*fillData() {
+      if (chart !== undefined) {
+        chart.destroy()
+      }
+      const ctx = document.getElementById('chart').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+            '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
+            '21', '22', '23', '24','','','','','','','','','','','','','','','','','','','','','','','',''],
+          datasets: [{
+            label: '테스트 데이터셋',
+            data: this.chartHumidityData,
+            borderColor: "rgba(255, 201, 14, 1)",
+            fill: false,
+            pointBackgroundColor: "#fff",
+            lineTension: 0
+          }]
+        },
+        options: {
+          barPercentage: 0.5,
+          parsing: {
+          },
+          responsive: false,
+          title: {},
+          hover: {
+            mode: null
+          },
+          scales: {
+            y: {
+              display: false,
+              grid: {
+                drawBorder: false
+              }
+            },
+            x: {
+              display: false,
+              grid: {
+                drawBorder: false
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              enabled: false
+            }
+          }
+        }
+      })
+      // chart.data.datasets[0].data = this.chartTemperatureData
+      chart.update()
+    }*/
   }
 }
 </script>
@@ -148,7 +210,7 @@ export default {
       #chart{
         position: absolute;
         left: 14px;
-        top: 46px;
+        top: 40px;
       }
     }
   }
