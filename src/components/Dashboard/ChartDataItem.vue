@@ -1,7 +1,9 @@
 <template>
   <div class="data-item-wrap">
     <div class="weather-icon-wrap">
-      <div class="weather-icon" :style="{ backgroundImage: `url('img/icon_weather_0_` + itemData.cloud + `_` + itemData.rain + `.png`}"></div>
+      <!--      <div class="weather-icon" :style="{ backgroundImage: `url('img/icon_weather_0_` + itemData.cloud + `_` + itemData.rain + `.png`}"></div>-->
+      <!--      <div class="weather-icon" :style="{ backgroundImage: weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`)}"></div>-->
+      <div class="weather-icon" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`) + ')'}"></div>
     </div>
     <span class="weather-value">{{currentValue}}</span>
     <span class="weather-hour">{{currentHour}}</span>
@@ -9,6 +11,7 @@
 </template>
 
 <script>
+import weatherSvgIcon from "../../../public/img/weatherSvgIcon";
 export default {
   name: "ChartDataItem",
   props: {
@@ -20,6 +23,11 @@ export default {
     },
     currentHour() {
       return this.itemData.hour ? this.itemData.hour + '시' : ''
+    }
+  },
+  data () {
+    return {
+      weatherSvgIcon
     }
   }
 }

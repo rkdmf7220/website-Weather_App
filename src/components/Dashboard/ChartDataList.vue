@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import ChartDataItem from "@/components/Dashboard/ChartDataItem";
+import ChartDataItem from "./ChartDataItem";
 export default {
   name: "ChartDataList",
   components: {ChartDataItem},
