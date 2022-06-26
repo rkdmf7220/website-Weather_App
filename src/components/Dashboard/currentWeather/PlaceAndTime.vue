@@ -6,7 +6,7 @@
       <span class="gray4">{{`${cityName} ${stationName}`}}</span>
     </div>
     <div class="txt-time">
-      <span class="small-text gray3">금, 오후 4:30</span>
+      <span class="small-text gray3">{{currentTimeInfo}}</span>
     </div>
   </div>
 </template>
@@ -32,6 +32,9 @@ export default {
     },
     isLoading() {
       return this.$store.state.loadingCount > 0 && this.$store.state.loadingCount < this.$store.getters.getCompleteCount
+    },
+    currentTimeInfo() {
+      return moment().locale('ko').format("ddd, a h:00")
     }
   },
   data() {
