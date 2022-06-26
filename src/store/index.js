@@ -634,64 +634,64 @@ const helper = {
         // console.log("wf${index+1}Am", data[`wf${index+1}Am`])
         switch (data[`wf${index+1}Am`]) {
           case "맑음":
-            item.cloud = 0
-            item.rain = 0
+            item.cloud = "0"
+            item.rain = "0"
             break;
           case "소나기":
-            item.cloud = 0
-            item.rain = 1
+            item.cloud = "0"
+            item.rain = "1"
             break;
           case "비":
-            item.cloud = 0
-            item.rain = 1
+            item.cloud = "0"
+            item.rain = "1"
             break;
           case "눈":
-            item.cloud = 0
-            item.rain = 2
+            item.cloud = "0"
+            item.rain = "2"
             break;
           case "비/눈":
-            item.cloud = 3
-            item.rain = 3
+            item.cloud = "3"
+            item.rain = "3"
             break;
           case "구름많음":
-            item.cloud = 3
-            item.rain = 0
+            item.cloud = "3"
+            item.rain = "0"
             break;
           case "구름많고 소나기":
-            item.cloud = 3
-            item.rain = 1
+            item.cloud = "3"
+            item.rain = "1"
             break;
           case "구름많고 비":
-            item.cloud = 3
-            item.rain = 1
+            item.cloud = "3"
+            item.rain = "1"
             break;
           case "구름많고 눈":
-            item.cloud = 3
-            item.rain = 2
+            item.cloud = "3"
+            item.rain = "2"
             break;
           case "구름많고 비/눈":
-            item.cloud = 3
-            item.rain = 3
+            item.cloud = "3"
+            item.rain = "3"
             break;
           case "흐림":
-            item.cloud = 4
-            item.rain = 0
+            item.cloud = "4"
+            item.rain = "0"
             break;
           case "흐리고 소나기":
-            item.cloud = 4
-            item.rain = 1
+            item.cloud = "4"
+            item.rain = "1"
             break;
           case "흐리고 비":
-            item.cloud = 4
-            item.rain = 1
+            item.cloud = "4"
+            item.rain = "1"
             break;
           case "흐리고 눈":
-            item.cloud = 4
-            item.rain = 2
+            item.cloud = "4"
+            item.rain = "2"
             break;
           case "흐리고 비/눈":
-            item.cloud = 4
-            item.rain = 3
+            item.cloud = "4"
+            item.rain = "3"
             break;
           default:
         }
