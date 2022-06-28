@@ -79,7 +79,7 @@ export default {
             fill: true,
             backgroundColor: gradientFill,
             pointBackgroundColor: "#fff",
-            lineTension: 0
+            lineTension: 0.4
           }]
         },
         options: {
