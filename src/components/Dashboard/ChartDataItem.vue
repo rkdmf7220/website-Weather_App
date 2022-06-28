@@ -1,6 +1,6 @@
 <template>
   <div class="data-item-wrap">
-    <div class="weather-icon-wrap">
+    <div class="weather-icon-wrap" v-if="chartCategory === 'weather'">
       <!--      <div class="weather-icon" :style="{ backgroundImage: `url('img/icon_weather_0_` + itemData.cloud + `_` + itemData.rain + `.png`}"></div>-->
       <!--      <div class="weather-icon" :style="{ backgroundImage: weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`)}"></div>-->
       <div class="weather-icon" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`) + ')'}"></div>
@@ -16,7 +16,8 @@ import moment from "moment";
 export default {
   name: "ChartDataItem",
   props: {
-    itemData: Object
+    itemData: Object,
+    chartCategory: String
   },
   computed: {
     currentValue() {

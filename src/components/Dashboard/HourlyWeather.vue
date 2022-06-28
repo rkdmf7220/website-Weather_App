@@ -1,17 +1,17 @@
 <template>
   <div class="card-item" style="overflow: hidden">
     <div class="tab-menu">
-      <button @click="onClickTab('WEATHER')" :class="[{active: selectedTab === 'WEATHER'}]" class="tab-btn">날씨</button>
+      <button @click="onClickTab('weather', chartTemperatureData)" :class="[{active: selectedTab === 'weather'}]" class="tab-btn">날씨</button>
       <span class="vertical-bar"></span>
-      <button @click="onClickTab('WIND')" :class="[{active: selectedTab === 'WIND'}]" class="tab-btn">바람</button>
+      <button @click="onClickTab('wind', chartTemperatureData)" :class="[{active: selectedTab === 'wind'}]" class="tab-btn">바람</button>
       <span class="vertical-bar"></span>
-      <button @click="onClickTab('RAINFALL')" :class="[{active: selectedTab === 'RAINFALL'}]" class="tab-btn">강수</button>
+      <button @click="onClickTab('rainfall', chartHumidityData)" :class="[{active: selectedTab === 'rainfall'}]" class="tab-btn">강수</button>
       <span class="vertical-bar"></span>
-      <button @click="onClickTab('HUMIDITY')" :class="[{active: selectedTab === 'HUMIDITY'}]" class="tab-btn">습도</button>
+      <button @click="onClickTab('humidity', chartHumidityData)" :class="[{active: selectedTab === 'humidity'}]" class="tab-btn">습도</button>
     </div>
     <div class="chart-slide-wrap">
-      <canvas id="chart" width="2361" height="40"></canvas>
-      <chart-data-list :chart-data="chartTemperatureData"/>
+        <canvas id="chart" :width="chartOption.width" :height="chartOption.height" :class="`${selectedTab}`"></canvas>
+      <chart-data-list :chart-data="chartData" :chart-category="this.selectedTab"/>
     </div>
   </div>
 </template>
@@ -29,8 +29,18 @@ export default {
   name: "HourlyWeather",
   data() {
     return {
-      selectedTab : 'WEATHER',
-
+      selectedTab : 'weather',
+      chartData: [],
+      chartOption: {
+        chartType: "line",
+        mainColor: "#FFC90E",
+        gradientColor1: "#FFE178",
+        gradientColor2: "rgba(255, 255, 255, 0.4)",
+        min: null,
+        max: null,
+        width: 2361,
+        height: 40
+      }
     }
   },
   components: {ChartDataList},
@@ -44,38 +54,101 @@ export default {
   },
   watch: {
     chartTemperatureData() {
-      this.fillData()
+      // this.fillData()
+      this.chartData = [...this.chartTemperatureData]
     },
-    chartHumidityData() {
-      this.fillData
+/*    chartHumidityData() {
+      this.fillData()
+    },*/
+    chartData() {
+      // console.log(this.chartOption)
+      this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.min, this.chartOption.max)
     },
     deep: true
   },
-  mounted() {
-    this.fillData();
-  },
   methods: {
-    onClickTab(type) {
-      this.selectedTab = type
+    onClickTab(category, chartData) {
+      // console.log('chartData', chartData)
+      this.selectedTab = category;
+      this.chartData = [...chartData];
+      this.changeChartOption(category)
     },
-    fillData() {
+    changeChartOption(category) {
+      switch (category) {
+        case "weather":
+          this.chartOption = {
+            chartType: "line",
+            mainColor: "#FFC90E",
+            gradientColor1: "#FFE178",
+            gradientColor2: "rgba(255, 255, 255, 0.4)",
+            min: null,
+            max: null,
+            width: 2361,
+            height: 40
+          }
+              break;
+
+        case "wind":
+          this.chartOption = {
+            chartType: "line",
+            mainColor: "#FFC90E",
+            gradientColor1: "#FFE178",
+            gradientColor2: "rgba(255, 255, 255, 0.4)",
+            min: null,
+            max: null,
+            width: 2361,
+            height: 40
+          }
+              break;
+
+        case "rainfall":
+          this.chartOption = {
+            chartType: "line",
+            mainColor: "#85B6FD",
+            gradientColor1: "#CEE2FE",
+            gradientColor2: "rgba(255, 255, 255, 0.4)",
+            min: null,
+            max: null,
+            width: 2361,
+            height: 40
+          }
+              break;
+
+        case "humidity":
+          this.chartOption = {
+            chartType: "line",
+            mainColor: "#85B6FD",
+            gradientColor1: "#CEE2FE",
+            gradientColor2: "rgba(255, 255, 255, 0.4)",
+            min: 0,
+            max: 100,
+            width: 2361,
+            height: 64
+          }
+              break;
+            default:
+      }
+    },
+    fillData(chartType, mainColor, gradientColor1, gradientColor2, minValue, maxValue) {
       if (chart !== undefined) {
         chart.destroy()
       }
       ctx = document.getElementById('chart').getContext('2d');
       gradientFill = ctx.createLinearGradient(0, 0, 0, 50);
-      gradientFill.addColorStop(0, "rgba(255, 225, 120, 1)");
-      gradientFill.addColorStop(1, "rgba(255, 255, 255, 0.5)");
+      gradientFill.addColorStop(0, gradientColor1);
+      gradientFill.addColorStop(1, gradientColor2);
+      // console.log("chartData :", this.chartData)
+      // console.log("chartTempData :", this.chartTemperatureData)
       chart = new Chart(ctx, {
-        type: 'line',
+        type: chartType,
         data: {
           labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
             '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
             '21', '22', '23', '24','','','','','','','','','','','','','','','','','','','','','','','',''],
           datasets: [{
             label: '테스트 데이터셋',
-            data: this.chartTemperatureData,
-            borderColor: "rgba(255, 201, 14, 1)",
+            data: this.chartData,
+            borderColor: mainColor,
             fill: true,
             backgroundColor: gradientFill,
             pointBackgroundColor: "#fff",
@@ -92,6 +165,8 @@ export default {
           },
           scales: {
             y: {
+              min: minValue,
+              max: maxValue,
               display: false,
               grid: {
                 drawBorder: false
@@ -213,6 +288,12 @@ export default {
     .chart-slide-wrap{
       position: relative;
       width: 2390px;
+
+/*      .chart-canvas-wrap{
+        position: relative;
+        width: 2361px;
+        height: 40px;
+      }*/
 
       #chart{
         position: absolute;

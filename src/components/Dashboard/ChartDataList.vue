@@ -1,8 +1,8 @@
 <template>
   <div>
-    <ul class="chart-data-list">
+    <ul class="chart-data-list" @click="checkData">
       <li class="chart-data-item" v-for="(item, index) in chartData" :key="item.x">
-        <chart-data-item :item-data="chartData[index]"/>
+        <chart-data-item :item-data="chartData[index]" :chart-category="chartCategory"/>
       </li>
     </ul>
   </div>
@@ -14,7 +14,13 @@ export default {
   name: "ChartDataList",
   components: {ChartDataItem},
   props: {
-    chartData: Array
+    chartData: Array,
+    chartCategory: String
+  },
+  methods: {
+    checkData() {
+      console.log("checkData", this.chartCategory, this.chartData)
+    }
   }
 }
 </script>
