@@ -21,13 +21,16 @@
 import ChartDataList from "./ChartDataList";
 import { Chart, ArcElement, LineElement, BarElement, PointElement, BarController, BubbleController, DoughnutController, LineController, PieController, PolarAreaController, RadarController, ScatterController, CategoryScale, LinearScale, LogarithmicScale, RadialLinearScale, TimeScale, TimeSeriesScale, Decimation, Filler, Legend, Title, Tooltip, SubTitle } from 'chart.js';
 Chart.register( ArcElement, LineElement, BarElement, PointElement, BarController, BubbleController, DoughnutController, LineController, PieController, PolarAreaController, RadarController, ScatterController, CategoryScale, LinearScale, LogarithmicScale, RadialLinearScale, TimeScale, TimeSeriesScale, Decimation, Filler, Legend, Title, Tooltip, SubTitle )
-let chart
+let chart;
+let ctx;
+let gradientFill
 
 export default {
   name: "HourlyWeather",
   data() {
     return {
-      selectedTab : 'WEATHER'
+      selectedTab : 'WEATHER',
+
     }
   },
   components: {ChartDataList},
@@ -59,7 +62,10 @@ export default {
       if (chart !== undefined) {
         chart.destroy()
       }
-      const ctx = document.getElementById('chart').getContext('2d');
+      ctx = document.getElementById('chart').getContext('2d');
+      gradientFill = ctx.createLinearGradient(0, 0, 0, 50);
+      gradientFill.addColorStop(0, "rgba(255, 225, 120, 1)");
+      gradientFill.addColorStop(1, "rgba(255, 255, 255, 0.5)");
       chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -70,7 +76,8 @@ export default {
             label: '테스트 데이터셋',
             data: this.chartTemperatureData,
             borderColor: "rgba(255, 201, 14, 1)",
-            fill: false,
+            fill: true,
+            backgroundColor: gradientFill,
             pointBackgroundColor: "#fff",
             lineTension: 0
           }]
