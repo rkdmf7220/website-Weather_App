@@ -36,6 +36,7 @@ export default {
         mainColor: "#FFC90E",
         gradientColor1: "#FFE178",
         gradientColor2: "rgba(255, 255, 255, 0.4)",
+        gradientY1: 50,
         min: null,
         max: null,
         width: 2361,
@@ -62,7 +63,7 @@ export default {
     },*/
     chartData() {
       // console.log(this.chartOption)
-      this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.min, this.chartOption.max)
+      this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.gradientY1, this.chartOption.min, this.chartOption.max, this.chartOption.height)
     },
     deep: true
   },
@@ -81,6 +82,7 @@ export default {
             mainColor: "#FFC90E",
             gradientColor1: "#FFE178",
             gradientColor2: "rgba(255, 255, 255, 0.4)",
+            gradientY1: 50,
             min: null,
             max: null,
             width: 2361,
@@ -94,6 +96,7 @@ export default {
             mainColor: "#FFC90E",
             gradientColor1: "#FFE178",
             gradientColor2: "rgba(255, 255, 255, 0.4)",
+            gradientY1: 50,
             min: null,
             max: null,
             width: 2361,
@@ -107,6 +110,7 @@ export default {
             mainColor: "#85B6FD",
             gradientColor1: "#CEE2FE",
             gradientColor2: "rgba(255, 255, 255, 0.4)",
+            gradientY1: 50,
             min: null,
             max: null,
             width: 2361,
@@ -120,25 +124,27 @@ export default {
             mainColor: "#85B6FD",
             gradientColor1: "#CEE2FE",
             gradientColor2: "rgba(255, 255, 255, 0.4)",
+            gradientY1: 64,
             min: 0,
             max: 100,
             width: 2361,
-            height: 64
+            height: 56
           }
               break;
             default:
       }
     },
-    fillData(chartType, mainColor, gradientColor1, gradientColor2, minValue, maxValue) {
+    fillData(chartType, mainColor, gradientColor1, gradientColor2, gradientY1, minValue, maxValue, height) {
       if (chart !== undefined) {
         chart.destroy()
       }
       ctx = document.getElementById('chart').getContext('2d');
-      gradientFill = ctx.createLinearGradient(0, 0, 0, 50);
+      gradientFill = ctx.createLinearGradient(0, 0, 0, gradientY1);
       gradientFill.addColorStop(0, gradientColor1);
       gradientFill.addColorStop(1, gradientColor2);
       // console.log("chartData :", this.chartData)
       // console.log("chartTempData :", this.chartTemperatureData)
+      ctx.canvas.height = height;
       chart = new Chart(ctx, {
         type: chartType,
         data: {
@@ -299,6 +305,10 @@ export default {
         position: absolute;
         left: 14px;
         top: 40px;
+
+        &.humidity{
+          top: 28px;
+        }
       }
     }
   }
