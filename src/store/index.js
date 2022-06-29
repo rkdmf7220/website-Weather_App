@@ -147,6 +147,7 @@ export default new Vuex.Store({
       }
     ],
     chartTemperatureList: [],
+    chartWindList: [],
     chartHumidityList: [],
     completeCount: 10,
     loadingCount: 0,
@@ -196,6 +197,9 @@ export default new Vuex.Store({
     },
     chartTemperatureList(state, data) {
       state.chartTemperatureList = data
+    },
+    chartWindList(state, data) {
+      state.chartWindList = data
     },
     chartHumidityList(state, data) {
       state.chartHumidityList = data
@@ -350,6 +354,7 @@ export default new Vuex.Store({
               // console.log("villageForecast에서", state.weeklyInfoList)
               let filteredList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
               let chartTemperatureList = helper.pushChartTemperatureData(state.chartTemperatureList, list)
+              let chartWindList = helper.pushChartWindList(state.chartWindList, list)
               let chartHumidityList = helper.pushChartHumidityList(state.chartHumidityList, list)
               // console.log(chartHumidityList)
               // console.log("filteredList", filteredList)
@@ -358,6 +363,7 @@ export default new Vuex.Store({
                 commit('villageForecast', list)
                 commit('weeklyInfoList', filteredList)
                 commit('chartTemperatureList', chartTemperatureList)
+                commit('chartWindList', chartWindList)
                 commit('chartHumidityList', chartHumidityList)
                 // console.log("state확인", state.chartTemperatureList, chartTemperatureList)
                 commit('increaseLoadingCount')
@@ -784,6 +790,48 @@ const helper = {
     }
     // console.log("chart 기온 정보", chartTemperatureList)
     return [...chartTemperatureList]
+  },
+  pushChartWindList: (chartWindList, data) => {
+    if (chartWindList !== []) {
+      chartWindList = []
+    }
+    let checkDate;
+    let checkTime;
+    function findWindData (category, checkDate, checkTime) {
+      let found = data.find(info => (
+          info?.category === category &&
+              info?.fcstDate === checkDate &&
+              info?.fcstTime === checkTime
+      ))
+      // console.log("category : ", category, "found :", found)
+      return found.fcstValue;
+    }
+    for(let i = 0; i < 48; i++) {
+      checkDate = moment().add(i, "hour").format("YYYYMMDD")
+      checkTime = moment().add(i, "hour").format("HH00")
+      let dayAgo;
+      switch (moment(moment().format("YYYYMMDD")).diff(moment(checkDate), "days")) {
+        case 0:
+          dayAgo = "today"
+              break;
+        case -1:
+          dayAgo = "tomorrow"
+              break;
+        case -2:
+          dayAgo = "after-tomorrow"
+              break;
+        default:
+      }
+      let found = {
+        x: i + 1,
+        y: findWindData("WSD", checkDate, checkTime),
+        windDirection: findWindData("VEC", checkDate, checkTime),
+        hour: moment().add(i, "hour").format("HH"),
+        day: dayAgo
+      }
+      chartWindList.push(found)
+    }
+    return [...chartWindList]
   },
   pushChartHumidityList: (chartHumidityList, data) => {
     if (chartHumidityList !== []) {

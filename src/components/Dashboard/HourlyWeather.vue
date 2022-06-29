@@ -3,7 +3,7 @@
     <div class="tab-menu">
       <button @click="onClickTab('weather', chartTemperatureData)" :class="[{active: selectedTab === 'weather'}]" class="tab-btn">날씨</button>
       <span class="vertical-bar"></span>
-      <button @click="onClickTab('wind', chartTemperatureData)" :class="[{active: selectedTab === 'wind'}]" class="tab-btn">바람</button>
+      <button @click="onClickTab('wind', chartWindData)" :class="[{active: selectedTab === 'wind'}]" class="tab-btn">바람</button>
       <span class="vertical-bar"></span>
       <button @click="onClickTab('rainfall', chartHumidityData)" :class="[{active: selectedTab === 'rainfall'}]" class="tab-btn">강수</button>
       <span class="vertical-bar"></span>
@@ -49,6 +49,9 @@ export default {
     chartTemperatureData() {
       return this.$store.state.chartTemperatureList
     },
+    chartWindData() {
+      return this.$store.state.chartWindList
+    },
     chartHumidityData() {
       return this.$store.state.chartHumidityList
     }
@@ -56,11 +59,17 @@ export default {
   watch: {
     chartTemperatureData() {
       // this.fillData()
-      this.chartData = [...this.chartTemperatureData]
+      if (this.selectedTab === "weather") {
+        console.log("차트 동기화 확인 1")
+        this.chartData = [...this.chartTemperatureData]
+      }
     },
-/*    chartHumidityData() {
-      this.fillData()
-    },*/
+    chartHumidityData() {
+      if (this.selectedTab === "humidity") {
+        console.log("차트 동기화 확인 2")
+        this.chartData = [...this.chartHumidityData]
+      }
+    },
     chartData() {
       // console.log(this.chartOption)
       this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.gradientY1, this.chartOption.min, this.chartOption.max, this.chartOption.height)
@@ -86,15 +95,15 @@ export default {
             min: null,
             max: null,
             width: 2361,
-            height: 40
+            height: 48
           }
               break;
 
         case "wind":
           this.chartOption = {
             chartType: "line",
-            mainColor: "#FFC90E",
-            gradientColor1: "#FFE178",
+            mainColor: "#23e05c",
+            gradientColor1: "#B1F8C6",
             gradientColor2: "rgba(255, 255, 255, 0.4)",
             gradientY1: 50,
             min: null,
@@ -162,6 +171,13 @@ export default {
           }]
         },
         options: {
+/*          layout: {
+            padding: {
+              top: 1,
+              bottom: 1
+            }
+          },*/
+          clip: false,
           parsing: {
           },
           responsive: false,
