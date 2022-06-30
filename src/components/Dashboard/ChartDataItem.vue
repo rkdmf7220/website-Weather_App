@@ -1,9 +1,10 @@
 <template>
   <div class="data-item-wrap">
-    <div class="weather-icon-wrap" v-if="chartCategory === 'weather'">
+    <div class="weather-icon-wrap" v-if="chartCategory !== 'humidity'">
       <!--      <div class="weather-icon" :style="{ backgroundImage: `url('img/icon_weather_0_` + itemData.cloud + `_` + itemData.rain + `.png`}"></div>-->
       <!--      <div class="weather-icon" :style="{ backgroundImage: weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`)}"></div>-->
-      <div class="weather-icon" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`) + ')'}"></div>
+      <div class="weather-icon" v-if="chartCategory === 'weather'" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`) + ')'}"></div>
+      <div class="weather-icon" v-if="chartCategory === 'wind'" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWindArrow`, this.itemData.windDirection) + ')'}"></div>
     </div>
     <span class="weather-value">{{currentValue}}</span>
     <span class="weather-hour">{{currentHour}}</span>
