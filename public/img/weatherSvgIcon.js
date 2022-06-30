@@ -417,6 +417,18 @@ const ImageData = {
             </defs>
         </svg>`
     ),
-
+    iconWindArrow: (direction) => (
+        `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_361_377)" style="transform: rotate(${direction}; transform-origin: center)">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.928879 6.65685L7.29284 0.292893C7.68336 -0.0976318 8.31653 -0.0976318 8.70705 0.292893L15.071 6.65685C15.4615 7.04738 15.4615 7.68054 15.071 8.07107C14.6805 8.46159 14.0473 8.46159 13.6568 8.07107L8.99995 3.41421L8.99995 15C8.99995 15.5523 8.55223 16 7.99995 16C7.44766 16 6.99995 15.5523 6.99995 15L6.99995 3.41421L2.34309 8.07107C1.95257 8.46159 1.3194 8.46159 0.928879 8.07107C0.538355 7.68054 0.538355 7.04738 0.928879 6.65685Z" fill="#87AC91"/>
+            </g>
+            <defs>
+            <clipPath id="clip0_361_377">
+            <rect width="16" height="16" fill="white"/>
+            </clipPath>
+            </defs>
+        </svg>`
+    )
+    // TODO: iconWindArrow 회전 반영(데이터는 itemData.windDirection 이용)
 
 }
