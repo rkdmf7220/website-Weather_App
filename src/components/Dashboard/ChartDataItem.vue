@@ -3,11 +3,11 @@
     <div class="weather-icon-wrap" v-if="chartCategory !== 'humidity'">
       <!--      <div class="weather-icon" :style="{ backgroundImage: `url('img/icon_weather_0_` + itemData.cloud + `_` + itemData.rain + `.png`}"></div>-->
       <!--      <div class="weather-icon" :style="{ backgroundImage: weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`)}"></div>-->
-      <div class="weather-icon" v-if="chartCategory === 'weather'" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`) + ')'}"></div>
+      <div class="weather-icon" v-if="chartCategory === 'weather'" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWeather${isDaytime}${itemData.cloud}${itemData.rain}`) + ')'}"></div>
       <div class="weather-icon" v-if="chartCategory === 'wind'" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWindArrow`, this.itemData.windDirection) + ')'}"></div>
     </div>
     <span class="weather-value">{{currentValue}}</span>
-    <span class="weather-hour">{{currentHour}}</span>
+    <span class="weather-hour" @click="checkDayTimeLog">{{currentHour}}</span>
   </div>
 </template>
 
@@ -22,24 +22,28 @@ export default {
   },
   computed: {
     currentValue() {
-      return this.itemData.y ? this.itemData.y + '°' : ''
+      if (this.chartCategory === "weather") {
+        return this.itemData.y ? this.itemData.y + '°' : ''
+      } else {
+        return this.itemData.y ? this.itemData.y : ''
+      }
     },
     currentHour() {
       return this.itemData.hour ? this.itemData.hour + '시' : ''
     },
     isDaytime() {
-      let currentTime = this.itemData.hour + "00";
+      let currentTime = this.itemData.hour;
       let checkTime
       let dayTime
       switch (this.itemData.day) {
         case "today":
-          checkTime = moment(currentTime).isBetween(moment(this.$store.state.sunriseSunsetList[0].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[0].sunset, 'h:mm A'))
+          checkTime = moment(currentTime, 'HH').isBetween(moment(this.$store.state.sunriseSunsetList[0].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[0].sunset, 'h:mm A'))
               break;
         case "tomorrow":
-          checkTime = moment(currentTime).isBetween(moment(this.$store.state.sunriseSunsetList[1].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[1].sunset, 'h:mm A'))
+          checkTime = moment(currentTime, 'HH').isBetween(moment(this.$store.state.sunriseSunsetList[1].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[1].sunset, 'h:mm A'))
               break;
-        case "afterTomorrow":
-          checkTime = moment(currentTime).isBetween(moment(this.$store.state.sunriseSunsetList[2].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[2].sunset, 'h:mm A'))
+        case "after-tomorrow":
+          checkTime = moment(currentTime, 'HH').isBetween(moment(this.$store.state.sunriseSunsetList[2].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[2].sunset, 'h:mm A'))
               break;
       }
       switch (checkTime) {
@@ -58,6 +62,23 @@ export default {
   data () {
     return {
       weatherSvgIcon
+    }
+  },
+  methods: {
+    checkDayTimeLog() {
+      // let currentTime = moment(this.itemData.hour, 'HH').format("HH:00")
+      // let baseTimeStart = moment(this.$store.state.sunriseSunsetList[0].sunrise, 'hh:mm a').format("HH:MM")
+      // let baseTimeEnd = moment(this.$store.state.sunriseSunsetList[0].sunset, 'hh:mm a').format("HH:MM")
+
+      // let currentTime = moment("1600", "HHmm").format("HH:mm")
+      // let baseTimeStart = moment("1200", "HHmm").format("HH:mm")
+      // let baseTimeEnd = moment("2000", "HHmm").format("HH:mm")
+
+      // let output = moment(currentTime).isBetween(baseTimeStart, baseTimeEnd)
+      // console.log(currentTime, baseTimeStart, baseTimeEnd, output)
+
+      let found = moment(this.itemData.hour, 'HH').isBetween(moment(this.$store.state.sunriseSunsetList[0].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[0].sunset, 'h:mm A'))
+      console.log(found)
     }
   }
 }
