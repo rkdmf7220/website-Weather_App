@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul class="chart-data-list" @click="checkData">
+    <ul class="chart-data-list">
       <li class="chart-data-item" v-for="(item, index) in chartData" :key="item.x">
         <chart-data-item :item-data="chartData[index]" :chart-category="chartCategory"/>
       </li>
@@ -18,9 +18,6 @@ export default {
     chartCategory: String
   },
   methods: {
-    checkData() {
-      console.log("checkData", this.chartCategory, this.chartData)
-    }
   }
 }
 </script>
