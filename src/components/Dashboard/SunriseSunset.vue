@@ -83,7 +83,7 @@ export default {
 <style scoped lang="scss">
   .card-item{
     width: 380px;
-    height: 194px;
+    height: 170px;
     flex-direction: column;
 
     .card-title{

@@ -13,6 +13,6 @@ export default {
 <style scoped lang="scss">
   .card-item{
     width: 180px;
-    height: 194px;
+    height: 170px;
   }
 </style>

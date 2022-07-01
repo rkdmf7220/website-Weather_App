@@ -89,7 +89,7 @@ export default {
     display: flex;
     flex-direction: column;
     width: 40px;
-    height: 108px;
+    height: 132px;
     align-items: center;
 
       .weather-icon-wrap{

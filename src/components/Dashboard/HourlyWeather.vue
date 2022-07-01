@@ -1,5 +1,5 @@
 <template>
-  <div class="card-item" style="overflow: hidden">
+  <div class="card-item">
     <div class="tab-menu">
       <button @click="onClickTab('weather', chartTemperatureData)" :class="[{active: selectedTab === 'weather'}]" class="tab-btn">날씨</button>
       <span class="vertical-bar"></span>
@@ -40,7 +40,7 @@ export default {
         min: null,
         max: null,
         width: 2361,
-        height: 40
+        height: 50
       }
     }
   },
@@ -60,19 +60,22 @@ export default {
     chartTemperatureData() {
       // this.fillData()
       if (this.selectedTab === "weather") {
-        console.log("차트 동기화 확인 1")
         this.chartData = [...this.chartTemperatureData]
+      }
+    },
+    chartWindData() {
+      if (this.selectedTab === "wind") {
+        this.chartData = [...this.chartWindData]
       }
     },
     chartHumidityData() {
       if (this.selectedTab === "humidity") {
-        console.log("차트 동기화 확인 2")
         this.chartData = [...this.chartHumidityData]
       }
     },
     chartData() {
       // console.log(this.chartOption)
-      this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.gradientY1, this.chartOption.min, this.chartOption.max, this.chartOption.height)
+      this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.gradientY1, this.chartOption.borderWidth, this.chartOption.min, this.chartOption.max, this.chartOption.width, this.chartOption.height)
     },
     deep: true
   },
@@ -90,26 +93,31 @@ export default {
             chartType: "line",
             mainColor: "#FFC90E",
             gradientColor1: "#FFE178",
-            gradientColor2: "rgba(255, 255, 255, 0.4)",
+            gradientColor2: "#FFF8E0",
             gradientY1: 50,
+            borderWidth: 2,
             min: null,
             max: null,
             width: 2361,
-            height: 48
+            height: 58
           }
               break;
 
         case "wind":
           this.chartOption = {
-            chartType: "line",
+            chartType: "bar",
             mainColor: "#23e05c",
             gradientColor1: "#B1F8C6",
-            gradientColor2: "rgba(255, 255, 255, 0.4)",
+            gradientColor2: "#DEFCE7",
+            // gradientColor2: "rgba(255, 255, 255, 0.4)",
             gradientY1: 50,
+            borderWidth: {
+              top: 3,
+            },
             min: null,
-            max: null,
-            width: 2361,
-            height: 40
+            max: 10,
+            width: 2400,
+            height: 48
           }
               break;
 
@@ -120,6 +128,7 @@ export default {
             gradientColor1: "#CEE2FE",
             gradientColor2: "rgba(255, 255, 255, 0.4)",
             gradientY1: 50,
+            borderWidth: 2,
             min: null,
             max: null,
             width: 2361,
@@ -134,6 +143,7 @@ export default {
             gradientColor1: "#CEE2FE",
             gradientColor2: "rgba(255, 255, 255, 0.4)",
             gradientY1: 64,
+            borderWidth: 2,
             min: 0,
             max: 100,
             width: 2361,
@@ -143,7 +153,7 @@ export default {
             default:
       }
     },
-    fillData(chartType, mainColor, gradientColor1, gradientColor2, gradientY1, minValue, maxValue, height) {
+    fillData(chartType, mainColor, gradientColor1, gradientColor2, gradientY1, borderWidth, minValue, maxValue, width, height) {
       if (chart !== undefined) {
         chart.destroy()
       }
@@ -153,6 +163,7 @@ export default {
       gradientFill.addColorStop(1, gradientColor2);
       // console.log("chartData :", this.chartData)
       // console.log("chartTempData :", this.chartTemperatureData)
+      ctx.canvas.width = width;
       ctx.canvas.height = height;
       chart = new Chart(ctx, {
         type: chartType,
@@ -166,17 +177,23 @@ export default {
             borderColor: mainColor,
             fill: true,
             backgroundColor: gradientFill,
+            borderWidth: borderWidth,
+            borderSkipped: false,
             pointBackgroundColor: "#fff",
             lineTension: 0.4
           }]
         },
         options: {
-/*          layout: {
+          layout: {
             padding: {
-              top: 1,
-              bottom: 1
+              top: 0,
+              bottom: 0
+            },
+            margin: {
+              top: 0,
+              bottom: 0
             }
-          },*/
+          },
           clip: false,
           parsing: {
           },
@@ -199,7 +216,7 @@ export default {
               grid: {
                 drawBorder: false
               }
-            }
+            },
           },
           plugins: {
             legend: {
@@ -277,10 +294,11 @@ export default {
 <style scoped lang="scss">
   .card-item{
     width: 580px;
-    height: 194px;
+    height: 218px;
     flex-shrink: 0;
     flex-direction: column;
     justify-content: space-between;
+    //overflow: hidden;
 
     .tab-menu{
       line-height: 1em;
@@ -320,7 +338,15 @@ export default {
       #chart{
         position: absolute;
         left: 14px;
-        top: 40px;
+        top: 52px;
+
+        &.weather{
+          top: 48px;
+        }
+
+        &.wind{
+          left: -5px;
+        }
 
         &.humidity{
           top: 28px;
