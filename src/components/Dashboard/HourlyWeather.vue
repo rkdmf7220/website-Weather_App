@@ -115,7 +115,7 @@ export default {
               top: 3,
             },
             min: null,
-            max: 10,
+            max: null,
             width: 2400,
             height: 48
           }
@@ -216,7 +216,7 @@ export default {
               grid: {
                 drawBorder: false
               }
-            },
+            }
           },
           plugins: {
             legend: {
