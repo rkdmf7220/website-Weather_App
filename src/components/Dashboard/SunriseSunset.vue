@@ -12,7 +12,7 @@
         </div>
       </div>
       <ul class="sun-data-list">
-        <li v-for="item in this.sunriseSunsetList" class="sun-data-item" :key="item.title">
+        <li v-for="item in arrangedSunriseSunset" class="sun-data-item" :key="item.title">
           <sun-data-item :item-data="item"/>
         </li>
       </ul>
@@ -29,7 +29,10 @@ export default {
   computed: {
     ...mapState([
         'sunriseSunsetList'
-    ])
+    ]),
+    arrangedSunriseSunset() {
+      return this.sunriseSunsetList.filter((item, index) => index < 2)
+    }
 /*    todaySunrise() {
       return this.$store.state.sunriseSunset.sunrise
     },
