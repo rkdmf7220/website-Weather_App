@@ -9,10 +9,12 @@
       <span class="vertical-bar"></span>
       <button @click="onClickTab('humidity', chartHumidityData)" :class="[{active: selectedTab === 'humidity'}]" class="tab-btn">습도</button>
     </div>
-    <div class="chart-slide-wrap">
-        <canvas id="chart" :width="chartOption.width" :height="chartOption.height" :class="`${selectedTab}`"></canvas>
+    <div @scroll="displaySlideBtn" class="chart-slide-wrap" id="container">
+      <canvas id="chart" :width="chartOption.width" :height="chartOption.height" :class="`${selectedTab}`"></canvas>
       <chart-data-list :chart-data="chartData" :chart-category="this.selectedTab"/>
     </div>
+    <button @click="onClickChartSlideBtn('prev')" :class="{'is-on': prevBtnOn}" class="scroll-btn btn-prev">←</button>
+    <button @click="onClickChartSlideBtn('next')" :class="{'is-on': nextBtnOn}" class="scroll-btn btn-next">→</button>
   </div>
 </template>
 
@@ -41,7 +43,9 @@ export default {
         max: null,
         width: 2361,
         height: 50
-      }
+      },
+      prevBtnOn: false,
+      nextBtnOn: true
     }
   },
   components: {ChartDataList},
@@ -230,7 +234,7 @@ export default {
       })
       // chart.data.datasets[0].data = this.chartTemperatureData
       chart.update()
-    }
+    },
     /*fillData() {
       if (chart !== undefined) {
         chart.destroy()
@@ -287,6 +291,42 @@ export default {
       // chart.data.datasets[0].data = this.chartTemperatureData
       chart.update()
     }*/
+    onClickChartSlideBtn(direction) {
+      let slideWrap = document.getElementsByClassName('chart-slide-wrap')[0]
+      console.log('1번 현재 scrollLeft : ', slideWrap.scrollLeft)
+      if (slideWrap.scrollLeft === 0) {
+        this.prevBtnOn = false
+      } else if (slideWrap.scrollLeft === 1830) {
+        this.nextBtnOn = false
+      } else {
+        this.prevBtnOn = true
+        this.nextBtnOn = true
+      }
+      switch (direction) {
+        case "prev" :
+          slideWrap.scrollLeft -= 550;
+            break;
+        case "next" :
+          slideWrap.scrollLeft += 550;
+            break;
+        default:
+      }
+    },
+    displaySlideBtn() {
+      let currentScrollLeft = document.getElementsByClassName('chart-slide-wrap')[0].scrollLeft
+      switch (currentScrollLeft) {
+        case 0 :
+          this.prevBtnOn = false;
+            break;
+        case 1830 :
+          this.nextBtnOn = false;
+            break;
+        default :
+          this.prevBtnOn = true;
+          this.nextBtnOn = true;
+      }
+
+    }
   }
 }
 </script>
@@ -298,7 +338,7 @@ export default {
     flex-shrink: 0;
     flex-direction: column;
     justify-content: space-between;
-    //overflow: hidden;
+    position: relative;
 
     .tab-menu{
       line-height: 1em;
@@ -327,7 +367,14 @@ export default {
 
     .chart-slide-wrap{
       position: relative;
-      width: 2390px;
+      width: calc(100% + 40px);
+      margin-left: -20px;
+      overflow: hidden;
+      overflow-x: scroll;
+      scroll-behavior: smooth;
+      &::-webkit-scrollbar{
+        display: none;
+      }
 
 /*      .chart-canvas-wrap{
         position: relative;
@@ -337,7 +384,7 @@ export default {
 
       #chart{
         position: absolute;
-        left: 14px;
+        left: 34px;
         top: 52px;
 
         &.weather{
@@ -345,12 +392,35 @@ export default {
         }
 
         &.wind{
-          left: -5px;
+          left: 15px;
         }
 
         &.humidity{
           top: 28px;
         }
+      }
+    }
+
+    .scroll-btn{
+      width: 32px;
+      height: 32px;
+      border-radius: 16px;
+      background-color: white;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+      position: absolute;
+      top: 50%;
+      margin-top: 3px;
+      border: none;
+      display: none;
+
+      &.btn-prev{
+        left: -16px;
+      }
+      &.btn-next{
+        right: -16px;
+      }
+      &.is-on{
+        display: block;
       }
     }
   }
