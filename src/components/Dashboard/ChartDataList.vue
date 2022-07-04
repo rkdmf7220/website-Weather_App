@@ -24,6 +24,8 @@ export default {
 
 <style scoped lang="scss">
   .chart-data-list{
+    display: flex;
+    margin-left: 20px;
 
     .chart-data-item{
       display: inline-block;
