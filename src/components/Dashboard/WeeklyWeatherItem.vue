@@ -43,10 +43,10 @@ export default {
         return {cloud: '9', rain: '9'}
       }*/
       if (skyData && rainData) {
-        console.log("if 작동 확인")
+        // console.log("if 작동 확인")
         return {cloud: skyData, rain: rainData}
       } else {
-        console.log("else if 작동 확인")
+        // console.log("else if 작동 확인")
         return {cloud: '9', rain: '9'}
       }
     }
