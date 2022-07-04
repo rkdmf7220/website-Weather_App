@@ -7,7 +7,7 @@
       <div class="weather-icon" v-if="chartCategory === 'wind'" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWindArrow`, this.itemData.windDirection) + ')'}"></div>
     </div>
     <span class="weather-value">{{currentValue}}</span>
-    <span class="weather-hour" @click="checkDayTimeLog">{{currentHour}}</span>
+    <span class="weather-hour" :class="`${itemData.day}`" @click="checkDayTimeLog">{{currentHour}}</span>
   </div>
 </template>
 
@@ -113,6 +113,13 @@ export default {
         flex-grow: 0;
         font-size: 14px;
         color: #666666;
+
+        &.tomorrow{
+          color: #0cf;
+        }
+        &.after-tomorrow{
+          color: coral;
+        }
       }
   }
 </style>
