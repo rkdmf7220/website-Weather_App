@@ -419,17 +419,9 @@ const ImageData = {
         </svg>`
     ),
     iconWindArrow: (direction) => (
-        `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_361_377)" style="transform: rotate(${direction}deg); transform-origin: center;">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.928879 6.65685L7.29284 0.292893C7.68336 -0.0976318 8.31653 -0.0976318 8.70705 0.292893L15.071 6.65685C15.4615 7.04738 15.4615 7.68054 15.071 8.07107C14.6805 8.46159 14.0473 8.46159 13.6568 8.07107L8.99995 3.41421L8.99995 15C8.99995 15.5523 8.55223 16 7.99995 16C7.44766 16 6.99995 15.5523 6.99995 15L6.99995 3.41421L2.34309 8.07107C1.95257 8.46159 1.3194 8.46159 0.928879 8.07107C0.538355 7.68054 0.538355 7.04738 0.928879 6.65685Z" fill="#87AC91"/>
-            </g>
-            <defs>
-            <clipPath id="clip0_361_377">
-            <rect width="16" height="16" fill="white"/>
-            </clipPath>
-            </defs>
+        `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path style="transform: rotate(${direction}deg); transform-origin: center;" fill-rule="evenodd" clip-rule="evenodd" d="M13.4999 8.62132L17.3032 12.4246C17.889 13.0104 18.8388 13.0104 19.4246 12.4246C20.0104 11.8388 20.0104 10.8891 19.4246 10.3033L13.0606 3.93934C12.4748 3.35355 11.5251 3.35355 10.9393 3.93934L4.57533 10.3033C3.98954 10.8891 3.98954 11.8388 4.57533 12.4246C5.16111 13.0104 6.11086 13.0104 6.69665 12.4246L10.4999 8.62132V19C10.4999 19.8284 11.1715 20.5 11.9999 20.5C12.8284 20.5 13.4999 19.8284 13.4999 19V8.62132Z" fill="#87AC91"/>
         </svg>`
     )
-    // TODO: iconWindArrow 회전 반영(데이터는 itemData.windDirection 이용)
 
 }
