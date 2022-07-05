@@ -37,12 +37,13 @@ export default {
         chartType: "line",
         mainColor: "#FFC90E",
         gradientColor1: "#FFE178",
-        gradientColor2: "rgba(255, 255, 255, 0.4)",
+        gradientColor2: "#fffbed",
         gradientY1: 50,
         min: null,
         max: null,
-        width: 2361,
-        height: 50
+        width: 2400,
+        height: 72,
+        paddingRight: 45
       },
       prevBtnOn: false,
       nextBtnOn: true
@@ -79,7 +80,7 @@ export default {
     },
     chartData() {
       // console.log(this.chartOption)
-      this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.gradientY1, this.chartOption.borderWidth, this.chartOption.min, this.chartOption.max, this.chartOption.width, this.chartOption.height)
+      this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.gradientY1, this.chartOption.borderWidth, this.chartOption.min, this.chartOption.max, this.chartOption.width, this.chartOption.height, this.chartOption.paddingRight)
     },
     deep: true
   },
@@ -88,7 +89,8 @@ export default {
       // console.log('chartData', chartData)
       this.selectedTab = category;
       this.chartData = [...chartData];
-      this.changeChartOption(category)
+      this.changeChartOption(category);
+      document.getElementsByClassName('chart-slide-wrap')[0].scrollLeft = 0;
     },
     changeChartOption(category) {
       switch (category) {
@@ -97,13 +99,15 @@ export default {
             chartType: "line",
             mainColor: "#FFC90E",
             gradientColor1: "#FFE178",
-            gradientColor2: "#FFF8E0",
+            gradientColor2: "#fffbed",
+            // gradientColor2: "#00ccff",
             gradientY1: 50,
             borderWidth: 2,
             min: null,
             max: null,
-            width: 2361,
-            height: 58
+            width: 2400,
+            height: 72,
+            paddingRight: 45
           }
               break;
 
@@ -121,7 +125,8 @@ export default {
             min: null,
             max: null,
             width: 2400,
-            height: 48
+            height: 64,
+            paddingRight: 0
           }
               break;
 
@@ -130,13 +135,15 @@ export default {
             chartType: "line",
             mainColor: "#85B6FD",
             gradientColor1: "#CEE2FE",
-            gradientColor2: "rgba(255, 255, 255, 0.4)",
+            // gradientColor2: "rgba(255, 255, 255, 0.4)",
+            gradientColor2: "#00ccff",
             gradientY1: 50,
             borderWidth: 2,
             min: null,
             max: null,
-            width: 2361,
-            height: 40
+            width: 2400,
+            height: 40,
+            paddingRight: 45
           }
               break;
 
@@ -145,19 +152,20 @@ export default {
             chartType: "line",
             mainColor: "#85B6FD",
             gradientColor1: "#CEE2FE",
-            gradientColor2: "rgba(255, 255, 255, 0.4)",
+            gradientColor2: "rgba(250, 252, 255, 1)",
             gradientY1: 64,
             borderWidth: 2,
             min: 0,
             max: 100,
-            width: 2361,
-            height: 56
+            width: 2400,
+            height: 80,
+            paddingRight: 45
           }
               break;
             default:
       }
     },
-    fillData(chartType, mainColor, gradientColor1, gradientColor2, gradientY1, borderWidth, minValue, maxValue, width, height) {
+    fillData(chartType, mainColor, gradientColor1, gradientColor2, gradientY1, borderWidth, minValue, maxValue, width, height, paddingRight) {
       if (chart !== undefined) {
         chart.destroy()
       }
@@ -190,13 +198,8 @@ export default {
         options: {
           layout: {
             padding: {
-              top: 0,
-              bottom: 0
+              right: paddingRight
             },
-            margin: {
-              top: 0,
-              bottom: 0
-            }
           },
           clip: false,
           parsing: {
@@ -232,76 +235,10 @@ export default {
           }
         }
       })
-      // chart.data.datasets[0].data = this.chartTemperatureData
       chart.update()
     },
-    /*fillData() {
-      if (chart !== undefined) {
-        chart.destroy()
-      }
-      const ctx = document.getElementById('chart').getContext('2d');
-      chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-            '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
-            '21', '22', '23', '24','','','','','','','','','','','','','','','','','','','','','','','',''],
-          datasets: [{
-            label: '테스트 데이터셋',
-            data: this.chartHumidityData,
-            borderColor: "rgba(255, 201, 14, 1)",
-            fill: false,
-            pointBackgroundColor: "#fff",
-            lineTension: 0
-          }]
-        },
-        options: {
-          barPercentage: 0.5,
-          parsing: {
-          },
-          responsive: false,
-          title: {},
-          hover: {
-            mode: null
-          },
-          scales: {
-            y: {
-              display: false,
-              grid: {
-                drawBorder: false
-              }
-            },
-            x: {
-              display: false,
-              grid: {
-                drawBorder: false
-              }
-            }
-          },
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              enabled: false
-            }
-          }
-        }
-      })
-      // chart.data.datasets[0].data = this.chartTemperatureData
-      chart.update()
-    }*/
     onClickChartSlideBtn(direction) {
       let slideWrap = document.getElementsByClassName('chart-slide-wrap')[0]
-      console.log('1번 현재 scrollLeft : ', slideWrap.scrollLeft)
-      if (slideWrap.scrollLeft === 0) {
-        this.prevBtnOn = false
-      } else if (slideWrap.scrollLeft === 1830) {
-        this.nextBtnOn = false
-      } else {
-        this.prevBtnOn = true
-        this.nextBtnOn = true
-      }
       switch (direction) {
         case "prev" :
           slideWrap.scrollLeft -= 550;
@@ -314,11 +251,13 @@ export default {
     },
     displaySlideBtn() {
       let currentScrollLeft = document.getElementsByClassName('chart-slide-wrap')[0].scrollLeft
+      let slideWrapScrollWidth = document.getElementsByClassName('chart-slide-wrap')[0].scrollWidth
+      let slideWrapOffsetWidth = document.getElementsByClassName('chart-slide-wrap')[0].offsetWidth
       switch (currentScrollLeft) {
         case 0 :
           this.prevBtnOn = false;
             break;
-        case 1830 :
+        case slideWrapScrollWidth - slideWrapOffsetWidth :
           this.nextBtnOn = false;
             break;
         default :
@@ -385,10 +324,10 @@ export default {
       #chart{
         position: absolute;
         left: 34px;
-        top: 52px;
+        top: 40px;
 
         &.weather{
-          top: 48px;
+          top: 36px;
         }
 
         &.wind{
