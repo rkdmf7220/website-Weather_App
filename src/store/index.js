@@ -148,6 +148,7 @@ export default new Vuex.Store({
     ],
     chartTemperatureList: [],
     chartWindList: [],
+    chartRainfallList: [],
     chartHumidityList: [],
     completeCount: 10,
     loadingCount: 0,
@@ -200,6 +201,9 @@ export default new Vuex.Store({
     },
     chartWindList(state, data) {
       state.chartWindList = data
+    },
+    chartRainfallList(state, data) {
+      state.chartRainfallList = data
     },
     chartHumidityList(state, data) {
       state.chartHumidityList = data
@@ -354,6 +358,7 @@ export default new Vuex.Store({
               // console.log("villageForecast에서", state.weeklyInfoList)
               let filteredList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
               let chartTemperatureList = helper.pushChartTemperatureData(state.chartTemperatureList, list)
+              let chartRainfallList = helper.pushChartRainfallList(state.chartRainfallList, list)
               let chartWindList = helper.pushChartWindList(state.chartWindList, list)
               let chartHumidityList = helper.pushChartHumidityList(state.chartHumidityList, list)
               // console.log(chartHumidityList)
@@ -364,6 +369,7 @@ export default new Vuex.Store({
                 commit('weeklyInfoList', filteredList)
                 commit('chartTemperatureList', chartTemperatureList)
                 commit('chartWindList', chartWindList)
+                commit('chartRainfallList', chartRainfallList)
                 commit('chartHumidityList', chartHumidityList)
                 // console.log("state확인", state.chartTemperatureList, chartTemperatureList)
                 commit('increaseLoadingCount')
@@ -832,6 +838,72 @@ const helper = {
       chartWindList.push(found)
     }
     return [...chartWindList]
+  },
+  pushChartRainfallList: (chartRainfallList, data) => {
+    if (chartRainfallList !== []) {
+      chartRainfallList = []
+    }
+    let checkDate;
+    let checkTime;
+    function findRainfallValueData(checkDate, checkTime) {
+      let value
+      let found = data.find(info => (
+          info?.category === "PCP" &&
+              info?.fcstDate === checkDate &&
+              info?.fcstTime === checkTime
+      ))
+      switch(found.fcstValue) {
+        case "강수없음":
+          value = "-"
+              break;
+        case "1.0mm 미만":
+          value = "0.1~1"
+            break;
+        case "30.0~50.0mm":
+          value =  "30~50"
+            break;
+        case "50.mm 이상":
+          value = "50~"
+            break;
+        default:
+          value = found.fcstValue.replace("mm","")
+      }
+      return value
+    }
+    function findRainfallProbabilityData (checkDate, checkTime) {
+      let found = data.find(info => (
+          info?.category === "POP" &&
+          info?.fcstDate === checkDate &&
+          info?.fcstTime === checkTime
+      ))
+      return found.fcstValue
+    }
+    for(let i = 0; i < 48; i++) {
+      checkDate = moment().add(i, "hour").format("YYYYMMDD")
+      checkTime = moment().add(i, "hour").format("HH00")
+      let dayAgo;
+      switch (moment(moment().format("YYYYMMDD")).diff(moment(checkDate), "days")) {
+        case 0:
+          dayAgo = "today"
+          break;
+        case -1:
+          dayAgo = "tomorrow"
+          break;
+        case -2:
+          dayAgo = "after-tomorrow"
+          break;
+        default:
+      }
+      let found = {
+        x: i + 1,
+        y: findRainfallValueData(checkDate, checkTime),
+        rainfallProbability: findRainfallProbabilityData(checkDate, checkTime),
+        hour: moment().add(i, "hour").format("HH"),
+        day: dayAgo
+      }
+      chartRainfallList.push(found)
+    }
+    return [...chartRainfallList]
   },
   pushChartHumidityList: (chartHumidityList, data) => {
     if (chartHumidityList !== []) {
