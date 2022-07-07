@@ -1,13 +1,26 @@
 <template>
   <div class="card-item">
-    <div class="tab-menu">
-      <button @click="onClickTab('weather', chartTemperatureData)" :class="[{active: selectedTab === 'weather'}]" class="tab-btn">날씨</button>
-      <span class="vertical-bar"></span>
-      <button @click="onClickTab('wind', chartWindData)" :class="[{active: selectedTab === 'wind'}]" class="tab-btn">바람</button>
-      <span class="vertical-bar"></span>
-      <button @click="onClickTab('rainfall', chartHumidityData)" :class="[{active: selectedTab === 'rainfall'}]" class="tab-btn">강수</button>
-      <span class="vertical-bar"></span>
-      <button @click="onClickTab('humidity', chartHumidityData)" :class="[{active: selectedTab === 'humidity'}]" class="tab-btn">습도</button>
+    <div class="card-top-wrap">
+      <div class="tab-menu">
+        <button @click="onClickTab('weather', chartTemperatureData)" :class="[{active: selectedTab === 'weather'}]"
+                class="tab-btn">날씨
+        </button>
+        <span class="vertical-bar"></span>
+        <button @click="onClickTab('wind', chartWindData)" :class="[{active: selectedTab === 'wind'}]" class="tab-btn">
+          바람
+        </button>
+        <span class="vertical-bar"></span>
+        <button @click="onClickTab('rainfall', chartHumidityData)" :class="[{active: selectedTab === 'rainfall'}]"
+                class="tab-btn">강수
+        </button>
+        <span class="vertical-bar"></span>
+        <button @click="onClickTab('humidity', chartHumidityData)" :class="[{active: selectedTab === 'humidity'}]"
+                class="tab-btn">습도
+        </button>
+      </div>
+      <div class="chart-data-info small-text gray2">
+        <span>{{this.chartDataInfo}}</span>
+      </div>
     </div>
     <div @scroll="displaySlideBtn" class="chart-slide-wrap" id="container">
       <canvas id="chart" :width="chartOption.width" :height="chartOption.height" :class="`${selectedTab}`"></canvas>
@@ -38,7 +51,8 @@ export default {
         mainColor: "#FFC90E",
         gradientColor1: "#FFE178",
         gradientColor2: "#fffbed",
-        gradientY1: 50,
+        gradientY0: 6,
+        gradientY1: 58,
         min: null,
         max: null,
         width: 2400,
@@ -59,6 +73,25 @@ export default {
     },
     chartHumidityData() {
       return this.$store.state.chartHumidityList
+    },
+    chartDataInfo() {
+      let info
+      switch (this.selectedTab) {
+        case 'weather' :
+          info = null
+              break;
+        case 'wind' :
+          info = '풍향 | 풍속 m/s'
+              break;
+        case 'rainfall' :
+          info = '강수 확률 % | 강수량 mm'
+              break;
+        case 'humidity' :
+          info = '습도 %'
+              break;
+        default :
+      }
+      return info
     }
   },
   watch: {
@@ -80,7 +113,7 @@ export default {
     },
     chartData() {
       // console.log(this.chartOption)
-      this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.gradientY1, this.chartOption.borderWidth, this.chartOption.min, this.chartOption.max, this.chartOption.width, this.chartOption.height, this.chartOption.paddingRight)
+      this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.gradientY0, this.chartOption.gradientY1, this.chartOption.borderWidth, this.chartOption.min, this.chartOption.max, this.chartOption.width, this.chartOption.height, this.chartOption.paddingRight)
     },
     deep: true
   },
@@ -101,7 +134,8 @@ export default {
             gradientColor1: "#FFE178",
             gradientColor2: "#fffbed",
             // gradientColor2: "#00ccff",
-            gradientY1: 50,
+            gradientY0: 6,
+            gradientY1: 58,
             borderWidth: 2,
             min: null,
             max: null,
@@ -118,6 +152,7 @@ export default {
             gradientColor1: "#B1F8C6",
             gradientColor2: "#DEFCE7",
             // gradientColor2: "rgba(255, 255, 255, 0.4)",
+            gradientY0: 0,
             gradientY1: 50,
             borderWidth: {
               top: 3,
@@ -137,6 +172,7 @@ export default {
             gradientColor1: "#CEE2FE",
             // gradientColor2: "rgba(255, 255, 255, 0.4)",
             gradientColor2: "#00ccff",
+            gradientY0: 0,
             gradientY1: 50,
             borderWidth: 2,
             min: null,
@@ -153,7 +189,8 @@ export default {
             mainColor: "#85B6FD",
             gradientColor1: "#CEE2FE",
             gradientColor2: "rgba(250, 252, 255, 1)",
-            gradientY1: 64,
+            gradientY0: 6,
+            gradientY1: 70,
             borderWidth: 2,
             min: 0,
             max: 100,
@@ -165,12 +202,12 @@ export default {
             default:
       }
     },
-    fillData(chartType, mainColor, gradientColor1, gradientColor2, gradientY1, borderWidth, minValue, maxValue, width, height, paddingRight) {
+    fillData(chartType, mainColor, gradientColor1, gradientColor2, gradientY0, gradientY1, borderWidth, minValue, maxValue, width, height, paddingRight) {
       if (chart !== undefined) {
         chart.destroy()
       }
       ctx = document.getElementById('chart').getContext('2d');
-      gradientFill = ctx.createLinearGradient(0, 0, 0, gradientY1);
+      gradientFill = ctx.createLinearGradient(0, gradientY0, 0, gradientY1);
       gradientFill.addColorStop(0, gradientColor1);
       gradientFill.addColorStop(1, gradientColor2);
       // console.log("chartData :", this.chartData)
@@ -236,6 +273,7 @@ export default {
         }
       })
       chart.update()
+      document.getElementsByClassName('chart-slide-wrap')[0].scrollLeft = 0;
     },
     onClickChartSlideBtn(direction) {
       let slideWrap = document.getElementsByClassName('chart-slide-wrap')[0]
@@ -279,28 +317,35 @@ export default {
     justify-content: space-between;
     position: relative;
 
-    .tab-menu{
-      line-height: 1em;
+    .card-top-wrap{
+      display: flex;
+      align-items: center;
 
-      .tab-btn{
-        background: transparent;
-        border: none;
-        padding: 4px 8px 8px 8px;
-        position: relative;
+      .tab-menu {
+        line-height: 1em;
+        flex: auto;
 
-        &.active::after{
-          content: '';
-          position: absolute;
-          bottom: 0;
-          width: 60%;
-          height: 2px;
-          left: 20%;
-          background-color: #1E90FF;
+        .tab-btn {
+          background: transparent;
+          border: none;
+          padding: 4px 8px 8px 8px;
+          position: relative;
+
+          &.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 60%;
+            height: 2px;
+            left: 20%;
+            background-color: #1E90FF;
+          }
         }
-      }
-      .vertical-bar{
-        font-size: 0.75em;
-        border-left: 1px solid #bbbbbb;
+
+        .vertical-bar {
+          font-size: 0.75em;
+          border-left: 1px solid #bbbbbb;
+        }
       }
     }
 
@@ -327,7 +372,7 @@ export default {
         top: 40px;
 
         &.weather{
-          top: 36px;
+          top: 40px;
         }
 
         &.wind{
