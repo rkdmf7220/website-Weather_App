@@ -10,7 +10,7 @@
           바람
         </button>
         <span class="vertical-bar"></span>
-        <button @click="onClickTab('rainfall', chartHumidityData)" :class="[{active: selectedTab === 'rainfall'}]"
+        <button @click="onClickTab('rainfall', chartRainfallData)" :class="[{active: selectedTab === 'rainfall'}]"
                 class="tab-btn">강수
         </button>
         <span class="vertical-bar"></span>
@@ -68,6 +68,9 @@ export default {
     chartTemperatureData() {
       return this.$store.state.chartTemperatureList
     },
+    chartRainfallData() {
+      return this.$store.state.chartRainfallList
+    },
     chartWindData() {
       return this.$store.state.chartWindList
     },
@@ -99,6 +102,11 @@ export default {
       // this.fillData()
       if (this.selectedTab === "weather") {
         this.chartData = [...this.chartTemperatureData]
+      }
+    },
+    chartRainfallData() {
+      if (this.selectedTab === "rainfall") {
+        this.chartData = [...this.chartRainfallData]
       }
     },
     chartWindData() {
