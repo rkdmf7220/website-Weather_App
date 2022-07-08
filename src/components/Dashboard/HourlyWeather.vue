@@ -23,7 +23,7 @@
       </div>
     </div>
     <div @scroll="displaySlideBtn" class="chart-slide-wrap" id="container">
-      <canvas id="chart" :width="chartOption.width" :height="chartOption.height" :class="`${selectedTab}`"></canvas>
+      <canvas v-show="selectedTab !== 'rainfall'" id="chart" :width="chartOption.width" :height="chartOption.height" :class="`${selectedTab}`"></canvas>
       <chart-data-list :chart-data="chartData" :chart-category="this.selectedTab"/>
     </div>
     <button @click="onClickChartSlideBtn('prev')" :class="{'is-on': prevBtnOn}" class="scroll-btn btn-prev">←</button>
@@ -211,6 +211,10 @@ export default {
       }
     },
     fillData(chartType, mainColor, gradientColor1, gradientColor2, gradientY0, gradientY1, borderWidth, minValue, maxValue, width, height, paddingRight) {
+      if (chartType === "rainfall") {
+        chart.destroy()
+        return
+      }
       if (chart !== undefined) {
         chart.destroy()
       }
@@ -343,9 +347,9 @@ export default {
             content: '';
             position: absolute;
             bottom: 0;
-            width: 60%;
+            width: 70%;
             height: 2px;
-            left: 20%;
+            left: 16%;
             background-color: #1E90FF;
           }
         }
