@@ -422,6 +422,15 @@ const ImageData = {
         `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path style="transform: rotate(${direction}deg); transform-origin: center;" fill-rule="evenodd" clip-rule="evenodd" d="M13.4999 8.62132L17.3032 12.4246C17.889 13.0104 18.8388 13.0104 19.4246 12.4246C20.0104 11.8388 20.0104 10.8891 19.4246 10.3033L13.0606 3.93934C12.4748 3.35355 11.5251 3.35355 10.9393 3.93934L4.57533 10.3033C3.98954 10.8891 3.98954 11.8388 4.57533 12.4246C5.16111 13.0104 6.11086 13.0104 6.69665 12.4246L10.4999 8.62132V19C10.4999 19.8284 11.1715 20.5 11.9999 20.5C12.8284 20.5 13.4999 19.8284 13.4999 19V8.62132Z" fill="#87AC91"/>
         </svg>`
+    ),
+    iconRainfallProbabilityBase: () => (
+        `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 15.2308C20 19.2455 16.4183 22.5 12 22.5C7.58172 22.5 4 19.2455 4 15.2308C4 11.2161 10.6667 1.5 12 1.5C13.3333 1.5 20 11.2161 20 15.2308Z" fill="#E7F0FF"/>
+        </svg>`
+    ),
+    iconRainfallProbabilityFill: () => (
+        `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 15.2308C20 19.2455 16.4183 22.5 12 22.5C7.58172 22.5 4 19.2455 4 15.2308C4 11.2161 10.6667 1.5 12 1.5C13.3333 1.5 20 11.2161 20 15.2308Z" fill="#85B6FD"/>
+        </svg>`
     )
-
 }
