@@ -1,12 +1,17 @@
 <template>
   <div class="data-item-wrap">
     <div class="weather-icon-wrap" v-if="chartCategory !== 'humidity'">
+<!--    <div class="weather-icon-wrap" v-if="chartCategory === 'weather' || chartCategory === 'wind'">-->
       <!--      <div class="weather-icon" :style="{ backgroundImage: `url('img/icon_weather_0_` + itemData.cloud + `_` + itemData.rain + `.png`}"></div>-->
       <!--      <div class="weather-icon" :style="{ backgroundImage: weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`)}"></div>-->
       <div class="weather-icon" v-if="chartCategory === 'weather'" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWeather${isDaytime}${itemData.cloud}${itemData.rain}`) + ')'}"></div>
       <div class="weather-icon" v-if="chartCategory === 'wind'" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWindArrow`, this.itemData.windDirection) + ')'}"></div>
+      <div class="weather-icon rainfall-icon" v-if="chartCategory === 'rainfall'" :style="{backgroundImage: `url(` + weatherSvgIcon.get(`iconRainfallProbabilityBase`) +`)`}">
+        <div class="rainfall-icon-fill" :style="{backgroundImage: `url(` + weatherSvgIcon.get(`iconRainfallProbabilityFill`) +`)`, height: itemData.rainfallProbability+'%'}"></div>
+      </div>
+      <span class="small-text gray3" v-if="chartCategory === 'rainfall'">{{currentRainfallProbability}}</span>
     </div>
-    <span class="weather-value">{{currentValue}}</span>
+    <span :class="{'rainfall-value': chartCategory === 'rainfall', 'white': rainfallValueTextColor}" class="weather-value small-text" :style="{backgroundColor: rainfallValueBackgroundColor}">{{currentValue}}</span>
     <span class="weather-hour" :class="`${itemData.day}`" @click="checkDayTimeLog">{{currentHour}}</span>
   </div>
 </template>
@@ -57,6 +62,52 @@ export default {
             dayTime = "0"
       }
       return dayTime
+    },
+    currentRainfallProbability() {
+      let found = this.itemData.rainfallProbability
+      let value
+      switch (found) {
+        case "0" :
+          value = "-"
+              break;
+        default:
+          value = found
+      }
+      return value ? value + '%' : null;
+    },
+    rainfallValueBackgroundColor() {
+      if (this.chartCategory !== 'rainfall') {
+        return undefined
+      }
+      let bgColor
+      switch (this.itemData.y) {
+        case '-' :
+          bgColor = "#EAF2FF"
+              break;
+        case undefined :
+          bgColor = "#EAF2FF"
+              break;
+        default :
+          bgColor = "#558FFF"
+      }
+      return bgColor
+    },
+    rainfallValueTextColor() {
+      if (this.chartCategory !== 'rainfall') {
+        return undefined
+      }
+      let textColor
+      switch (this.itemData.y) {
+        case '-' :
+          textColor = false
+              break;
+        case undefined :
+          textColor = false
+              break;
+        default :
+          textColor = true
+      }
+      return textColor
     }
   },
   data () {
@@ -91,22 +142,41 @@ export default {
     width: 40px;
     height: 132px;
     align-items: center;
+    justify-content: space-between;
 
       .weather-icon-wrap{
         flex-grow: 0;
-        width: 24px;
-        height: 24px;
 
         .weather-icon{
-          width: 100%;
-          height: 100%;
+          width: 24px;
+          height: 24px;
           background-size: cover;
+        }
+        .rainfall-icon{
+          position: relative;
+          margin: auto;
+
+          .rainfall-icon-fill{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            left: 0;
+            background-position-y: bottom;
+          }
         }
       }
 
       .weather-value{
         flex: auto;
-        font-size: 14px;
+
+        &.rainfall-value{
+          width: 100%;
+          height: 32px;
+          line-height: 32px;
+          flex: none;
+          font-size: 12px;
+        }
       }
 
       .weather-hour{
