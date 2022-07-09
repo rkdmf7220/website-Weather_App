@@ -144,10 +144,4 @@ export default {
 
 <style lang="scss">
   @import "../assets/scss/dashboard";
-  .box1{
-    width: 20px;
-    height: 20px;
-    background: #000;
-    margin: 8px;
-  }
 </style>

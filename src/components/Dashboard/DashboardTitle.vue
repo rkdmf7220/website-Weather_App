@@ -23,7 +23,6 @@ export default {
 <style scoped lang="scss">
   .dashboard-title{
     padding-left: 10px;
-    margin-top: 64px;
 
     span{
       font-weight: 400;
