@@ -1,10 +1,11 @@
 <template>
-  <div :class="currentColorClass" id="app">
+<!--  <div :class="currentColorClass" id="app">-->
+  <div id="app">
     <router-view/>
   </div>
 </template>
 
-<script>
+<!--<script>
 import moment from "moment";
 export default {
   computed: {
@@ -41,7 +42,7 @@ export default {
     }
   }
 }
-</script>
+</script>-->
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
