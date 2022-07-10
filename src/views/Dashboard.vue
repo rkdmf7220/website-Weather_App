@@ -16,7 +16,7 @@
       <weekly-weather/>
     </div>
     <div>
-      <b-modal :ok-title="'확인'" :cancel-title="'취소'" id="stationModal" title="지역 설정" @ok="onConfirmChangeLocale">
+      <b-modal :ok-title="'적용'" :cancel-title="'취소'" id="stationModal" title="지역 설정" @ok="onConfirmChangeLocale">
 <!--        <select v-model="selectedStation" >
           <option key="none" :value="null" label="시/군/구"/>
           <option v-for="station in stations" :key="station.areaNo" :value="station.areaNo" :label="station.stationName"/>
@@ -46,6 +46,16 @@ export default {
     stations() {
       return this.areaInfo.seoul.stations || []
     },
+    stationOptions() {
+      console.log("작동확인")
+      let found = []
+      found.push({value: null, text: "시/군/구"})
+      this.areaInfo.seoul.stations.forEach((station) => {
+        found.push({value: station.areaNo, text: station.stationName})
+      })
+      console.log(found)
+      return found
+    }
   },
   data() {
     return{
@@ -145,4 +155,14 @@ export default {
 
 <style lang="scss">
   @import "../assets/scss/dashboard";
+  .custom-select{
+    width: 100px;
+    height: 40px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    option{
+      padding: 4px 0;
+    }
+  }
 </style>
