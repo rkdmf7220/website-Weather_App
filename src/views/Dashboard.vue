@@ -43,17 +43,12 @@ export default {
   name: "Dashboard",
   components: {WeeklyWeather, WeatherWarn, SunriseSunset, HourlyWeather, CurrentWeather, SearchBar, DashboardTitle},
   computed: {
-    stations() {
-      return this.areaInfo.seoul.stations || []
-    },
     stationOptions() {
-      console.log("작동확인")
       let found = []
       found.push({value: null, text: "시/군/구"})
       this.areaInfo.seoul.stations.forEach((station) => {
         found.push({value: station.areaNo, text: station.stationName})
       })
-      console.log(found)
       return found
     }
   },
