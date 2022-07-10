@@ -167,7 +167,7 @@ export default {
             },
             min: null,
             max: null,
-            width: 2400,
+            width: 2399.999,
             height: 64,
             paddingRight: 0
           }
@@ -185,7 +185,7 @@ export default {
             borderWidth: 2,
             min: null,
             max: null,
-            width: 2400,
+            width: 2400.000,
             height: 40,
             paddingRight: 45
           }
@@ -202,7 +202,7 @@ export default {
             borderWidth: 2,
             min: 0,
             max: 100,
-            width: 2400,
+            width: 2399.9999,
             height: 80,
             paddingRight: 45
           }
