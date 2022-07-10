@@ -34,4 +34,10 @@ export default {
       }
     }
   }
+
+  @media screen and (max-width: 768px) {
+    .air-info-container .air-info-list{
+      border-right: none;
+    }
+  }
 </style>

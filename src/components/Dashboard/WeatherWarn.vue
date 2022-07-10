@@ -1,6 +1,8 @@
 <template>
-  <div class="card-item">
+  <div class="card-wrap">
+    <div class="card-item">
 
+    </div>
   </div>
 </template>
 
@@ -14,5 +16,10 @@ export default {
   .card-item{
     width: 180px;
     height: 170px;
+  }
+  @media screen and (max-width: 768px) {
+    .card-wrap{
+      display: none;
+    }
   }
 </style>

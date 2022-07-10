@@ -49,7 +49,6 @@ export default {
 @import "assets/scss/reset-bootstrap";
 @import "assets/scss/reset.scss";
 #app {
-  min-width: 1216px;
   &.dawn{
     background-color: #8E9CE8;
   }

@@ -1,13 +1,15 @@
 <template>
-  <div class="card-item">
-    <place-and-time/>
-    <div class="top-item-wrap">
-      <div class="icon-wrap">
-        <weather-icon :item-data="this.weatherData" :daytime="currentDaytime"/>
+  <div class="card-wrap">
+    <div class="card-item">
+      <place-and-time/>
+      <div class="top-item-wrap">
+        <div class="icon-wrap">
+          <weather-icon :item-data="this.weatherData" :daytime="currentDaytime"/>
+        </div>
+        <temperature-info :item-data="this.weatherData" :daytime="currentDaytime"/>
       </div>
-      <temperature-info/>
+      <air-info/>
     </div>
-    <air-info/>
   </div>
 </template>
 
@@ -70,6 +72,21 @@ export default {
     .icon-wrap{
       width: 160px;
       height: 160px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .card-wrap {
+    width: 100%;
+    .card-item {
+      width: 100%;
+      height: auto;
+      .top-item-wrap {
+        .icon-wrap {
+          display: none;
+        }
+      }
     }
   }
 }

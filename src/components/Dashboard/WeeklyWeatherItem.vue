@@ -1,22 +1,28 @@
 <template>
-  <div class="card-item weekly-weather-item">
-    <div class="text-day-info">
-      <span>{{itemData.day}}</span>
-      <span class="small-text txt-date gray2">{{moment().add(index, "days").format("M/D")}}</span>
-    </div>
-    <div class="icon-wrap">
-      <weather-icon :item-data="weatherData"/>
-    </div>
-    <div class="value-info">
-      <div class="temperature-value">
-        <h3 class="gray2 small-text"><span class="blue-bell">{{itemData.minTemperature}}°</span>
-          /
-          <span class="coral">{{itemData.maxTemperature}}°</span>
-        </h3>
+  <div class="card-wrap">
+    <div class="card-item weekly-weather-item">
+      <div class="text-day-info">
+        <span>{{ itemData.day }}</span>
+        <span class="small-text txt-date gray2">{{ moment().add(index, "days").format("M/D") }}</span>
       </div>
-      <div class="rainfall-probability-value small-text">
-        <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 11.692c0 2.103-1.79 3.808-4 3.808s-4-1.705-4-3.808C6 9.59 9.333 4.5 10 4.5c.667 0 4 5.09 4 7.192Z" fill="#85B6FD"/></svg>
-        <b class="blue-bell">{{itemData.rainfallProbability}}%</b>
+      <div class="icon-wrap">
+        <weather-icon :item-data="weatherData"/>
+      </div>
+      <div class="value-info">
+        <div class="temperature-value">
+          <h3 class="gray2 small-text"><span class="blue-bell">{{ itemData.minTemperature }}°</span>
+            /
+            <span class="coral">{{ itemData.maxTemperature }}°</span>
+          </h3>
+        </div>
+        <div class="rainfall-probability-value small-text">
+          <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M14 11.692c0 2.103-1.79 3.808-4 3.808s-4-1.705-4-3.808C6 9.59 9.333 4.5 10 4.5c.667 0 4 5.09 4 7.192Z"
+                fill="#85B6FD"/>
+          </svg>
+          <b class="blue-bell">{{ itemData.rainfallProbability }}%</b>
+        </div>
       </div>
     </div>
   </div>
@@ -92,6 +98,22 @@ export default {
       .rainfall-probability-value{
         margin-left: auto;
         margin-right: 0;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .dashboard-container .list-container .weekly-item{
+      &:last-child .card-wrap{
+        padding-right: 10px;
+      }
+
+      .card-wrap {
+        padding-right: 0;
+
+        .weekly-weather-item {
+          width: 160px;
+        }
       }
     }
   }

@@ -1,7 +1,11 @@
 <template>
   <div class="info-container">
-    <h2>{{currentTemperature}}</h2>
-<!--    <span>어제보다 <b class="coral">1°</b> 높아요</span>-->
+    <div class="first-info-wrap">
+      <div class="icon-wrap">
+        <weather-icon :item-data="this.itemData" :daytime="daytime"/>
+      </div>
+      <h2>{{ currentTemperature }}</h2>
+    </div>
     <div class="temperature-list">
       <h3 class="gray2"><span class="blue-bell">12°</span> / <span class="coral">23°</span></h3>
       <span class="small-text"><span class="gray3">체감온도</span> {{currentWindChill}}</span>
@@ -31,9 +35,15 @@
 
 <script>
 import moment from "moment";
+import WeatherIcon from "@/components/Dashboard/currentWeather/WeatherIcon";
 
 export default {
   name: "TempInfo",
+  components: {WeatherIcon},
+  props: {
+    itemData : Object,
+    daytime : String
+  },
   computed: {
      currentTemperature() {
        // console.log('currentTemperature()::::', this.$store.state)
@@ -93,12 +103,6 @@ export default {
         return Number(moment().format('HH'))
       }
     }
-  },
-
-  methods: {
-    getYesterdayTemperature() {
-      //
-    }
   }
 }
 </script>
@@ -109,6 +113,12 @@ export default {
     flex-direction: column;
     line-height: 1.25em;
     justify-content: center;
+
+    .icon-wrap{
+      display: none;
+      width: 100px;
+      height: 100px;
+    }
 
     h2{
       //margin-bottom: 16px;
@@ -129,6 +139,21 @@ export default {
       .vertical-line{
         margin: 0 8px;
         border-left: 1px solid #bbbbbb;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .info-container{
+      align-items: center;
+
+      .first-info-wrap{
+        display: flex;
+        align-items: center;
+
+        .icon-wrap{
+          display: block;
+        }
       }
     }
   }

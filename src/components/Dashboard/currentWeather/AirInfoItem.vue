@@ -80,4 +80,17 @@ export default {
       }
     }
   }
+
+  @media screen and (max-width: 768px) {
+    .air-item-container{
+      width: 80px;
+      .air-item-grade{
+        padding: 8px 12px;
+
+        &.small-text{
+        font-size: 0.8rem
+        }
+      }
+    }
+  }
 </style>

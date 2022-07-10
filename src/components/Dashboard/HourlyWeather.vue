@@ -1,33 +1,37 @@
 <template>
-  <div class="card-item">
-    <div class="card-top-wrap">
-      <div class="tab-menu">
-        <button @click="onClickTab('weather', chartTemperatureData)" :class="[{active: selectedTab === 'weather'}]"
-                class="tab-btn">날씨
-        </button>
-        <span class="vertical-bar"></span>
-        <button @click="onClickTab('wind', chartWindData)" :class="[{active: selectedTab === 'wind'}]" class="tab-btn">
-          바람
-        </button>
-        <span class="vertical-bar"></span>
-        <button @click="onClickTab('rainfall', chartRainfallData)" :class="[{active: selectedTab === 'rainfall'}]"
-                class="tab-btn">강수
-        </button>
-        <span class="vertical-bar"></span>
-        <button @click="onClickTab('humidity', chartHumidityData)" :class="[{active: selectedTab === 'humidity'}]"
-                class="tab-btn">습도
-        </button>
+  <div class="card-wrap">
+    <div class="card-item">
+      <div class="card-top-wrap">
+        <div class="tab-menu">
+          <button @click="onClickTab('weather', chartTemperatureData)" :class="[{active: selectedTab === 'weather'}]"
+                  class="tab-btn">날씨
+          </button>
+          <span class="vertical-bar"></span>
+          <button @click="onClickTab('wind', chartWindData)" :class="[{active: selectedTab === 'wind'}]"
+                  class="tab-btn">
+            바람
+          </button>
+          <span class="vertical-bar"></span>
+          <button @click="onClickTab('rainfall', chartRainfallData)" :class="[{active: selectedTab === 'rainfall'}]"
+                  class="tab-btn">강수
+          </button>
+          <span class="vertical-bar"></span>
+          <button @click="onClickTab('humidity', chartHumidityData)" :class="[{active: selectedTab === 'humidity'}]"
+                  class="tab-btn">습도
+          </button>
+        </div>
+        <div class="chart-data-info small-text gray2">
+          <span>{{ this.chartDataInfo }}</span>
+        </div>
       </div>
-      <div class="chart-data-info small-text gray2">
-        <span>{{this.chartDataInfo}}</span>
+      <div @scroll="displaySlideBtn" class="chart-slide-wrap" id="container">
+        <canvas id="chart" :width="chartOption.width" :height="chartOption.height"
+                :class="`${selectedTab}`"></canvas>
+        <chart-data-list :chart-data="chartData" :chart-category="this.selectedTab"/>
       </div>
+      <button @click="onClickChartSlideBtn('prev')" :class="{'is-on': prevBtnOn}" class="scroll-btn btn-prev">←</button>
+      <button @click="onClickChartSlideBtn('next')" :class="{'is-on': nextBtnOn}" class="scroll-btn btn-next">→</button>
     </div>
-    <div @scroll="displaySlideBtn" class="chart-slide-wrap" id="container">
-      <canvas v-show="selectedTab !== 'rainfall'" id="chart" :width="chartOption.width" :height="chartOption.height" :class="`${selectedTab}`"></canvas>
-      <chart-data-list :chart-data="chartData" :chart-category="this.selectedTab"/>
-    </div>
-    <button @click="onClickChartSlideBtn('prev')" :class="{'is-on': prevBtnOn}" class="scroll-btn btn-prev">←</button>
-    <button @click="onClickChartSlideBtn('next')" :class="{'is-on': nextBtnOn}" class="scroll-btn btn-next">→</button>
   </div>
 </template>
 
@@ -84,10 +88,10 @@ export default {
           info = null
               break;
         case 'wind' :
-          info = '풍향 | 풍속 m/s'
+          info = '풍향│풍속 ㎧'
               break;
         case 'rainfall' :
-          info = '강수 확률 % | 강수량 mm'
+          info = '확률│강수량 ㎜'
               break;
         case 'humidity' :
           info = '습도 %'
@@ -132,6 +136,7 @@ export default {
       this.chartData = [...chartData];
       this.changeChartOption(category);
       document.getElementsByClassName('chart-slide-wrap')[0].scrollLeft = 0;
+      console.log('selectedTab : ',this.selectedTab)
     },
     changeChartOption(category) {
       switch (category) {
@@ -391,6 +396,10 @@ export default {
           left: 15px;
         }
 
+        &.rainfall{
+          display: none !important;
+        }
+
         &.humidity{
           top: 28px;
         }
@@ -417,6 +426,18 @@ export default {
       }
       &.is-on{
         display: block;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .card-wrap{
+      width: 100%;
+      .card-item{
+        width: 100%;
+        .scroll-btn{
+          display: none;
+        }
       }
     }
   }
