@@ -63,6 +63,7 @@ export default {
       areaNo: '1100000000',
       time: moment().format('YYYYMMDD06'),
       stationName: '종로구',
+      searchDate: moment().format('YYYY-MM-DD'),
       lat: 37.5360944,
       lng: 126.9675222,
       date_today: moment().format('YYYY-MM-DD'),
@@ -126,7 +127,8 @@ export default {
       const {time} = this.getMidlandAndLivingTime();
       this.$store.dispatch('updateWindChillTemperature', {areaNo: station.areaNo, time: time})
       this.$store.dispatch('updateUltraviolet', {areaNo: station.areaNo, time: time})
-      this.$store.dispatch('updateAirQuality', {stationName: station.stationName})
+      // this.$store.dispatch('updateAirQuality', {stationName: station.stationName})
+      this.$store.dispatch('updateAirQuality', {searchDate: this.searchDate, stationName: "경기"})
       this.$store.dispatch('updateWeatherWarn')
       this.$store.dispatch('updateTodaySunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_today,})
       this.$store.dispatch('updateTomorrowSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_tomorrow,})

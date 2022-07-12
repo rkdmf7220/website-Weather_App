@@ -13,6 +13,7 @@ const URL = {
   windChillTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2?&requestCode=A41&dataType=JSON',
   ultraviolet: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
   airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0',
+  airQuality2: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?pageNo=1&numOfRows=100&returnType=json&ver=1.0',
   weatherWarn: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
   sunriseSunset: 'https://api.sunrise-sunset.org/json?'
 }
@@ -36,6 +37,7 @@ export default new Vuex.Store({
     windChillTemperature: {},
     ultraviolet: {},
     airQuality: {},
+    airQuality2: {},
     airInfoList: [
       {
         id: 'pm10',
@@ -249,7 +251,7 @@ export default new Vuex.Store({
             }
           })
     },
-    updateAirQuality({commit, state}, {stationName}) {
+/*    updateAirQuality({commit, state}, {stationName}) {
       axios.get(`${URL.airQuality}&stationName=${stationName}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
@@ -258,6 +260,21 @@ export default new Vuex.Store({
               let item = result?.data?.response?.body?.items?.[0];
               // console.log("AirQuality item", item, state.airInfoList)
               let list = helper.pushAirQualityData(state.airInfoList, item);
+              commit('airInfoList', list)
+              commit('increaseLoadingCount')
+              // commit('airQuality', item || helper.getAirQuality())
+            }
+          })
+    },*/
+    updateAirQuality({commit}, {searchDate, stationName}) {
+      axios.get(`${URL.airQuality2}&searchDate=${searchDate}&sidoName=${stationName}&serviceKey=${API_KEY}`)
+          .then(result => {
+            if (result.statusText === "OK") {
+              // console.log("대기환경 / airQuality", result)
+              // console.log(commit)
+              let item = result?.data?.response?.body?.items;
+              // console.log("AirQuality item", item, state.airInfoList)
+              let list = helper.pushAirQualityData(item);
               commit('airInfoList', list)
               commit('increaseLoadingCount')
               // commit('airQuality', item || helper.getAirQuality())
@@ -569,7 +586,7 @@ const helper = {
       astronomical_twilight_end: ""
     }
   },
-  pushAirQualityData: (airInfoList, data) => {
+/*  pushAirQualityData: (airInfoList, data) => {
     airInfoList.forEach((item, index) => {
       if (index === 0) {
         item.value = data.pm10Value
@@ -582,6 +599,26 @@ const helper = {
         item.grade = data.o3Grade
       }
     })
+    return [...airInfoList];
+  },*/
+  pushAirQualityData: (airInfoList) => {
+    let found = []
+    airInfoList.forEach((item) => {
+      found.push(item.stationName)
+    })
+    console.log('found stationName', found)
+/*    airInfoList.forEach((item, index) => {
+      if (index === 0) {
+        item.value = data.pm10Value
+        item.grade = data.pm10Grade
+      } else if (index === 1) {
+        item.value = data.pm25Value
+        item.grade = data.pm25Grade
+      } else if (index === 2) {
+        item.value = data.o3Value
+        item.grade = data.o3Grade
+      }
+    })*/
     return [...airInfoList];
   },
   pushUltravioletData: (airInfoList, data) => {
