@@ -21,7 +21,8 @@
           <option key="none" :value="null" label="시/군/구"/>
           <option v-for="station in stations" :key="station.areaNo" :value="station.areaNo" :label="station.stationName"/>
         </select>-->
-        <b-form-select  v-model="selectedStation" :options="this.stationOptions"  onmousedown="this.size=8"></b-form-select>
+        <b-form-select  class="select-city" v-model="selectedCity" :options="this.cityOptions"></b-form-select>
+        <b-form-select  class="select-station" v-model="selectedStation" :options="this.stationOptions"  onmousedown="this.size=8"></b-form-select>
       </b-modal>
     </div>
   </div>
@@ -43,13 +44,40 @@ export default {
   name: "Dashboard",
   components: {WeeklyWeather, WeatherWarn, SunriseSunset, HourlyWeather, CurrentWeather, SearchBar, DashboardTitle},
   computed: {
+    cityOptions() {
+      let found = []
+      found.push({value: null, text: "시/도"})
+      for (let key in this.areaInfo) {
+        // console.log('key = ', key, 'areaInfo = ', this,areaInfo)
+        found.push({value: key, text: this.areaInfo[key].cityName})
+      }
+      return found
+    },
     stationOptions() {
       let found = []
       found.push({value: null, text: "시/군/구"})
-      this.areaInfo.seoul.stations.forEach((station) => {
-        found.push({value: station.areaNo, text: station.stationName})
-      })
+/*      if (!this.selectedCity) {
+        console.log('selectedCity는 없음')
+      } else {
+        console.log('selectedCity는 있음')
+      }*/
+/*      console.log(this.areaInfo[this.selectedCity])
+      console.log('테스트 시작',areaInfo.seoul.stations.find(item => item.areaNo === "1168000000"),)*/
+      if (!this.selectedCity && !localStorage.getItem("cityName")) {
+        this.areaInfo.seoul.stations.forEach((station) => {
+          found.push({value: station.areaNo, text: station.stationName})
+        })
+      } else if (!this.selectedCity) {
+        this.areaInfo[localStorage.getItem('cityName')].stations.forEach((station) => {
+          found.push({value: station.areaNo, text: station.stationName})
+        })
+      } else {
+        this.areaInfo[this.selectedCity].stations.forEach((station) => {
+          found.push({value: station.areaNo, text: station.stationName})
+        })
+      }
       return found
+      // return ''
     }
   },
   data() {
@@ -71,6 +99,7 @@ export default {
       date_after_tomorrow: moment().add(2, 'days').format('YYYY-MM-DD'),
       areaInfo,
       LocaleUtil,
+      selectedCity: null,
       selectedStation: null,
   }
   },
@@ -89,7 +118,7 @@ export default {
     if (!localeObject.isSaved) {
       this.$bvModal.show("stationModal")
     }
-    this.dispatchStation(localeObject.station)
+    this.dispatchStation(localeObject.station, localeObject.city)
 
 
   },
@@ -123,12 +152,12 @@ export default {
         time
       }
     },
-    dispatchStation(station) {
+    dispatchStation(station, cityInfo) {
       const {time} = this.getMidlandAndLivingTime();
       this.$store.dispatch('updateWindChillTemperature', {areaNo: station.areaNo, time: time})
       this.$store.dispatch('updateUltraviolet', {areaNo: station.areaNo, time: time})
       // this.$store.dispatch('updateAirQuality', {stationName: station.stationName})
-      this.$store.dispatch('updateAirQuality', {searchDate: this.searchDate, stationName: "경기"})
+      this.$store.dispatch('updateAirQuality', {searchDate: this.searchDate, cityName: cityInfo.sidoName, stationName: station.stationName})
       this.$store.dispatch('updateWeatherWarn')
       this.$store.dispatch('updateTodaySunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_today,})
       this.$store.dispatch('updateTomorrowSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_tomorrow,})
@@ -136,12 +165,16 @@ export default {
       const {base_date, base_time} = this.getBaseDateTime();
       this.$store.dispatch('updateVillageForecast', {base_date, base_time, nx: station.nx, ny: station.ny})
       this.$store.dispatch('updateMediumLandForecast', {regId: areaInfo.seoul.landRegId, tmFc: time})
-      this.$store.dispatch('updateMediumTemperature', {regId: areaInfo.seoul.temperatureRegId, tmFc: time})
+      this.$store.dispatch('updateMediumTemperature', {regId: station.temperatureRegId, tmFc: time})
+      // console.log('cityInfo = ', cityInfo)
+      // console.log('cityInfo.cityName = ', cityInfo.cityName)
+      this.$store.dispatch('setCityInfo', cityInfo)
       this.$store.dispatch('setAreaNo', station.areaNo)
     },
     onConfirmChangeLocale() {
       this.$store.dispatch('resetLoadingCount', true)
-      LocaleUtil.setLocale(this.selectedStation, this.dispatchStation)
+      LocaleUtil.setLocale(this.selectedCity, this.selectedStation, this.dispatchStation)
+      // this.selectedStation === "seoul"
     }
 /*    undoLocal() {
       //TODO : cancel을 클릭하거나 close 했을 때 , localStorage 데이터를 이용해 select 되돌리기
@@ -161,5 +194,11 @@ export default {
     option{
       padding: 4px 0;
     }
+  }
+  .select-city{
+    width: 120px;
+  }
+  .select-station{
+    left: 140px;
   }
 </style>
