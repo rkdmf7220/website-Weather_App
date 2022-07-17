@@ -6,8 +6,30 @@ const LocationUtil = {
      * @returns {{isSaved: boolean, station}}
      */
     getLocale() {
+        let cityName = localStorage.getItem("cityName")
         let areaNo = localStorage.getItem("areaNo")
-        if (areaNo) {
+        if (cityName) {
+            if (areaNo) {
+                return {
+                    city: areaInfo[cityName],
+                    station: areaInfo[cityName].stations.find(item => item.areaNo === areaNo),
+                    isSaved: true
+                }
+            } else {
+                return {
+                    city: areaInfo.seoul,
+                    station: areaInfo.seoul.stations.find(item => item.areaNo === "1168000000"),
+                    isSaved: false
+                }
+            }
+        } else {
+            return {
+                city: areaInfo.seoul,
+                station: areaInfo.seoul.stations.find(item => item.areaNo === "1168000000"),
+                isSaved: false
+            }
+        }
+/*        if (areaNo) {
             return {
                 station: areaInfo.seoul.stations.find(item => item.areaNo === areaNo),
                 isSaved: true
@@ -17,13 +39,15 @@ const LocationUtil = {
                 station: areaInfo.seoul.stations.find(item => item.areaNo === "1168000000"),
                 isSaved: false
             }
-        }
+        }*/
     },
-    setLocale(selectedStation, callback) {
+    setLocale(selectedCity, selectedStation, callback) {
+        // console.log('selectedCity 확인', selectedCity)
+        localStorage.setItem("cityName", selectedCity)
         localStorage.setItem("areaNo", selectedStation)
-        let station = areaInfo.seoul.stations.find(item => item.areaNo === selectedStation);
+        let station = areaInfo[selectedCity].stations.find(item => item.areaNo === selectedStation);
         if (station) {
-            callback(station);
+            callback(station, areaInfo[selectedCity]);
         }
     },
 }
