@@ -22,7 +22,8 @@
           <option v-for="station in stations" :key="station.areaNo" :value="station.areaNo" :label="station.stationName"/>
         </select>-->
         <b-form-select  class="select-city" v-model="selectedCity" :options="this.cityOptions"></b-form-select>
-        <b-form-select  class="select-station" v-model="selectedStation" :options="this.stationOptions"  onmousedown="this.size=8"></b-form-select>
+        <b-form-select  class="select-station" v-model="selectedStation" :options="this.stationOptions"></b-form-select>
+<!--        <b-form-select  class="select-station" v-model="selectedStation" :options="this.stationOptions"  onmousedown="this.size=8"></b-form-select>-->
       </b-modal>
     </div>
   </div>
@@ -63,7 +64,9 @@ export default {
       }*/
 /*      console.log(this.areaInfo[this.selectedCity])
       console.log('테스트 시작',areaInfo.seoul.stations.find(item => item.areaNo === "1168000000"),)*/
-      if (!this.selectedCity && !localStorage.getItem("cityName")) {
+      if (this.selectedCity === null) {
+        found.push({value: null, text: "시/도 미선택"})
+      } else if (!this.selectedCity && !localStorage.getItem("cityName")) {
         this.areaInfo.seoul.stations.forEach((station) => {
           found.push({value: station.areaNo, text: station.stationName})
         })
@@ -172,8 +175,10 @@ export default {
       this.$store.dispatch('setAreaNo', station.areaNo)
     },
     onConfirmChangeLocale() {
-      this.$store.dispatch('resetLoadingCount', true)
-      LocaleUtil.setLocale(this.selectedCity, this.selectedStation, this.dispatchStation)
+      if(this.selectedCity && this.selectedStation) {
+        this.$store.dispatch('resetLoadingCount', true)
+        LocaleUtil.setLocale(this.selectedCity, this.selectedStation, this.dispatchStation)
+      }
       // this.selectedStation === "seoul"
     }
 /*    undoLocal() {
