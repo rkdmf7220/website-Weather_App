@@ -10,7 +10,7 @@ const URL = {
   mediumLandForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/MidFcstInfoService/getMidLandFcst?numOfRows=10&pageNo=1&dataType=JSON',
   mediumTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa?numOfRows=10&pageNo=1&dataType=JSON',
   villageForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=830&pageNo=1&dataType=JSON',
-  windChillTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2?&requestCode=A41&dataType=JSON',
+  windChillTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2?requestCode=A41&dataType=JSON',
   ultraviolet: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
   airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0',
   airQuality2: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?pageNo=1&numOfRows=100&returnType=json&ver=1.0',
@@ -31,6 +31,7 @@ const URL = {
 export default new Vuex.Store({
   state: {
     areaNo: null,
+    cityInfo: null,
     mediumLandForecast: {},
     mediumTemperature: {},
     villageForecast: [],
@@ -162,6 +163,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    cityInfo(state, cityInfo) {
+      state.cityInfo = cityInfo
+    },
     areaNo(state, areaNo) {
       state.areaNo = areaNo
     },
@@ -221,6 +225,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setCityInfo({commit}, cityInfo) {
+      commit('cityInfo', cityInfo)
+    },
     setAreaNo({commit}, areaNo) {
       commit('areaNo', areaNo)
     },
@@ -266,15 +273,15 @@ export default new Vuex.Store({
             }
           })
     },*/
-    updateAirQuality({commit}, {searchDate, stationName}) {
-      axios.get(`${URL.airQuality2}&searchDate=${searchDate}&sidoName=${stationName}&serviceKey=${API_KEY}`)
+    updateAirQuality({commit, state}, {searchDate, cityName, stationName}) {
+      axios.get(`${URL.airQuality2}&searchDate=${searchDate}&sidoName=${cityName}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
               // console.log("대기환경 / airQuality", result)
               // console.log(commit)
               let item = result?.data?.response?.body?.items;
               // console.log("AirQuality item", item, state.airInfoList)
-              let list = helper.pushAirQualityData(item);
+              let list = helper.pushAirQualityData(state.airInfoList, item, stationName);
               commit('airInfoList', list)
               commit('increaseLoadingCount')
               // commit('airQuality', item || helper.getAirQuality())
@@ -601,13 +608,31 @@ const helper = {
     })
     return [...airInfoList];
   },*/
-  pushAirQualityData: (airInfoList) => {
+  pushAirQualityData: (airInfoList, data, stationName) => {
+    let found = data.find(info => (
+        info.stationName = stationName
+    ))
+    airInfoList.forEach((item, index) => {
+      if (index === 0) {
+        item.value = found.pm10Value
+        item.grade = found.pm10Grade
+      } else if (index === 1) {
+        item.value = found.pm25Value
+        item.grade = found.pm25Grade
+      } else if (index === 2) {
+        item.value = found.o3Value
+        item.grade = found.o3Grade
+      }
+    })
+    return [...airInfoList];
+  },
+/*  pushAirQualityData: (airInfoList) => {
     let found = []
     airInfoList.forEach((item) => {
       found.push(item.stationName)
     })
     console.log('found stationName', found)
-/*    airInfoList.forEach((item, index) => {
+/!*    airInfoList.forEach((item, index) => {
       if (index === 0) {
         item.value = data.pm10Value
         item.grade = data.pm10Grade
@@ -618,9 +643,9 @@ const helper = {
         item.value = data.o3Value
         item.grade = data.o3Grade
       }
-    })*/
+    })*!/
     return [...airInfoList];
-  },
+  },*/
   pushUltravioletData: (airInfoList, data) => {
     let info = airInfoList?.[3];
     if (info) {
@@ -683,19 +708,19 @@ const helper = {
         // console.log("wf${index+1}Am", data[`wf${index+1}Am`])
         switch (data[`wf${index+1}Am`]) {
           case "맑음":
-            item.cloud = "0"
+            item.cloud = "1"
             item.rain = "0"
             break;
           case "소나기":
-            item.cloud = "0"
+            item.cloud = "1"
             item.rain = "1"
             break;
           case "비":
-            item.cloud = "0"
+            item.cloud = "1"
             item.rain = "1"
             break;
           case "눈":
-            item.cloud = "0"
+            item.cloud = "1"
             item.rain = "2"
             break;
           case "비/눈":
