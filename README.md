@@ -20,6 +20,11 @@
 - [sunrise-sunset](https://sunrise-sunset.org/api)
 
 ### Version │ 버전
+beta 1.1
+```
+- 경기도 지역권 추가
+- 서울 외 지역 추가에 따른 일부 API 변경  
+```
 beta 1.0
 ```
 - 서울 지역구만 제공
