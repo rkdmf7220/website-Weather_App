@@ -38,7 +38,7 @@ import SunriseSunset from "../components/Dashboard/SunriseSunset";
 import WeatherWarn from "../components/Dashboard/WeatherWarn";
 import WeeklyWeather from "../components/Dashboard/WeeklyWeather";
 import moment from "moment";
-import {areaInfo} from "../common/areaInfo";
+import {areaInfo} from "@/common/areaInfo";
 import LocaleUtil from "../common/LocationUtil"
 
 export default {
@@ -160,7 +160,7 @@ export default {
       this.$store.dispatch('updateWindChillTemperature', {areaNo: station.areaNo, time: time})
       this.$store.dispatch('updateUltraviolet', {areaNo: station.areaNo, time: time})
       // this.$store.dispatch('updateAirQuality', {stationName: station.stationName})
-      this.$store.dispatch('updateAirQuality', {searchDate: this.searchDate, cityName: cityInfo.sidoName, stationName: station.stationName})
+      this.$store.dispatch('updateAirQuality', {searchDate: this.searchDate, cityName: cityInfo.sidoName, stationName: station.airStation})
       this.$store.dispatch('updateWeatherWarn')
       this.$store.dispatch('updateTodaySunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_today,})
       this.$store.dispatch('updateTomorrowSunriseSunset', {lat: station.lat, lng: station.lng, date: this.date_tomorrow,})
