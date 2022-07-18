@@ -645,5 +645,113 @@ export const areaInfo = {
                     lng: 1
                 }*/
             ]
+        },
+        incheon: {
+            cityId: 'incheon',
+            cityName: "인천광역시",
+            sidoName: "인천",
+            landRegId: "11B00000",
+            stations: [
+                {
+                    stationName: "강화군",
+                    airStation: "길상",
+                    temperatureRegId: "11B20101",
+                    nx: "51",
+                    ny: "130",
+                    areaNo: "2871000000",
+                    lat: 37.74385833,
+                    lng: 126.49
+                },
+                {
+                    stationName: "계양구",
+                    airStation: "계산",
+                    temperatureRegId: "11B20201",
+                    nx: "56",
+                    ny: "126",
+                    areaNo: "2824500000",
+                    lat: 37.53479166,
+                    lng: 126.73975277
+                },
+                {
+                    stationName: "남동구",
+                    airStation: "구월동",
+                    temperatureRegId: "11B20201",
+                    nx: "56",
+                    ny: "124",
+                    areaNo: "2820000000",
+                    lat: 37.44451944,
+                    lng: 126.73379722
+                },
+                {
+                    stationName: "동구",
+                    airStation: "송현",
+                    temperatureRegId: "11B20201",
+                    nx: "54",
+                    ny: "125",
+                    areaNo: "2814000000",
+                    lat: 37.47103611,
+                    lng: 126.64536666
+                },
+                {
+                    stationName: "미추홀구",
+                    airStation: "주안",
+                    temperatureRegId: "11B20201",
+                    nx: "54",
+                    ny: "124",
+                    areaNo: "2817700000",
+                    lat: 37.46068055,
+                    lng: 126.65268611
+                },
+                {
+                    stationName: "부평구",
+                    airStation: "부평",
+                    temperatureRegId: "11B20201",
+                    nx: "55",
+                    ny: "125",
+                    areaNo: "2823700000",
+                    lat: 37.50426666,
+                    lng: 126.7241
+                },
+                {
+                    stationName: "서구",
+                    airStation: "연희",
+                    temperatureRegId: "11B20201",
+                    nx: "55",
+                    ny: "126",
+                    areaNo: "2826000000",
+                    lat: 37.54269166,
+                    lng: 126.6782
+                },
+                {
+                    stationName: "연수구",
+                    airStation: "동춘",
+                    temperatureRegId: "11B20201",
+                    nx: "55",
+                    ny: "123",
+                    areaNo: "2818500000",
+                    lat: 37.40712222,
+                    lng: 126.68044166
+                },
+                {
+                    stationName: "옹진군",
+                    airStation: "영흥",
+                    temperatureRegId: "11B20201",
+                    nx: "54",
+                    ny: "124",
+                    areaNo: "2872000000",
+                    lat: 37.44372499,
+                    lng: 126.63888888
+                },
+                {
+                    stationName: "중구",
+                    airStation: "인천항",
+                    temperatureRegId: "11B20201",
+                    nx: "54",
+                    ny: "125",
+                    areaNo: "2811000000",
+                    lat: 37.47093333,
+                    lng: 126.62356666
+                }
+            ]
         }
 }
