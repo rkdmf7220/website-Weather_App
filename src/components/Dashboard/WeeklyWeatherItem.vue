@@ -110,6 +110,7 @@ export default {
 
       .card-wrap {
         padding-right: 0;
+        padding-bottom: 22px;
 
         .weekly-weather-item {
           width: 160px;
