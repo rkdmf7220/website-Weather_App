@@ -610,11 +610,11 @@ const helper = {
     return [...airInfoList];
   },*/
   pushAirQualityData: (airInfoList, data, stationName) => {
-    // console.log('stationName = ', stationName)
+    console.log('stationName = ', stationName)
     let found = data.find(info => (
         info.stationName === stationName
     ))
-    // console.log('공기 데이터 found = ', found)
+    console.log('공기 데이터 found = ', found)
     airInfoList.forEach((item, index) => {
       if (index === 0) {
         item.value = found.pm10Value
