@@ -13,7 +13,7 @@ const URL = {
   windChillTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2?requestCode=A41&dataType=JSON',
   ultraviolet: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
   airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?dataTerm=daily&pageNo=1&numOfRows=100&returnType=json&ver=1.0',
-  airQuality2: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?pageNo=1&numOfRows=100&returnType=json&ver=1.0',
+  airQuality2: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?pageNo=1&numOfRows=150&returnType=json&ver=1.0',
   weatherWarn: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
   sunriseSunset: 'https://api.sunrise-sunset.org/json?'
 }
@@ -281,6 +281,7 @@ export default new Vuex.Store({
               // console.log(commit)
               let item = result?.data?.response?.body?.items;
               // console.log("AirQuality item", item, state.airInfoList)
+              // console.log('item : ', item)
               let list = helper.pushAirQualityData(state.airInfoList, item, stationName);
               commit('airInfoList', list)
               commit('increaseLoadingCount')
@@ -609,9 +610,11 @@ const helper = {
     return [...airInfoList];
   },*/
   pushAirQualityData: (airInfoList, data, stationName) => {
+    // console.log('stationName = ', stationName)
     let found = data.find(info => (
-        info.stationName = stationName
+        info.stationName === stationName
     ))
+    // console.log('공기 데이터 found = ', found)
     airInfoList.forEach((item, index) => {
       if (index === 0) {
         item.value = found.pm10Value
@@ -626,9 +629,9 @@ const helper = {
     })
     return [...airInfoList];
   },
-/*  pushAirQualityData: (airInfoList) => {
+/*  pushAirQualityData: (airInfoList, data) => {
     let found = []
-    airInfoList.forEach((item) => {
+    data.forEach((item) => {
       found.push(item.stationName)
     })
     console.log('found stationName', found)
