@@ -2,12 +2,13 @@
 
 국내 시/군/구의 날씨를 보여주는 웹사이트입니다.
 
-[Web Link](https://dontforgetumbrella.netlify.com/)
+[Web Link](https://dontforgetumbrella.netlify.app/)
 
 ### Use skill stack │ 사용 기술 스택
 - Vue.js
 - Vuex
 - Bootstrap-vue
+- Chart.js
 
 ### Use API │ 사용 API
 공공데이터
@@ -20,6 +21,10 @@
 - [sunrise-sunset](https://sunrise-sunset.org/api)
 
 ### Version │ 버전
+beta 1.2
+```
+- 인천 지역권 추가
+```
 beta 1.1
 ```
 - 경기도 지역권 추가
