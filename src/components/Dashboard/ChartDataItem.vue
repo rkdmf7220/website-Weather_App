@@ -66,14 +66,22 @@ export default {
     currentRainfallProbability() {
       let found = this.itemData.rainfallProbability
       let value
-      switch (found) {
+/*      switch (found) {
         case "0" :
           value = "-"
               break;
         default:
           value = found
       }
-      return value ? value + '%' : null;
+      return value ? value + '%' : null;*/
+      if (found === "0") {
+        value = "-"
+      } else if (found) {
+        value = found + "%"
+      } else {
+        value = null
+      }
+      return value
     },
     rainfallValueBackgroundColor() {
       if (this.chartCategory !== 'rainfall') {
