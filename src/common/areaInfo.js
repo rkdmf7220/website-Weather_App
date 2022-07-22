@@ -303,18 +303,7 @@ export const areaInfo = {
                     areaNo: "1126000000",
                     lat: 37.60380555,
                     lng: 127.09477777
-                }/*,
-                {
-                    stationName: "",
-                    airStation: "",
-                    landRegId: "",
-                    temperatureRegId: "",
-                    nx: "",
-                    ny: "",
-                    areaNo: "",
-                    lat: 2,
-                    lng: 1
-                }*/
+                }
             ]
         },
         gyeonggi: {
@@ -633,17 +622,6 @@ export const areaInfo = {
                     lat: 37.19681666,
                     lng: 126.83353055
                 }
-                /*,
-                {
-                    stationName: "",
-                    airStation: "",
-                    temperatureRegId: "",
-                    nx: "",
-                    ny: "",
-                    areaNo: "",
-                    lat: 2,
-                    lng: 1
-                }*/
             ]
         },
         incheon: {

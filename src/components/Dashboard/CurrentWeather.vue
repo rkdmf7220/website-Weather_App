@@ -37,7 +37,6 @@ export default {
       }
     },
     currentDaytime() {
-      // daytime = true, night = false
       let currentTime;
       let found = moment().isBetween(moment(this.$store.state.sunriseSunsetList[0].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[0].sunset, 'h:mm A'))
       switch (found) {

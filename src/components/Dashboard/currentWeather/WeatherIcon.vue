@@ -4,7 +4,6 @@
       <b-spinner label="Spinning" type="grow" variant="300"></b-spinner>
     </div>
     <img v-show="itemData.cloud !== '9' && itemData.rain !== '9'" :src="`/img/icon_weather_${this.checkDaytime}_${this.itemData.cloud}_${this.itemData.rain}.png`" alt="" @click="computeCurrentWeather">
-<!--    {{weatherData}}-->
   </div>
 </template>
 

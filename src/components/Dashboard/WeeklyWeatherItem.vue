@@ -38,21 +38,9 @@ export default {
     weatherData() {
       let skyData = this.itemData.cloud;
       let rainData = this.itemData.rain;
-/*      if (skyData && rainData) {
-        console.log("if 작동 확인")
-        return {cloud: skyData, rain: rainData}
-      } else if (!skyData && !rainData) {
-        console.log("else if 작동 확인")
-        return {cloud: '9', rain: '9'}
-      } else {
-        console.log("else 작동 확인")
-        return {cloud: '9', rain: '9'}
-      }*/
       if (skyData && rainData) {
-        // console.log("if 작동 확인")
         return {cloud: skyData, rain: rainData}
       } else {
-        // console.log("else if 작동 확인")
         return {cloud: '9', rain: '9'}
       }
     }

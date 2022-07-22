@@ -1,5 +1,4 @@
 <template>
-<!--  <div :class="currentColorClass" id="app">-->
   <div id="app">
     <router-view/>
   </div>

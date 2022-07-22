@@ -17,7 +17,6 @@ export default {
     itemData: Object
   },
   computed: {
-
     gradeObject() {
       return getGradeObject(this.itemData.id, this.itemData.grade);
     }
@@ -26,16 +25,9 @@ export default {
     dataValue: {
       deep: true,
       handler() {
-          // return this.itemData.valueKey
           return this.itemData.id
       }
     }
-  },
-  mounted() {
-    // console.log(this.itemData.title, this.itemData)
-  },
-  methods: {
-
   }
 }
 </script>

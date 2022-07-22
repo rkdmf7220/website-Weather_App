@@ -35,12 +35,6 @@ export default {
     arrangedSunriseSunset() {
       return this.sunriseSunsetList.filter((item, index) => index < 2)
     }
-/*    todaySunrise() {
-      return this.$store.state.sunriseSunset.sunrise
-    },
-    todaySunset() {
-      return this.$store.state.sunriseSunset.sunset
-    }*/
   },
   watch: {
     todaySunrise: {

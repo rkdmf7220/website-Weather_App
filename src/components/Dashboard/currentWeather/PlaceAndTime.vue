@@ -13,24 +13,21 @@
 
 <script>
 import moment from "moment"
-import {areaInfo} from "../../../common/areaInfo";
+import {areaInfo} from "@/common/areaInfo";
 export default {
   name: "PlaceAndTime",
   computed: {
     cityName() {
-      // console.log('여기서 확인해볼까요?', this.$store.state.cityInfo)
       let cityInfo = this.$store.state.cityInfo
       if (cityInfo) {
         return cityInfo ? cityInfo.cityName : ''
       } else {
         return ''
       }
-      // return this.$store.state.cityInfo.cityName;
     },
     stationName() {
       let areaNo =  this.$store.state.areaNo;
       if (areaNo) {
-        // console.log('<<<<',areaNo, this.$store, areaInfo)
         let found = areaNo ? areaInfo[this.$store.state.cityInfo.cityId].stations.find(item => item.areaNo === areaNo) : {stationName: '지역을 설정해주세요'}
         return found.stationName;
       } else {

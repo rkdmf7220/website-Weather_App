@@ -1,8 +1,4 @@
-export const someFunction = () => {
-
-}
 export const getGradeObject = (id, grade) => {
-    // let grade = this.itemData.grade
     let text;
     let gradeClassName;
     let valueClassName;

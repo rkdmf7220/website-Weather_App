@@ -46,7 +46,6 @@ export default {
   },
   computed: {
      currentTemperature() {
-       // console.log('currentTemperature()::::', this.$store.state)
        let found = this.$store.state.villageForecast.find(item => (
            item.category === "TMP" &&
            item.fcstDate === this.today &&
@@ -98,7 +97,6 @@ export default {
       now: moment().format('HH') + '00',
       villageForecastApi: this.$store.state.villageForecast,
       nowRain: false,
-      // checkWindChillTime: Number(moment().format('HH'))
       checkWindChillTime: function() {
         return Number(moment().format('HH'))
       }

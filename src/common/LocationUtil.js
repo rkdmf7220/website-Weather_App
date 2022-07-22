@@ -29,20 +29,8 @@ const LocationUtil = {
                 isSaved: false
             }
         }
-/*        if (areaNo) {
-            return {
-                station: areaInfo.seoul.stations.find(item => item.areaNo === areaNo),
-                isSaved: true
-            }
-        } else {
-            return {
-                station: areaInfo.seoul.stations.find(item => item.areaNo === "1168000000"),
-                isSaved: false
-            }
-        }*/
     },
     setLocale(selectedCity, selectedStation, callback) {
-        // console.log('selectedCity 확인', selectedCity)
         localStorage.setItem("cityName", selectedCity)
         localStorage.setItem("areaNo", selectedStation)
         let station = areaInfo[selectedCity].stations.find(item => item.areaNo === selectedStation);
