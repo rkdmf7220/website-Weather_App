@@ -1,9 +1,6 @@
 <template>
   <div class="data-item-wrap">
     <div class="weather-icon-wrap" v-if="chartCategory !== 'humidity'">
-<!--    <div class="weather-icon-wrap" v-if="chartCategory === 'weather' || chartCategory === 'wind'">-->
-      <!--      <div class="weather-icon" :style="{ backgroundImage: `url('img/icon_weather_0_` + itemData.cloud + `_` + itemData.rain + `.png`}"></div>-->
-      <!--      <div class="weather-icon" :style="{ backgroundImage: weatherSvgIcon.get(`iconWeather0${itemData.cloud}${itemData.rain}`)}"></div>-->
       <div class="weather-icon" v-if="chartCategory === 'weather'" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWeather${isDaytime}${itemData.cloud}${itemData.rain}`) + ')'}"></div>
       <div class="weather-icon" v-if="chartCategory === 'wind'" :style="{ backgroundImage: 'url(' + weatherSvgIcon.get(`iconWindArrow`, this.itemData.windDirection) + ')'}"></div>
       <div class="weather-icon rainfall-icon" v-if="chartCategory === 'rainfall'" :style="{backgroundImage: `url(` + weatherSvgIcon.get(`iconRainfallProbabilityBase`) +`)`}">
@@ -12,7 +9,7 @@
       <span class="small-text gray3" v-if="chartCategory === 'rainfall'">{{currentRainfallProbability}}</span>
     </div>
     <span :class="{'rainfall-value': chartCategory === 'rainfall', 'white': rainfallValueTextColor}" class="weather-value small-text" :style="{backgroundColor: rainfallValueBackgroundColor}">{{currentValue}}</span>
-    <span class="weather-hour" :class="`${itemData.day}`" @click="checkDayTimeLog">{{currentHour}}</span>
+    <span class="weather-hour" :class="`${itemData.day}`">{{currentHour}}</span>
   </div>
 </template>
 
@@ -66,14 +63,6 @@ export default {
     currentRainfallProbability() {
       let found = this.itemData.rainfallProbability
       let value
-/*      switch (found) {
-        case "0" :
-          value = "-"
-              break;
-        default:
-          value = found
-      }
-      return value ? value + '%' : null;*/
       if (found === "0") {
         value = "-"
       } else if (found) {
@@ -122,28 +111,14 @@ export default {
     return {
       weatherSvgIcon
     }
-  },
-  methods: {
-    checkDayTimeLog() {
-      // let currentTime = moment(this.itemData.hour, 'HH').format("HH:00")
-      // let baseTimeStart = moment(this.$store.state.sunriseSunsetList[0].sunrise, 'hh:mm a').format("HH:MM")
-      // let baseTimeEnd = moment(this.$store.state.sunriseSunsetList[0].sunset, 'hh:mm a').format("HH:MM")
-
-      // let currentTime = moment("1600", "HHmm").format("HH:mm")
-      // let baseTimeStart = moment("1200", "HHmm").format("HH:mm")
-      // let baseTimeEnd = moment("2000", "HHmm").format("HH:mm")
-
-      // let output = moment(currentTime).isBetween(baseTimeStart, baseTimeEnd)
-      // console.log(currentTime, baseTimeStart, baseTimeEnd, output)
-
-      let found = moment(this.itemData.hour, 'HH').isBetween(moment(this.$store.state.sunriseSunsetList[0].sunrise, 'h:mm A'), moment(this.$store.state.sunriseSunsetList[0].sunset, 'h:mm A'))
-      console.log(found)
-    }
   }
 }
 </script>
 
 <style scoped lang="scss">
+  .chart-data-item:last-child .data-item-wrap{
+    margin-right: 20px;
+  }
   .data-item-wrap{
     display: flex;
     flex-direction: column;

@@ -36,10 +36,24 @@
 </template>
 
 <script>
-// import {mapState} from "vuex";
 import ChartDataList from "./ChartDataList";
-import { Chart, ArcElement, LineElement, BarElement, PointElement, BarController, BubbleController, DoughnutController, LineController, PieController, PolarAreaController, RadarController, ScatterController, CategoryScale, LinearScale, LogarithmicScale, RadialLinearScale, TimeScale, TimeSeriesScale, Decimation, Filler, Legend, Title, Tooltip, SubTitle } from 'chart.js';
-Chart.register( ArcElement, LineElement, BarElement, PointElement, BarController, BubbleController, DoughnutController, LineController, PieController, PolarAreaController, RadarController, ScatterController, CategoryScale, LinearScale, LogarithmicScale, RadialLinearScale, TimeScale, TimeSeriesScale, Decimation, Filler, Legend, Title, Tooltip, SubTitle )
+import {
+  Chart,
+  LineElement,
+  BarElement,
+  PointElement,
+  BarController,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Filler
+
+
+
+
+} from 'chart.js';
+
+Chart.register( LineElement, BarElement, PointElement, BarController, LineController,  CategoryScale, LinearScale, Filler )
 let chart;
 let ctx;
 let gradientFill
@@ -48,7 +62,7 @@ export default {
   name: "HourlyWeather",
   data() {
     return {
-      selectedTab : 'weather',
+      selectedTab: 'weather',
       chartData: [],
       chartOption: {
         chartType: "line",
@@ -86,16 +100,16 @@ export default {
       switch (this.selectedTab) {
         case 'weather' :
           info = null
-              break;
+          break;
         case 'wind' :
           info = '풍향│풍속 ㎧'
-              break;
+          break;
         case 'rainfall' :
           info = '확률│강수량 ㎜'
-              break;
+          break;
         case 'humidity' :
           info = '습도 %'
-              break;
+          break;
         default :
       }
       return info
@@ -124,19 +138,16 @@ export default {
       }
     },
     chartData() {
-      // console.log(this.chartOption)
       this.fillData(this.chartOption.chartType, this.chartOption.mainColor, this.chartOption.gradientColor1, this.chartOption.gradientColor2, this.chartOption.gradientY0, this.chartOption.gradientY1, this.chartOption.borderWidth, this.chartOption.min, this.chartOption.max, this.chartOption.width, this.chartOption.height, this.chartOption.paddingRight)
     },
     deep: true
   },
   methods: {
     onClickTab(category, chartData) {
-      // console.log('chartData', chartData)
       this.selectedTab = category;
       this.chartData = [...chartData];
       this.changeChartOption(category);
       document.getElementsByClassName('chart-slide-wrap')[0].scrollLeft = 0;
-      console.log('selectedTab : ',this.selectedTab)
     },
     changeChartOption(category) {
       switch (category) {
@@ -146,7 +157,6 @@ export default {
             mainColor: "#FFC90E",
             gradientColor1: "#FFE178",
             gradientColor2: "#fffbed",
-            // gradientColor2: "#00ccff",
             gradientY0: 6,
             gradientY1: 58,
             borderWidth: 2,
@@ -156,7 +166,7 @@ export default {
             height: 72,
             paddingRight: 45
           }
-              break;
+          break;
 
         case "wind":
           this.chartOption = {
@@ -164,7 +174,6 @@ export default {
             mainColor: "#23e05c",
             gradientColor1: "#B1F8C6",
             gradientColor2: "#DEFCE7",
-            // gradientColor2: "rgba(255, 255, 255, 0.4)",
             gradientY0: 0,
             gradientY1: 50,
             borderWidth: {
@@ -176,14 +185,13 @@ export default {
             height: 64,
             paddingRight: 0
           }
-              break;
+          break;
 
         case "rainfall":
           this.chartOption = {
             chartType: "line",
             mainColor: "#85B6FD",
             gradientColor1: "#CEE2FE",
-            // gradientColor2: "rgba(255, 255, 255, 0.4)",
             gradientColor2: "#00ccff",
             gradientY0: 0,
             gradientY1: 50,
@@ -194,7 +202,7 @@ export default {
             height: 40,
             paddingRight: 45
           }
-              break;
+          break;
 
         case "humidity":
           this.chartOption = {
@@ -211,8 +219,8 @@ export default {
             height: 80,
             paddingRight: 45
           }
-              break;
-            default:
+          break;
+        default:
       }
     },
     fillData(chartType, mainColor, gradientColor1, gradientColor2, gradientY0, gradientY1, borderWidth, minValue, maxValue, width, height, paddingRight) {
@@ -227,8 +235,6 @@ export default {
       gradientFill = ctx.createLinearGradient(0, gradientY0, 0, gradientY1);
       gradientFill.addColorStop(0, gradientColor1);
       gradientFill.addColorStop(1, gradientColor2);
-      // console.log("chartData :", this.chartData)
-      // console.log("chartTempData :", this.chartTemperatureData)
       ctx.canvas.width = width;
       ctx.canvas.height = height;
       chart = new Chart(ctx, {
@@ -236,9 +242,11 @@ export default {
         data: {
           labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
             '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
-            '21', '22', '23', '24','','','','','','','','','','','','','','','','','','','','','','','',''],
+            '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
+            '31', '32', '33', '34', '35', '36', '37', '38', '39', '40',
+            '41', '42', '43', '44', '45', '46', '47', '48'],
           datasets: [{
-            label: '테스트 데이터셋',
+            label: 'hourly',
             data: this.chartData,
             borderColor: mainColor,
             fill: true,
@@ -256,8 +264,7 @@ export default {
             },
           },
           clip: false,
-          parsing: {
-          },
+          parsing: {},
           responsive: false,
           title: {},
           hover: {
@@ -297,10 +304,10 @@ export default {
       switch (direction) {
         case "prev" :
           slideWrap.scrollLeft -= 550;
-            break;
+          break;
         case "next" :
           slideWrap.scrollLeft += 550;
-            break;
+          break;
         default:
       }
     },
@@ -311,10 +318,10 @@ export default {
       switch (currentScrollLeft) {
         case 0 :
           this.prevBtnOn = false;
-            break;
+          break;
         case slideWrapScrollWidth - slideWrapOffsetWidth :
           this.nextBtnOn = false;
-            break;
+          break;
         default :
           this.prevBtnOn = true;
           this.nextBtnOn = true;
@@ -326,119 +333,117 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .card-item{
-    width: 580px;
-    height: 218px;
-    flex-shrink: 0;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
+.card-item {
+  width: 580px;
+  height: 218px;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
 
-    .card-top-wrap{
-      display: flex;
-      align-items: center;
+  .card-top-wrap {
+    display: flex;
+    align-items: center;
 
-      .tab-menu {
-        line-height: 1em;
-        flex: auto;
+    .tab-menu {
+      line-height: 1em;
+      flex: auto;
 
-        .tab-btn {
-          background: transparent;
-          border: none;
-          padding: 4px 8px 8px 8px;
-          position: relative;
+      .tab-btn {
+        background: transparent;
+        border: none;
+        padding: 4px 8px 8px 8px;
+        position: relative;
 
-          &.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            width: 70%;
-            height: 2px;
-            left: 16%;
-            background-color: #1E90FF;
-          }
-        }
-
-        .vertical-bar {
-          font-size: 0.75em;
-          border-left: 1px solid #bbbbbb;
+        &.active::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          width: 70%;
+          height: 2px;
+          left: 16%;
+          background-color: #1E90FF;
         }
       }
+
+      .vertical-bar {
+        font-size: 0.75em;
+        border-left: 1px solid #bbbbbb;
+      }
+    }
+  }
+
+  .chart-slide-wrap {
+    position: relative;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    overflow: hidden;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    #chart {
+      position: absolute;
+      left: 34px;
+      top: 40px;
+
+      &.weather {
+        top: 40px;
+      }
+
+      &.wind {
+        left: 15px;
+      }
+
+      &.rainfall {
+        display: none !important;
+      }
+
+      &.humidity {
+        top: 28px;
+      }
+    }
+  }
+
+  .scroll-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    background-color: white;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 50%;
+    margin-top: 3px;
+    border: none;
+    display: none;
+
+    &.btn-prev {
+      left: -16px;
     }
 
-    .chart-slide-wrap{
-      position: relative;
-      width: calc(100% + 40px);
-      margin-left: -20px;
-      overflow: hidden;
-      overflow-x: scroll;
-      scroll-behavior: smooth;
-      &::-webkit-scrollbar{
+    &.btn-next {
+      right: -16px;
+    }
+
+    &.is-on {
+      display: block;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .card-wrap {
+    width: 100%;
+
+    .card-item {
+      width: 100%;
+
+      .scroll-btn {
         display: none;
       }
-
-/*      .chart-canvas-wrap{
-        position: relative;
-        width: 2361px;
-        height: 40px;
-      }*/
-
-      #chart{
-        position: absolute;
-        left: 34px;
-        top: 40px;
-
-        &.weather{
-          top: 40px;
-        }
-
-        &.wind{
-          left: 15px;
-        }
-
-        &.rainfall{
-          display: none !important;
-        }
-
-        &.humidity{
-          top: 28px;
-        }
-      }
-    }
-
-    .scroll-btn{
-      width: 32px;
-      height: 32px;
-      border-radius: 16px;
-      background-color: white;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
-      position: absolute;
-      top: 50%;
-      margin-top: 3px;
-      border: none;
-      display: none;
-
-      &.btn-prev{
-        left: -16px;
-      }
-      &.btn-next{
-        right: -16px;
-      }
-      &.is-on{
-        display: block;
-      }
     }
   }
-
-  @media screen and (max-width: 768px) {
-    .card-wrap{
-      width: 100%;
-      .card-item{
-        width: 100%;
-        .scroll-btn{
-          display: none;
-        }
-      }
-    }
-  }
+}
 </style>
