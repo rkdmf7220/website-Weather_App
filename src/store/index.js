@@ -14,7 +14,7 @@ const URL = {
   ultraviolet: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
   airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?pageNo=1&numOfRows=150&returnType=json&ver=1.0',
   weatherWarn: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
-  sunriseSunset: 'http://api.sunrise-sunset.org/json?'
+  sunriseSunset: 'https://my-weather-server.herokuapp.com/http://api.sunrise-sunset.org/json?'
 }
 
 export default new Vuex.Store({
