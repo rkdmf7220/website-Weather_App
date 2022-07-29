@@ -396,8 +396,13 @@ const helper = {
   pushUltravioletData: (airInfoList, data) => {
     let info = airInfoList?.[3];
     if (info) {
-      info.value = data.today
-      info.grade = data.today
+      if (data.today !== "") {
+        info.value = data.today
+        info.grade = data.today
+      } else {
+        info.value = data.tomorrow
+        info.grade = data.tomorrow
+      }
     }
     return [...airInfoList]
   },
