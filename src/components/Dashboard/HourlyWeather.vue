@@ -24,7 +24,7 @@
           <span>{{ this.chartDataInfo }}</span>
         </div>
       </div>
-      <div @scroll="displaySlideBtn" class="chart-slide-wrap" id="container">
+      <div @scroll="displaySlideBtn" class="chart-slide-wrap" id="container" ref="chartSlideWrap">
         <canvas id="chart" :width="chartOption.width" :height="chartOption.height"
                 :class="`${selectedTab}`"></canvas>
         <chart-data-list :chart-data="chartData" :chart-category="this.selectedTab"/>
@@ -47,13 +47,9 @@ import {
   CategoryScale,
   LinearScale,
   Filler
-
-
-
-
 } from 'chart.js';
 
-Chart.register( LineElement, BarElement, PointElement, BarController, LineController,  CategoryScale, LinearScale, Filler )
+Chart.register(LineElement, BarElement, PointElement, BarController, LineController, CategoryScale, LinearScale, Filler)
 let chart;
 let ctx;
 let gradientFill
@@ -147,7 +143,7 @@ export default {
       this.selectedTab = category;
       this.chartData = [...chartData];
       this.changeChartOption(category);
-      document.getElementsByClassName('chart-slide-wrap')[0].scrollLeft = 0;
+      this.$refs.chartSlideWrap.scrollLeft = 0;
     },
     changeChartOption(category) {
       switch (category) {
@@ -297,10 +293,10 @@ export default {
         }
       })
       chart.update()
-      document.getElementsByClassName('chart-slide-wrap')[0].scrollLeft = 0;
+      this.$refs.chartSlideWrap.scrollLeft = 0;
     },
     onClickChartSlideBtn(direction) {
-      let slideWrap = document.getElementsByClassName('chart-slide-wrap')[0]
+      let slideWrap = this.$refs.chartSlideWrap
       switch (direction) {
         case "prev" :
           slideWrap.scrollLeft -= 550;
@@ -312,9 +308,9 @@ export default {
       }
     },
     displaySlideBtn() {
-      let currentScrollLeft = document.getElementsByClassName('chart-slide-wrap')[0].scrollLeft
-      let slideWrapScrollWidth = document.getElementsByClassName('chart-slide-wrap')[0].scrollWidth
-      let slideWrapOffsetWidth = document.getElementsByClassName('chart-slide-wrap')[0].offsetWidth
+      let currentScrollLeft = this.$refs.chartSlideWrap.scrollLeft
+      let slideWrapScrollWidth = this.$refs.chartSlideWrap.scrollWidth
+      let slideWrapOffsetWidth = this.$refs.chartSlideWrap.offsetWidth
       switch (currentScrollLeft) {
         case 0 :
           this.prevBtnOn = false;
@@ -384,6 +380,7 @@ export default {
     &::-webkit-scrollbar {
       display: none;
     }
+
     #chart {
       position: absolute;
       left: 34px;
