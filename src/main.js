@@ -4,9 +4,6 @@ import store from './store'
 import router from './router'
 import { BootstrapVue } from 'bootstrap-vue'
 
-Vue.config.devtools = true;
-
-
 Vue.config.productionTip = false
 Vue.use(BootstrapVue);
 
