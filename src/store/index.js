@@ -203,6 +203,7 @@ export default new Vuex.Store({
     updateWindChillTemperature({commit}, {areaNo, time}) {
       axios.get(`${PROXY}${URL.windChillTemperature}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
           .then(result => {
+            console.log('result 윗 부분 임시 로그')
             console.log('result 확인 >>>', result)
             if(result.statusText === "OK") {
               let item = result?.data?.response?.body?.items?.item?.[0];
