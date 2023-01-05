@@ -286,7 +286,7 @@ export default new Vuex.Store({
     updateMediumLandForecast({commit, state}, {regId, tmFc}) {
       axios.get(`${PROXY}${URL.mediumLandForecast}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
           .then(result => {
-            if (result.statusText === "OK") {
+            if (result.status === 200) {
               let item = result?.data?.response?.body?.items?.item?.[0];
               let list = helper.pushWeeklyDataFromMidLand(state.weeklyInfoList, item)
               commit('weeklyInfoList', list)
