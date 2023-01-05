@@ -205,7 +205,7 @@ export default new Vuex.Store({
           .then(result => {
             console.log('result 윗 부분 임시 로그')
             console.log('result 확인 >>>', result)
-            if(result.statusText === "OK") {
+            if(result.status === 200) {
               let item = result?.data?.response?.body?.items?.item?.[0];
               commit('windChillTemperature', item || helper.getWindChillTemperature())
               commit('increaseLoadingCount')
@@ -218,7 +218,7 @@ export default new Vuex.Store({
       console.log('uv 작동 확인')
       axios.get(`${PROXY}${URL.ultraviolet}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
           .then(result => {
-            if (result.statusText === "OK") {
+            if (result.status === 200) {
               console.log('uv 확인 >>>', result)
               let item = result?.data?.response?.body?.items?.item?.[0];
               let list = helper.pushUltravioletData(state.airInfoList, item);
@@ -230,7 +230,7 @@ export default new Vuex.Store({
     updateAirQuality({commit, state}, {searchDate, cityName, stationName}) {
       axios.get(`${PROXY}${URL.airQuality}&searchDate=${searchDate}&sidoName=${cityName}&serviceKey=${API_KEY}`)
           .then(result => {
-            if (result.statusText === "OK") {
+            if (result.status === 200) {
               let item = result?.data?.response?.body?.items;
               let list = helper.pushAirQualityData(state.airInfoList, item, stationName);
               commit('airInfoList', list)
@@ -241,7 +241,7 @@ export default new Vuex.Store({
     updateWeatherWarn({commit}) {
       axios.get(`${PROXY}${URL.weatherWarn}&serviceKey=${API_KEY}`)
           .then(result => {
-            if (result.statusText === "OK") {
+            if (result.status === 200) {
               let item = result?.data?.response?.body?.items?.item?.[0];
               commit('weatherWarn', item || helper.getWeatherWarn())
               commit('increaseLoadingCount')
@@ -297,7 +297,7 @@ export default new Vuex.Store({
     updateMediumTemperature({commit, state}, {regId, tmFc}) {
       axios.get(`${PROXY}${URL.mediumTemperature}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
           .then(result => {
-            if (result.statusText === "OK") {
+            if (result.status === 200) {
               let item = result?.data?.response?.body?.items?.item?.[0];
               let list = helper.pushWeeklyDataFromMidTemp(state.weeklyInfoList, item)
               commit('weeklyInfoList', list)
@@ -308,7 +308,7 @@ export default new Vuex.Store({
     updateVillageForecast({commit, state}, {base_date, base_time, nx, ny}) {
       axios.get(`${PROXY}${URL.villageForecast}&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}&serviceKey=${API_KEY}`)
           .then(result => {
-            if (result.statusText === "OK") {
+            if (result.status === 200) {
               let list = result?.data?.response?.body?.items?.item;
               let filteredList = helper.pushWeeklyDataFromVillage(state.weeklyInfoList, list)
               let chartTemperatureList = helper.pushChartTemperatureData(state.chartTemperatureList, list)
