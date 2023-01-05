@@ -7,7 +7,7 @@
       <h2>{{ currentTemperature }}</h2>
     </div>
     <div class="temperature-list">
-      <h3 class="gray2"><span class="blue-bell">12°</span> / <span class="coral">23°</span></h3>
+      <h3 class="gray2"><span class="blue-bell">{{todayMaxTemperature}}</span> / <span class="coral">{{todayMinTemperature}}</span></h3>
       <span class="small-text"><span class="gray3">체감온도</span> {{currentWindChill}}</span>
     </div>
     <ul class="sub-info small-text">
@@ -53,8 +53,24 @@ export default {
        ));
        return found ? found.fcstValue + '°' : '';
      },
+    todayMaxTemperature() {
+       let found = this.$store.state.villageForecast.find(item => (
+           item.category === "TMP" &&
+               item.fcstDate === this.today &&
+               item.fcstTime === '0300'
+       ));
+       return found ? found.fcstValue + '°' : '';
+    },
+    todayMinTemperature() {
+       let found = this.$store.state.villageForecast.find(item => (
+           item.category === "TMP" &&
+               item.fcstDate === this.today &&
+               item.fcstTime === '1500'
+       ));
+       return found ? found.fcstValue + '°' : '';
+    },
     currentWindChill() {
-       let found = this.$store.state.windChillTemperature[`h${this.checkWindChillTime()-6}`]
+      let found = this.$store.state.windChillTemperature[`h${this.checkWindChillTime()-6}`]
       return found ? found + '°' : '';
     },
     currentHumidity() {
