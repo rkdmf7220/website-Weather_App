@@ -211,6 +211,7 @@ export default new Vuex.Store({
           })
     },
     updateUltraviolet({commit, state}, {areaNo, time}) {
+      console.log('uv 작동 확인')
       axios.get(`${PROXY}${URL.ultraviolet}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
