@@ -207,6 +207,8 @@ export default new Vuex.Store({
               let item = result?.data?.response?.body?.items?.item?.[0];
               commit('windChillTemperature', item || helper.getWindChillTemperature())
               commit('increaseLoadingCount')
+            } else {
+              console.log('else 부분')
             }
           })
     },
