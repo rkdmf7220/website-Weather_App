@@ -3,18 +3,19 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import moment from "moment";
 const API_KEY = "MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D"
+const PROXY = window.location.hostname === 'localhost' ? '' : '/proxy';
 
 Vue.use(Vuex)
 
 const URL = {
-  mediumLandForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/MidFcstInfoService/getMidLandFcst?numOfRows=10&pageNo=1&dataType=JSON',
-  mediumTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa?numOfRows=10&pageNo=1&dataType=JSON',
-  villageForecast: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=830&pageNo=1&dataType=JSON',
-  windChillTemperature: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2?requestCode=A41&dataType=JSON',
-  ultraviolet: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
-  airQuality: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?pageNo=1&numOfRows=150&returnType=json&ver=1.0',
-  weatherWarn: 'https://my-weather-server.herokuapp.com/http://apis.data.go.kr/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
-  sunriseSunset: 'https://my-weather-server.herokuapp.com/http://api.sunrise-sunset.org/json?'
+  mediumLandForecast: '/1360000/MidFcstInfoService/getMidLandFcst?numOfRows=10&pageNo=1&dataType=JSON',
+  mediumTemperature: '/1360000/MidFcstInfoService/getMidTa?numOfRows=10&pageNo=1&dataType=JSON',
+  villageForecast: '/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=830&pageNo=1&dataType=JSON',
+  windChillTemperature: '/1360000/LivingWthrIdxServiceV2/getSenTaIdxV2?requestCode=A41&dataType=JSON',
+  ultraviolet: '/1360000/LivingWthrIdxServiceV2/getUVIdxV2?dataType=JSON',
+  airQuality: '/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?pageNo=1&numOfRows=150&returnType=json&ver=1.0',
+  weatherWarn: '/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
+  sunriseSunset: 'http://api.sunrise-sunset.org/json?'
 }
 
 export default new Vuex.Store({
@@ -200,7 +201,7 @@ export default new Vuex.Store({
       commit('areaNo', areaNo)
     },
     updateWindChillTemperature({commit}, {areaNo, time}) {
-      axios.get(`${URL.windChillTemperature}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
+      axios.get(`${PROXY}${URL.windChillTemperature}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
           .then(result => {
             if(result.statusText === "OK") {
               let item = result?.data?.response?.body?.items?.item?.[0];
@@ -210,7 +211,7 @@ export default new Vuex.Store({
           })
     },
     updateUltraviolet({commit, state}, {areaNo, time}) {
-      axios.get(`${URL.ultraviolet}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
+      axios.get(`${PROXY}${URL.ultraviolet}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
               let item = result?.data?.response?.body?.items?.item?.[0];
@@ -221,7 +222,7 @@ export default new Vuex.Store({
           })
     },
     updateAirQuality({commit, state}, {searchDate, cityName, stationName}) {
-      axios.get(`${URL.airQuality}&searchDate=${searchDate}&sidoName=${cityName}&serviceKey=${API_KEY}`)
+      axios.get(`${PROXY}${URL.airQuality}&searchDate=${searchDate}&sidoName=${cityName}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
               let item = result?.data?.response?.body?.items;
@@ -232,7 +233,7 @@ export default new Vuex.Store({
           })
     },
     updateWeatherWarn({commit}) {
-      axios.get(`${URL.weatherWarn}&serviceKey=${API_KEY}`)
+      axios.get(`${PROXY}${URL.weatherWarn}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
               let item = result?.data?.response?.body?.items?.item?.[0];
@@ -277,7 +278,7 @@ export default new Vuex.Store({
           })
     },
     updateMediumLandForecast({commit, state}, {regId, tmFc}) {
-      axios.get(`${URL.mediumLandForecast}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
+      axios.get(`${PROXY}${URL.mediumLandForecast}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
               let item = result?.data?.response?.body?.items?.item?.[0];
@@ -288,7 +289,7 @@ export default new Vuex.Store({
           })
     },
     updateMediumTemperature({commit, state}, {regId, tmFc}) {
-      axios.get(`${URL.mediumTemperature}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
+      axios.get(`${PROXY}${URL.mediumTemperature}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
               let item = result?.data?.response?.body?.items?.item?.[0];
@@ -299,7 +300,7 @@ export default new Vuex.Store({
           })
     },
     updateVillageForecast({commit, state}, {base_date, base_time, nx, ny}) {
-      axios.get(`${URL.villageForecast}&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}&serviceKey=${API_KEY}`)
+      axios.get(`${PROXY}${URL.villageForecast}&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
               let list = result?.data?.response?.body?.items?.item;
