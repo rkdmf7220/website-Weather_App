@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import moment from "moment";
 const API_KEY = "MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D"
-const PROXY = window.location.hostname === 'localhost' ? '' : '/proxy';
+const PROXY = window.location.hostname === 'localhost' ? 'http://apis.data.go.kr' : '/proxy';
 
 Vue.use(Vuex)
 
@@ -214,6 +214,7 @@ export default new Vuex.Store({
       axios.get(`${PROXY}${URL.ultraviolet}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
           .then(result => {
             if (result.statusText === "OK") {
+              console.log('uv 확인 >>>', result)
               let item = result?.data?.response?.body?.items?.item?.[0];
               let list = helper.pushUltravioletData(state.airInfoList, item);
               commit('airInfoList', list)
