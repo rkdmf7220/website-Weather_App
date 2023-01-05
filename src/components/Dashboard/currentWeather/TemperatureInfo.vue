@@ -8,7 +8,7 @@
     </div>
     <div class="temperature-list">
       <h3 class="gray2"><span class="blue-bell">{{todayMaxTemperature}}</span> / <span class="coral">{{todayMinTemperature}}</span></h3>
-      <span class="small-text"><span class="gray3">체감온도</span> {{currentWindChill}}</span>
+      <span v-if="currentWindChill" class="small-text"><span class="gray3">체감온도</span> {{currentWindChill}}</span>
     </div>
     <ul class="sub-info small-text">
       <li>
