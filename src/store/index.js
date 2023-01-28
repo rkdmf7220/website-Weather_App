@@ -394,19 +394,6 @@ const helper = {
     })
     return [...airInfoList];
   },
-/*  pushUltravioletData: (airInfoList, data) => {
-    let info = airInfoList?.[3];
-    if (info) {
-      if (data.today !== "") {
-        info.value = data.today
-        info.grade = data.today
-      } else {
-        info.value = data.tomorrow
-        info.grade = data.tomorrow
-      }
-    }
-    return [...airInfoList]
-  },*/
   pushUltravioletData: (airInfoList, data) => {
     let info = airInfoList?.[3];
     let checkTime = Math.ceil(moment().format("HH") / 3) * 3
