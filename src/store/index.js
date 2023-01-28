@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import moment from "moment";
 const API_KEY = "MFzG02frmQYYfBqpExZRsa8M19660fOWJryWWZHgSYG1RDNihLRj5rM276rXcPZDjM7th9Zm9b6CEWpbn88FNQ%3D%3D"
-const PROXY = window.location.hostname === 'localhost' ? '' : '/proxy';
+const PROXY = window.location.hostname === 'localhost' ? 'http://apis.data.go.kr' : '/proxy';
 
 Vue.use(Vuex)
 
@@ -394,7 +394,7 @@ const helper = {
     })
     return [...airInfoList];
   },
-  pushUltravioletData: (airInfoList, data) => {
+/*  pushUltravioletData: (airInfoList, data) => {
     let info = airInfoList?.[3];
     if (info) {
       if (data.today !== "") {
@@ -404,6 +404,15 @@ const helper = {
         info.value = data.tomorrow
         info.grade = data.tomorrow
       }
+    }
+    return [...airInfoList]
+  },*/
+  pushUltravioletData: (airInfoList, data) => {
+    let info = airInfoList?.[3];
+    let checkTime = Math.ceil(moment().format("HH") / 3) * 3
+    if (info) {
+      info.value = data[`h${checkTime}`]
+      info.grade = data[`h${checkTime}`]
     }
     return [...airInfoList]
   },
