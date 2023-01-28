@@ -245,7 +245,7 @@ export default {
             label: 'hourly',
             data: this.chartData,
             borderColor: mainColor,
-            fill: true,
+            fill: 'start',
             backgroundColor: gradientFill,
             borderWidth: borderWidth,
             borderSkipped: false,
