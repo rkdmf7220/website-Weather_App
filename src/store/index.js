@@ -11,8 +11,8 @@ const URL = {
   mediumLandForecast: '/1360000/MidFcstInfoService/getMidLandFcst?numOfRows=10&pageNo=1&dataType=JSON',
   mediumTemperature: '/1360000/MidFcstInfoService/getMidTa?numOfRows=10&pageNo=1&dataType=JSON',
   villageForecast: '/1360000/VilageFcstInfoService_2.0/getVilageFcst?numOfRows=830&pageNo=1&dataType=JSON',
-  windChillTemperature: '/1360000/LivingWthrIdxServiceV3/getSenTaIdxV3?requestCode=A41&dataType=JSON',
-  ultraviolet: '/1360000/LivingWthrIdxServiceV3/getUVIdxV3?dataType=JSON',
+  windChillTemperature: '/1360000/LivingWthrIdxServiceV4/getSenTaIdxV4?requestCode=A41&dataType=JSON',
+  ultraviolet: '/1360000/LivingWthrIdxServiceV4/getUVIdxV4?dataType=JSON',
   airQuality: '/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?pageNo=1&numOfRows=150&returnType=json&ver=1.0',
   weatherWarn: '/1360000/WthrWrnInfoService/getPwnStatus?numOfRows=10&pageNo=1&dataType=JSON',
   sunriseSunset: 'https://api.sunrise-sunset.org/json?'
