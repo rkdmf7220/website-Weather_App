@@ -413,8 +413,8 @@ const helper = {
       return found.fcstValue
     }
     weeklyInfoList.forEach((item, index) => {
-      referenceDate = moment().add(index+1, 'days').format("YYYYMMDD")
-      if (index <= 1) {
+      referenceDate = moment().add(index, 'days').format("YYYYMMDD")
+      if (index <= 2) {
         item.cloud = findInfoData("SKY")
         item.rain = findInfoData("PTY")
         item.minTemperature = Math.round(findInfoData("TMN"))
@@ -437,7 +437,7 @@ const helper = {
     */
 
     weeklyInfoList.forEach((item, index) => {
-      if (index > 1) {
+      if (index > 2) {
         item.rainfallProbability = data[`rnSt${index+1}Am`]
         switch (data[`wf${index+1}Am`]) {
           case "맑음":
