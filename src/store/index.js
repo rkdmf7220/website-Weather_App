@@ -7,6 +7,17 @@ const PROXY = window.location.hostname === 'localhost' ? 'http://apis.data.go.kr
 
 Vue.use(Vuex)
 
+/**
+ * API URL
+ * @property mediumLandForecast 중기육상예보 - 주간 날씨 정보
+ * @property mediumTemperature  중기기온 - 주간 기온 정보
+ * @property villageForecast    단기예보조회 - 시간 별 기온, 풍향, 풍속, 하늘상태, 강수형태, 강수확률, 강수량
+ * @property windChillTemperature 생활기상지수_체감온도
+ * @property ultraviolet        생활기상지수_자외선
+ * @property airQuality         대기오염정보
+ * @property weatherWarn        
+ * @property sunriseSunset      일출일몰
+ */
 const URL = {
   mediumLandForecast: '/1360000/MidFcstInfoService/getMidLandFcst?numOfRows=10&pageNo=1&dataType=JSON',
   mediumTemperature: '/1360000/MidFcstInfoService/getMidTa?numOfRows=10&pageNo=1&dataType=JSON',
@@ -20,8 +31,8 @@ const URL = {
 
 export default new Vuex.Store({
   state: {
-    areaNo: null,
-    cityInfo: null,
+    areaNo: null,   // 구 정보
+    cityInfo: null,   // 시 정보
     villageForecast: [],
     windChillTemperature: {},
     airInfoList: [
@@ -200,16 +211,23 @@ export default new Vuex.Store({
     setAreaNo({commit}, areaNo) {
       commit('areaNo', areaNo)
     },
+    /**
+     * 체감 온도 데이터를 가져와 가공한 후 저장
+     */
     updateWindChillTemperature({commit}, {areaNo, time}) {
       axios.get(`${PROXY}${URL.windChillTemperature}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
           .then(result => {
             if(result.status === 200) {
               let item = result?.data?.response?.body?.items?.item?.[0];
+              // 체감 온도 데이터가 없을 경우 빈 목업 데이터를 넣음.
               commit('windChillTemperature', item || helper.getWindChillTemperature())
               commit('increaseLoadingCount')
             }
           })
     },
+    /**
+     * 자외선 데이터를 가져와 가공한 후 저장
+     */
     updateUltraviolet({commit, state}, {areaNo, time}) {
       axios.get(`${PROXY}${URL.ultraviolet}&areaNo=${areaNo}&time=${time}&serviceKey=${API_KEY}`)
           .then(result => {
@@ -221,6 +239,9 @@ export default new Vuex.Store({
             }
           })
     },
+    /**
+     * 대기오염정보 데이터를 가져와 가공한 후 저장
+     */
     updateAirQuality({commit, state}, {searchDate, cityName, stationName}) {
       axios.get(`${PROXY}${URL.airQuality}&searchDate=${searchDate}&sidoName=${cityName}&serviceKey=${API_KEY}`)
           .then(result => {
@@ -242,6 +263,10 @@ export default new Vuex.Store({
             }
           })
     },
+    /**
+     * 일출일몰 데이터를 가져와 가공한 후 저장.
+     * 해당 api는 지정한 하루만 가져오기 때문에 세 번에 나눠 불러옴.
+     */
     updateTodaySunriseSunset({commit, state}, {lat, lng, date}) {
       // console.log("작동확인")
       axios.get(`${URL.sunriseSunset}lat=${lat}&lng=${lng}&date=${date}`)
@@ -277,6 +302,10 @@ export default new Vuex.Store({
             }
           })
     },
+    /**
+     * 중기예보 데이터를 가져와 가공한 후 저장.
+     * 날씨 예보, 강수 확률이 포함됨.
+     */
     updateMediumLandForecast({commit, state}, {regId, tmFc}) {
       axios.get(`${PROXY}${URL.mediumLandForecast}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
           .then(result => {
@@ -288,6 +317,10 @@ export default new Vuex.Store({
             }
           })
     },
+    /**
+     * 중기예보 데이터를 가져와 가공한 후 저장
+     * 최저·최고 기온 정보가 포함됨
+     */
     updateMediumTemperature({commit, state}, {regId, tmFc}) {
       axios.get(`${PROXY}${URL.mediumTemperature}&regId=${regId}&tmFc=${tmFc}&serviceKey=${API_KEY}`)
           .then(result => {
@@ -299,6 +332,10 @@ export default new Vuex.Store({
             }
           })
     },
+    /**
+     * 단기예보 데이터를 가져와 가공한 후 저장함.
+     * 하늘상태, 강수형태, 일 최저·최고기온, 습도, 풍속, 풍향, 강수확률, 시간당 강수량 정보가 포함됨
+     */
     updateVillageForecast({commit, state}, {base_date, base_time, nx, ny}) {
       axios.get(`${PROXY}${URL.villageForecast}&base_date=${base_date}&base_time=${base_time}&nx=${nx}&ny=${ny}&serviceKey=${API_KEY}`)
           .then(result => {
@@ -328,13 +365,15 @@ export default new Vuex.Store({
       commit('resetLoadingCount')
     }
   },
-  modules: {
-  }
+  // modules: {}
 })
 
 
 
 const helper = {
+  /**
+   * 체감온도 데이터의 기본값 
+   */
   getWindChillTemperature: () => {
     return {
       areaNo: "A41",
@@ -376,10 +415,14 @@ const helper = {
       tmSeq: null
     }
   },
+  /**
+   * 받아온 대기오염정보 데이터를 가공함
+   */
   pushAirQualityData: (airInfoList, data, stationName) => {
     let found = data.find(info => (
         info.stationName === stationName
     ))
+    // 순서대로 미세먼지, 초미세먼지, 오존의 수치와 등급을 정리함
     airInfoList.forEach((item, index) => {
       if (index === 0) {
         item.value = found.pm10Value
@@ -394,6 +437,9 @@ const helper = {
     })
     return [...airInfoList];
   },
+  /**
+   * 받아온 자외선 데이터를 가공함
+   */
   pushUltravioletData: (airInfoList, data) => {
     let info = airInfoList?.[3];
     let checkTime = Math.ceil(moment().format("HH") / 3) * 3
@@ -403,6 +449,10 @@ const helper = {
     }
     return [...airInfoList]
   },
+  /**
+   * 주간날씨정보를 위한 데이터를 가공함.
+   * 오늘~모레 날씨 정보는 단기예보 데이터를 사용.
+   */
   pushWeeklyDataFromVillage: (weeklyInfoList, data) => {
     let referenceDate
     function findInfoData(category) {
@@ -415,27 +465,28 @@ const helper = {
     weeklyInfoList.forEach((item, index) => {
       referenceDate = moment().add(index, 'days').format("YYYYMMDD")
       if (index <= 2) {
-        item.cloud = findInfoData("SKY")
-        item.rain = findInfoData("PTY")
-        item.minTemperature = Math.round(findInfoData("TMN"))
-        item.maxTemperature = Math.round(findInfoData("TMX"))
-        item.rainfallProbability = findInfoData("POP")
+        item.cloud = findInfoData("SKY")  // 하늘상태
+        item.rain = findInfoData("PTY")   // 강수형태
+        item.minTemperature = Math.round(findInfoData("TMN")) // 최저기온
+        item.maxTemperature = Math.round(findInfoData("TMX")) // 최고기온
+        item.rainfallProbability = findInfoData("POP")  // 강수확률
       }
     })
     return [...weeklyInfoList]
   },
+  /**
+   * 주간날씨정보를 위한 데이터를 가공함.
+   * 3일~6일 뒤 날씨는 중기예보 데이터를 사용.
+   * @key cloud = 0 === sunny(맑음)
+   * @key cloud = 3 === cloudy(구름많음)
+   * @key cloud = 3 === overcast(흐림)
+   * @key rain = 0 === clear(없음)
+   * @key rain = 1 === rain(비)
+   * @key rain = 2 === snow(눈)
+   * @key rain = 3 === Sleet(비/눈)
+   * @key rain = 4 === showers(소나기)
+   */
   pushWeeklyDataFromMidLand: (weeklyInfoList, data) => {
-    /**
-    * @key cloud = 0 === sunny(맑음)
-    * @key cloud = 3 === cloudy(구름많음)
-    * @key cloud = 3 === overcast(흐림)
-    * @key rain = 0 === clear(없음)
-    * @key rain = 1 === rain(비)
-    * @key rain = 2 === snow(눈)
-    * @key rain = 3 === Sleet(비/눈)
-    * @key rain = 4 === showers(소나기)
-    */
-
     weeklyInfoList.forEach((item, index) => {
       if (index > 2) {
         item.rainfallProbability = data[`rnSt${index+1}Am`]
@@ -506,6 +557,10 @@ const helper = {
     })
     return [...weeklyInfoList]
   },
+  /**
+   * 주간날씨정보를 위한 데이터를 가공함.
+   * 3일~6일 뒤 기온정보는 중기예보 데이터를 사용.
+   */
   pushWeeklyDataFromMidTemp: (weeklyInfoList, data) => {
     weeklyInfoList.forEach((item, index) => {
       if (index > 1) {
@@ -540,7 +595,9 @@ const helper = {
     }
     return [...sunriseSunsetList]
   },
-
+  /**
+   * 차트에 날씨 데이터를 넣음
+   */
   pushChartTemperatureData: (chartTemperatureList, data) => {
     if (chartTemperatureList !== []) {
       chartTemperatureList = []
@@ -589,6 +646,9 @@ const helper = {
     }
     return [...chartTemperatureList]
   },
+  /**
+   * 차트에 바람 데이터를 넣음
+   */
   pushChartWindList: (chartWindList, data) => {
     if (chartWindList !== []) {
       chartWindList = []
@@ -630,6 +690,9 @@ const helper = {
     }
     return [...chartWindList]
   },
+  /**
+   * 차트에 강수 데이터를 넣음
+   */
   pushChartRainfallList: (chartRainfallList, data) => {
     if (chartRainfallList !== []) {
       chartRainfallList = []
@@ -696,6 +759,9 @@ const helper = {
     }
     return [...chartRainfallList]
   },
+  /**
+   * 차트에 습도 데이터를 넣음
+   */
   pushChartHumidityList: (chartHumidityList, data) => {
     if (chartHumidityList !== []) {
       chartHumidityList = []
